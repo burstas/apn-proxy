@@ -1,0 +1,21 @@
+#common conf
+[common]
+home=/usr/home/wenbo/jpool/src/unistor/trunk/unistor/unistor/bin
+listen=127.0.0.1:2181
+[ch_1]
+thread=1
+type=dev/release
+[ch_2]
+thread=5
+type=dev/release
+[app_a]
+channel=ch_1,ch_2
+cert_file=
+key_file=
+ca_path=
+[app_b]
+channel=ch_1,ch_2
+cert_file=
+key_file=
+ca_path=
+

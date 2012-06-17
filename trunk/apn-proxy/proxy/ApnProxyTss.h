@@ -25,7 +25,7 @@ public:
 public:
     ///tss的初始化，0：成功；-1：失败
     int init(ApnProxyConfigChannel const* channel,
-        map<ApnProxyConfigChannelApp, ApnProxyConfigApp*> const& channelApp);
+        map<ApnProxyConfigChannelApp, ApnProxyConfigApp*> const* channelApp);
     ///获取package的buf，返回NULL表示失败
     inline char* getBuf(CWX_UINT32 uiSize){
         if (m_uiDataBufLen < uiSize){

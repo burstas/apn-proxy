@@ -13,7 +13,7 @@ ApnProxyTss::~ApnProxyTss(){
 }
 
 int ApnProxyTss::init(ApnProxyConfigChannel const* channel,
-                     map<ApnProxyConfigChannelApp, ApnProxyConfigApp*> const& channelApp)
+                     map<ApnProxyConfigChannelApp, ApnProxyConfigApp*> const* channelApp)
 {
     m_pReader = new CwxPackageReader(false);
     m_pWriter = new CwxPackageWriter(DEF_PACKAGE_SIZE);
@@ -24,8 +24,8 @@ int ApnProxyTss::init(ApnProxyConfigChannel const* channel,
         obj.m_strChannelName = channel->m_strChannelName;
         obj.m_strAppName = "";
         ApnProxySsl* ssl;
-        map<ApnProxyConfigChannelApp, ApnProxyConfigApp*>::const_iterator iter = channelApp.upper_bound(obj);
-        while(iter != channelApp.end()){
+        map<ApnProxyConfigChannelApp, ApnProxyConfigApp*>::const_iterator iter = channelApp->upper_bound(obj);
+        while(iter != channelApp->end()){
             if (channel->m_bRelease){
                 ssl = new ApnProxySsl(APN_PROXY_RELEASE_HOST,
                     APN_PROXY_RELEASE_PORT,

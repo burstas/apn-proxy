@@ -2,10 +2,8 @@
 #include "CwxDate.h"
 
 ///构造函数
-ApnProxyApp::ApnProxyApp()
-{
-    m_eventHandler = NULL;
-    m_threadPool = NULL;
+ApnProxyApp::ApnProxyApp(){
+    m_proxyHandler = NULL;
 }
 
 ///析构函数
@@ -19,7 +17,7 @@ int ApnProxyApp::init(int argc, char** argv){
     if (CwxAppFramework::init(argc, argv) == -1) return -1;
     ///检查是否通过-f指定了配置文件，若没有，则采用默认的配置文件
     if ((NULL == this->getConfFile()) || (strlen(this->getConfFile()) == 0)){
-        this->setConfFile("svr_conf.cnf");
+        this->setConfFile("apn_proxy.cnf");
     }
     ///加载配置文件，若失败则退出
     if (0 != m_config.loadConfig(getConfFile())){
@@ -34,7 +32,7 @@ int ApnProxyApp::init(int argc, char** argv){
 ///配置运行环境信息
 int ApnProxyApp::initRunEnv(){
     ///设置系统的时钟间隔，最小刻度为1ms，此为1s。
-    this->setClick(1000);//1s
+    this->setClick(100);//0.1s
     ///设置工作目录
     this->setWorkDir(this->m_config.m_strWorkDir.c_str());
     ///设置循环运行日志的数量
@@ -45,55 +43,59 @@ int ApnProxyApp::initRunEnv(){
     if (CwxAppFramework::initRunEnv() == -1 ) return -1;
     blockSignal(SIGPIPE);
     //set version
-    this->setAppVersion(ECHO_APP_VERSION);
+    this->setAppVersion(APN_PROXY_APP_VERSION);
     //set last modify date
-    this->setLastModifyDatetime(ECHO_MODIFY_DATE);
+    this->setLastModifyDatetime(APN_PROXY_APP_MODIFY_DATE);
     //set compile date
     this->setLastCompileDatetime(CWX_COMPILE_DATE(_BUILD_DATE));
 
     ///将加载的配置文件信息输出到日志文件中，以供查看检查
-    string strConfOut;
-    m_config.outputConfig(strConfOut);
-    CWX_INFO((strConfOut.c_str()));
+    m_config.outputConfig();
 
     ///注册echo请求的处理handle，echo请求的svr-id为SVR_TYPE_ECHO
-    m_eventHandler = new CwxEchoEventHandler(this);         
-    this->getCommander().regHandle(SVR_TYPE_ECHO, m_eventHandler);
+    m_proxyHandler = new ApnProxyHandler(this);         
+    this->getCommander().regHandle(SVR_TYPE_APN, m_proxyHandler);
 
-    ///监听TCP连接，其建立的连接的svr-id都为SVR_TYPE_ECHO，接收的消息的svr-id都为SVR_TYPE_ECHO。
-    ///全部由m_eventHandler对象来处理
-    if (0 > this->noticeTcpListen(SVR_TYPE_ECHO, 
+    ///监听TCP连接，其建立的连接的svr-id都为SVR_TYPE_APN，接收的消息的svr-id都为SVR_TYPE_APN。
+    ///全部由m_proxyHandler对象来处理
+    if (0 > this->noticeTcpListen(SVR_TYPE_APN, 
         this->m_config.m_listen.getHostName().c_str(),
         this->m_config.m_listen.getPort(),
         false,
-        CWX_APP_MSG_MODE,
-        ApnProxyApp::setSockAttr,
-        this))
+        CWX_APP_MSG_MODE))
     {
-        CWX_ERROR(("Can't register the echo acceptor port: addr=%s, port=%d",
+        CWX_ERROR(("Can't register the proxy acceptor port: addr=%s, port=%d",
             this->m_config.m_listen.getHostName().c_str(),
             this->m_config.m_listen.getPort()));
         return -1;
     }
-    ///监听UNIX DOMAIN连接，其建立的连接的svr-id都为SVR_TYPE_ECHO，接收的消息的svr-id都为SVR_TYPE_ECHO。
-    ///全部由m_eventHandler对象来处理
-    if (0 > this->noticeLsockListen(SVR_TYPE_ECHO, 
-        this->m_config.m_strUnixPathFile.c_str()))
-    {
-        CWX_ERROR(("Can't register the echo unix acceptor port: path=%s",
-            m_config.m_strUnixPathFile.c_str()));
-        return -1;
+    ///创建线程池对象，此线程池中线程的group-id为2
+    CWX_UINT16 i=0;
+    CWX_UINT16 uiThreadId = 2;
+    CwxThreadPool* pThreadPool = NULL;
+    map<string, ApnProxyConfigChannel*>::iterator iter = m_config.m_channels.begin();
+    while(iter != m_config.m_channels.end()){
+        pThreadPool = new CwxThreadPool(uiThreadId++, 
+            iter->second->m_unThreadNum,
+            getThreadPoolMgr(),
+            &getCommander());
+
+        ///启动线程
+        ApnProxyTss**pTss = new ApnProxyTss*[iter->second->m_unThreadNum];
+        for (i=0; i<iter->second->m_unThreadNum; i++){
+            pTss[i] = new ApnProxyTss();
+            pTss[i]->init(iter->second, m_config.m_channelApps);
+        }
+        m_threadPools[iter->first] = pair<CwxThreadPool*, ApnProxyTss**>(pThreadPool, pTss);
+
+        ///启动线程，线程池中线程的线程栈大小为1M。
+        if ( 0 != pThreadPool->start((CwxTss**)pTss)){
+            CWX_ERROR(("Failure to start thread pool"));
+            return -1;
+        }
+        iter++;
     }
-    ///创建线程池对象，此线程池中线程的group-id为2，线程池的线程数量为m_config.m_unThreadNum。
-    m_threadPool = new CwxThreadPool(2,
-        m_config.m_unThreadNum,
-        getThreadPoolMgr(),
-        &getCommander());
-    ///启动线程，线程池中线程的线程栈大小为1M。
-    if ( 0 != m_threadPool->start(NULL)){
-        CWX_ERROR(("Failure to start thread pool"));
-        return -1;
-    }
+
     return 0;
 
 }
@@ -119,90 +121,34 @@ void ApnProxyApp::onSignal(int signum){
 
 }
 
-///echo请求的请求消息
+///proxy请求的请求消息
 int ApnProxyApp::onRecvMsg(CwxMsgBlock* msg, CwxAppHandler4Msg& conn, CwxMsgHead const& header, bool& bSuspendConn){
-
+    int ret = 0;
+    if (!msg) return -1;
     msg->event().setSvrId(conn.getConnInfo().getSvrId());
     msg->event().setHostId(conn.getConnInfo().getHostId());
     msg->event().setConnId(conn.getConnInfo().getConnId());
-    msg->event().setIoHandle(conn.getHandle());
-    msg->event().setConnUserData(NULL);
     msg->event().setMsgHeader(header);
     msg->event().setEvent(CwxEventInfo::RECV_MSG);
-    msg->event().setTimestamp(CwxDate::getTimestamp());
-    ///不停止继续接受
-    bSuspendConn = false;
-    CWX_ASSERT (msg);
-    ///将消息放到线程池队列中，有内部的线程调用其处理handle来处理
-    m_threadPool->append(msg);
-    return 0;
+    switch(header.m_unMsgType){
 
+    }
+    if (msg) CwxMsgBlockAlloc::free(msg);
+    return ret;
 }
 
-int ApnProxyApp::setSockAttr(CWX_HANDLE handle, void* arg)
-{
-    ApnProxyApp* app=(ApnProxyApp*)arg;
-    int iSockBuf = 1024 * 1024;
-    while (setsockopt(handle, SOL_SOCKET, SO_SNDBUF, (void*)&iSockBuf, sizeof(iSockBuf)) < 0)
-    {
-        iSockBuf -= 1024;
-        if (iSockBuf <= 1024) break;
-    }
-    iSockBuf = 1024 * 1024;
-    while(setsockopt(handle, SOL_SOCKET, SO_RCVBUF, (void *)&iSockBuf, sizeof(iSockBuf)) < 0)
-    {
-        iSockBuf -= 1024;
-        if (iSockBuf <= 1024) break;
-    }
-
-    if (app->m_config.m_listen.isKeepAlive())
-    {
-        if (0 != CwxSocket::setKeepalive(handle,
-            true,
-            CWX_APP_DEF_KEEPALIVE_IDLE,
-            CWX_APP_DEF_KEEPALIVE_INTERNAL,
-            CWX_APP_DEF_KEEPALIVE_COUNT))
-        {
-            CWX_ERROR(("Failure to set listen addr:%s, port:%u to keep-alive, errno=%d",
-                app->m_config.m_listen.getHostName().c_str(),
-                app->m_config.m_listen.getPort(),
-                errno));
-            return -1;
-        }
-    }
-
-    int flags= 1;
-    if (setsockopt(handle, IPPROTO_TCP, TCP_NODELAY, (void *)&flags, sizeof(flags)) != 0)
-    {
-        CWX_ERROR(("Failure to set listen addr:%s, port:%u NODELAY, errno=%d",
-            app->m_config.m_listen.getHostName().c_str(),
-            app->m_config.m_listen.getPort(),
-            errno));
-        return -1;
-    }
-    struct linger ling= {0, 0};
-    if (setsockopt(handle, SOL_SOCKET, SO_LINGER, (void *)&ling, sizeof(ling)) != 0)
-    {
-        CWX_ERROR(("Failure to set listen addr:%s, port:%u LINGER, errno=%d",
-            app->m_config.m_listen.getHostName().c_str(),
-            app->m_config.m_listen.getPort(),
-            errno));
-        return -1;
-    }
-    return 0;
-}
 
 void ApnProxyApp::destroy()
 {
-    if (m_threadPool){
-        m_threadPool->stop();
-        delete m_threadPool;
-        m_threadPool = NULL;
+    map<string, pair<CwxThreadPool*, ApnProxyTss**> >::iterator iter =  m_threadPools.begin;
+    while(iter != m_threadPools.end()){
+        iter->second.first->stop();
+        delete iter->second.first;
+        iter++;
     }
-    if (m_eventHandler)
-    {
-        delete m_eventHandler;
-        m_eventHandler = NULL;
+    if (m_proxyHandler){
+        delete m_proxyHandler;
+        m_proxyHandler = NULL;
     }
     CwxAppFramework::destroy();
 }

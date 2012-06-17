@@ -23,6 +23,12 @@ public:
         SVR_TYPE_APN = CwxAppFramework::SVR_TYPE_USER_START, ///<proxy服务的服务类型，及SVR-ID的数值
         APN_MSG_TYPE_NOTICE = 1, ///<notice的消息类型
         APN_MSG_TYPE_NOTICE_REPLY = 2, ///<notice的reply消息类型
+        APN_MSG_TYPE_CHANNEL_INFO = 3, ///<获取channel的信息
+        APN_MSG_TYPE_CHANNEL_INFO_REPLY = 4, ///<channel信息的reply消息类型
+        APN_MSG_TYPE_APP_INFO = 5, ///<获取app的信息
+        APN_MSG_TYPE_APP_INFO_REPLY = 6, ///<app信息的reply消息类型
+        APN_MSG_TYPE_THREAD_INFO = 7, ///<获取线程信息
+        APN_MSG_TYPE_THREAD_INFO_REPLY = 8 ///<线程信息的reply消息类型
     };
     ///构造函数
 	ApnProxyApp();
@@ -36,21 +42,24 @@ public:
     ///signal响应函数
     virtual void onSignal(int signum);
     ///收到echo消息的响应函数
-    virtual int onRecvMsg(CwxMsgBlock* msg,///<收到的echo请求数据包
-                        CwxAppHandler4Msg& conn,///<收到echo请求的连接对象
-                        CwxMsgHead const& header, ///<收到echo请求的消息头
+    virtual int onRecvMsg(CwxMsgBlock* msg,///<收到的proxy请求数据包
+                        CwxAppHandler4Msg& conn,///<收到proxy请求的连接对象
+                        CwxMsgHead const& header, ///<收到proxy请求的消息头
                         bool& bSuspendConn///<true：停止此连接继续接受稍息，false：此连接可以继续接受消息
                         );
 protected:
-    static int setSockAttr(CWX_HANDLE handle, void* arg);
-
     ///重载运行环境设置API
 	virtual int initRunEnv();
     virtual void destroy();
 private:
-    CwxEchoEventHandler*         m_eventHandler;///<echo请求处理的commander handle
-    CwxThreadPool*               m_threadPool;///<线程池对象
-    CwxEchoConfig               m_config;///<配置文件对象
+    int  recvNoticeMsg(CwxMsgBlock*& msg);
+    int  recvQueryChannelMsg(CwxMsgBlock*& msg);
+    int  recvQueryAppMsg(CwxMsgBlock*& msg);
+    int  recvQueryThreadMsg(CwxMsgBlock*& msg);
+private:
+    ApnProxyHandler*             m_proxyHandler;///<proxy请求处理的commander handle
+    map<string, pair<CwxThreadPool*, ApnProxyTss**> >  m_threadPools; ///<线程池map
+    ApnProxyConfig               m_config;///<配置文件对象
 };
 #endif
 

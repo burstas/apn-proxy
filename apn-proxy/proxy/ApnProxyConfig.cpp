@@ -24,7 +24,14 @@ int ApnProxyConfig::loadConfig(string const & strConfFile){
 	if ('/' != value[value.length()-1]) value +="/";
 	m_strWorkDir = value;
 
-	// load query check_milli_second
+    // load query conn_connect_milli_second
+    if (!parser.getAttr("common", "conn_connect_milli_second", value) || !value.length()){
+        snprintf(m_szError, 2047, "Must set [common:conn_connect_milli_second].");
+        return -1;
+    }
+    m_uiConnTimeoutMilliSecond = strtoul(value.c_str(), NULL, 10);
+
+    // load query check_milli_second
 	if (!parser.getAttr("common", "check_milli_second", value) || !value.length()){
 		snprintf(m_szError, 2047, "Must set [common:check_milli_second].");
 		return -1;
@@ -116,7 +123,7 @@ int ApnProxyConfig::loadConfig(string const & strConfFile){
                 }
                 appChannel.m_strAppName = pApp->m_strAppName;
                 appChannel.m_strChannelName = *ch_iter;
-                m_appChannel.insert(appChannel);
+                m_appChannels[appChannel]=pApp;
                 ch_iter++;
             }
             ///get cert_file
@@ -167,6 +174,7 @@ void ApnProxyConfig::outputConfig(){
     CWX_INFO(("*****************begin common conf*******************"));
     CWX_INFO(("home=%s", m_strWorkDir.c_str()));
     CWX_INFO(("listen=%s:%u", m_listen.getHostName().c_str(), m_listen.getPort()));
+    CWX_INFO(("conn_connect_milli_second=%u", m_uiConnTimeoutMilliSecond));
     CWX_INFO(("check_milli_second=%u", m_uiCheckMilliSecond));
     CWX_INFO(("*****************end common conf*******************"));
     {

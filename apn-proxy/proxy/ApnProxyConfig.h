@@ -72,9 +72,9 @@ public:
     }
     ///<比较操作
     bool operator < (ApnProxyConfigAppChannel const& item) const{
-        if (m_strAppName < item.m_strAppName) return true;
-        if (m_strAppName > item.m_strAppName) return false;
-        return m_strChannelName < item.m_strChannelName;
+        if (m_strChannelName < item.m_strChannelName) return true;
+        if (m_strChannelName > item.m_strChannelName) return false;
+        return m_strAppName < item.m_strAppName;
     }
 public:
     string          m_strAppName; ///<app的名字
@@ -86,10 +86,29 @@ class ApnProxyConfig
 {
 public:
     ApnProxyConfig(){
-        m_uiCheckMilliSecond = 1;
+        m_uiCheckMilliSecond = 10;
+        m_uiConnTimeoutMilliSecond = 1000;
     }
     
-    ~ApnProxyConfig(){}
+    ~ApnProxyConfig(){
+        {
+            map<string, ApnProxyConfigChannel*>::iterator iter = m_channels.begin(); ///<channel的定义
+            while(iter != m_channels.end()){
+                delete iter->second;
+                iter++;
+            }
+
+        }
+        {
+            map<string, ApnProxyConfigApp*>::iterator iter = m_apps.begin(); ///<所有的app
+            while(iter != m_apps.end()){
+                delete iter->second;
+                iter++;
+            }
+
+        }
+
+    }
 public:
     //加载配置文件.-1:failure, 0:success
     int loadConfig(string const & strConfFile);
@@ -100,10 +119,11 @@ public:
 public:
     string              m_strWorkDir;///<工作目录
     CwxHostInfo         m_listen;///<tcp的监听ip/port
+    CWX_UINT32          m_uiConnTimeoutMilliSecond; ///<连接的超时时间
     CWX_UINT32          m_uiCheckMilliSecond; ///<发送成功检测的时间
     map<string, ApnProxyConfigChannel*>  m_channels; ///<channel的定义
     map<string, ApnProxyConfigApp*> m_apps; ///<所有的app
-    set<ApnProxyConfigAppChannel>   m_appChannel; ///<app channel的集合
+    map<ApnProxyConfigAppChannel, ApnProxyConfigApp*>   m_appChannels; ///<app channel的集合
     char                m_szError[2048];///<错误消息的buf
 };
 

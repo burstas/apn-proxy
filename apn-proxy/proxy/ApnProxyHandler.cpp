@@ -1,9 +1,8 @@
-#include "CwxEchoEventHandler.h"
-#include "CwxEchoApp.h"
+#include "ApnProxyHandler.h"
+#include "ApnProxyApp.h"
 
 ///echo请求的处理函数
-int CwxEchoEventHandler::onRecvMsg(CwxMsgBlock*& msg, CwxTss* )
-{
+int ApnProxyHandler::onRecvMsg(CwxMsgBlock*& msg, CwxTss* ){
     ///设置echo回复的消息类型，为请求的消息类型+1
     msg->event().getMsgHeader().setMsgType(msg->event().getMsgHeader().getMsgType() + 1);
     ///设置echo回复的数据包长度

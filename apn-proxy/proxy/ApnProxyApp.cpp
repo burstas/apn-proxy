@@ -52,7 +52,10 @@ int ApnProxyApp::initRunEnv(){
     ///将加载的配置文件信息输出到日志文件中，以供查看检查
     m_config.outputConfig();
 
-    ///注册echo请求的处理handle，echo请求的svr-id为SVR_TYPE_ECHO
+    ///初始化tss
+    m_tss.init(NULL, NULL);
+    
+    ///注册proxy请求的处理handle
     m_proxyHandler = new ApnProxyHandler(this);         
     this->getCommander().regHandle(SVR_TYPE_APN, m_proxyHandler);
 
@@ -84,7 +87,7 @@ int ApnProxyApp::initRunEnv(){
         ApnProxyTss**pTss = new ApnProxyTss*[iter->second->m_unThreadNum];
         for (i=0; i<iter->second->m_unThreadNum; i++){
             pTss[i] = new ApnProxyTss();
-            pTss[i]->init(iter->second, m_config.m_channelApps);
+            pTss[i]->init(iter->second, &m_config.m_channelApps);
         }
         m_threadPools[iter->first] = pair<CwxThreadPool*, ApnProxyTss**>(pThreadPool, pTss);
 
@@ -123,7 +126,6 @@ void ApnProxyApp::onSignal(int signum){
 
 ///proxy请求的请求消息
 int ApnProxyApp::onRecvMsg(CwxMsgBlock* msg, CwxAppHandler4Msg& conn, CwxMsgHead const& header, bool& bSuspendConn){
-    int ret = 0;
     if (!msg) return -1;
     msg->event().setSvrId(conn.getConnInfo().getSvrId());
     msg->event().setHostId(conn.getConnInfo().getHostId());
@@ -131,10 +133,26 @@ int ApnProxyApp::onRecvMsg(CwxMsgBlock* msg, CwxAppHandler4Msg& conn, CwxMsgHead
     msg->event().setMsgHeader(header);
     msg->event().setEvent(CwxEventInfo::RECV_MSG);
     switch(header.m_unMsgType){
-
+        case APN_MSG_TYPE_NOTICE:
+            return recvNoticeMsg(msg);
+        case APN_MSG_TYPE_CHANNEL_INFO:
+            return recvQueryChannelMsg(msg);
+        case APN_MSG_TYPE_APP_INFO:
+            return recvQueryAppMsg(msg);
+        case APN_MSG_TYPE_THREAD_INFO:
+            return recvQueryThreadMsg(msg);
     }
-    if (msg) CwxMsgBlockAlloc::free(msg);
-    return ret;
+
+    CwxCommon::snprintf(m_tss->m_szBuf2K, 2048, "Unknown msg type:%u", header.getMsgType());
+    replyMsg(this,
+        conn.getConnInfo().getConnId(),
+        header.getMsgType() + 1,
+        header.getTaskId(),
+        true,
+        APN_PROXY_ERR_UNKNOWN_MSG,
+        NULL,
+        0);
+    return 0;
 }
 
 
@@ -153,5 +171,56 @@ void ApnProxyApp::destroy()
     CwxAppFramework::destroy();
 }
 
+///收到notice消息；返回值：0，成功；-1：失败
+int  ApnProxyApp::recvNoticeMsg(CwxMsgBlock* msg){
 
+}
+///收到channel查询消息；返回值：0，成功；-1：失败
+int  ApnProxyApp::recvQueryChannelMsg(CwxMsgBlock* msg){
+
+}
+///收到app查询消息；返回值：0，成功；-1：失败
+int  ApnProxyApp::recvQueryAppMsg(CwxMsgBlock* msg){
+
+}
+///收到thread状态查询消息；返回值：0，成功；-1：失败
+int  ApnProxyApp::recvQueryThreadMsg(CwxMsgBlock* msg){
+
+}
+///消息回复
+void ApnProxyApp::replyMsg(ApnProxyApp* pApp, ///<app对象
+                     CWX_UINT32 uiConnId, ///<连接id
+                     CWX_UINT16 unMsgType, ///<消息类型
+                     CWX_UINT32 uiTaskId, ///<任务id
+                     bool       bCloseConn, ///<是否关闭连接
+                     int        ret, ///<返回的状态值
+                     char const* szErrMsg, ///<若出错则返回错误消息
+                     char const* result, ///<若是状态查询，则指定result，若为空则不添加
+                     CWX_UINT8 ucStatus ///<notice的apn状态值，若为0则不添加
+                     )
+{
+    pApp->m_tss.m_pWriter->beginPack();
+    pApp->m_tss.m_pWriter->addKeyValue(APN_PROXY_KEY_RET, strlen(APN_PROXY_KEY_RET),  ret);
+    if (APN_PROXY_ERR_SUCCESS != ret){
+        pApp->m_tss.m_pWriter->addKeyValue(APN_PROXY_KEY_ERR, strlen(APN_PROXY_KEY_ERR),  szErrMsg, strlen(szErrMsg), false);
+        if (ucStatus) pApp->m_tss.m_pWriter->addKeyValue(APN_PROXY_KEY_STATUS, strlen(APN_PROXY_KEY_STATUS), ucStatus);
+    }else{
+        if (result) pApp->m_tss.m_pWriter->addKeyValue(APN_PROXY_KEY_RESULT, stlren(APN_PROXY_KEY_RESULT), result, strlen(result), false);
+    }
+    pApp->m_tss.m_pWriter->->pack();
+    CwxMsgHead head(0, 0, unMsgType, uiTaskId, pApp->m_tss.m_pWriter->getMsgSize());
+    CwxMsgBlock* msg = CwxMsgBlockAlloc::pack(head, pApp->m_tss.m_pWriter->getMsg(), pApp->m_tss.m_pWriter->getMsgSize());
+    if (!msg){
+        CWX_ERROR(("No memory to alloc msg, size:%u", pApp->m_tss.m_pWriter->getMsgSize()));
+        pApp->noticeCloseConn(uiConnId);
+        return;
+    }
+    ///发送回复的数据包
+    msg->send_ctrl().setMsgAttr(bCloseConn?CwxMsgSendCtrl::CLOSE_NOTICE:CwxMsgSendCtrl::NONE);
+    if (!pApp->sendMsgByConn(msg))	{
+        CWX_ERROR(("Failure to send msg to client, conn[%u]", uiConnId));
+        CwxMsgBlockAlloc::free(msg);
+        pApp->noticeCloseConn(uiConnId);
+    }
+}
 

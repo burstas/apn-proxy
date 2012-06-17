@@ -28,4 +28,14 @@ CWINUX_USING_NAMESPACE
 #define APN_PROXY_APP_PREFIX           "app_" ///<配置文件中app的前缀
 #define APN_PROXY_CHANNEL_TYPE_DEV     "dev"  ///<develope类型的channel
 #define APN_PROXY_CHANNEL_TYPE_RELEASE "release" ///<release类型的channel
+
+///key的定义
+#define APN_PROXY_KEY_RET              "ret"
+#define APN_PROXY_KEY_ERR              "err"
+#define APN_PROXY_KEY_STATUS           "status"
+#define APN_PROXY_KEY_RESULT           "result"
+
+///错误代码的定义
+#define APN_PROXY_ERR_SUCCESS           0   ///<成功
+#define APN_PROXY_ERR_UNKNOWN_MSG       1   ///<未知的消息类型
 #endif

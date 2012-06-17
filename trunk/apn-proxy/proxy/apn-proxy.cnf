@@ -2,6 +2,7 @@
 [common]
 home=/usr/home/wenbo/jpool/src/unistor/trunk/unistor/unistor/bin
 listen=127.0.0.1:2181
+check_milli_second=1
 [ch_1]
 thread=1
 type=dev/release

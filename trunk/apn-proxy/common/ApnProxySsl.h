@@ -18,7 +18,11 @@
 class ApnProxySsl{
 public:
     ///构造函数
-    ApnProxySsl(char const* host, CWX_UINT16 port, char const *cerfile, char const *keyfile, char const *capath);
+    ApnProxySsl(char const* host,
+        CWX_UINT16 port,
+        char const *cerfile,
+        char const *keyfile,
+        char const *capath);
     ///析构函数
     ~ApnProxySsl();
 public:

@@ -53,13 +53,13 @@ public:
 };
 
 ///app与channel的对象
-class ApnProxyConfigAppChannel{
+class ApnProxyConfigChannelApp{
 public:
     ///构造函数
-    ApnProxyConfigAppChannel(){}
+    ApnProxyConfigChannelApp(){}
 public:
     ///复制操作
-    ApnProxyConfigAppChannel& operator=(ApnProxyConfigAppChannel const& item){
+    ApnProxyConfigChannelApp& operator=(ApnProxyConfigChannelApp const& item){
         if (this != &item){
             m_strAppName = item.m_strAppName;
             m_strChannelName = item.m_strChannelName;
@@ -67,11 +67,11 @@ public:
         return *this;
     }
     ///equal比较操作
-    bool operator == (ApnProxyConfigAppChannel const& item) const{
+    bool operator == (ApnProxyConfigChannelApp const& item) const{
         return (m_strAppName==item.m_strAppName) && (m_strChannelName == item.m_strChannelName);
     }
     ///<比较操作
-    bool operator < (ApnProxyConfigAppChannel const& item) const{
+    bool operator < (ApnProxyConfigChannelApp const& item) const{
         if (m_strChannelName < item.m_strChannelName) return true;
         if (m_strChannelName > item.m_strChannelName) return false;
         return m_strAppName < item.m_strAppName;
@@ -123,7 +123,7 @@ public:
     CWX_UINT32          m_uiCheckMilliSecond; ///<发送成功检测的时间
     map<string, ApnProxyConfigChannel*>  m_channels; ///<channel的定义
     map<string, ApnProxyConfigApp*> m_apps; ///<所有的app
-    map<ApnProxyConfigAppChannel, ApnProxyConfigApp*>   m_appChannels; ///<app channel的集合
+    map<ApnProxyConfigChannelApp, ApnProxyConfigApp*>   m_channelApps; ///<channel app的集合
     char                m_szError[2048];///<错误消息的buf
 };
 

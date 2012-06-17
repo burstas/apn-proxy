@@ -1,4 +1,5 @@
 #include "ApnProxyConfig.h"
+#include "CwxFile.h"
 
 static bool parseHostPort(string const& strHostPort, CwxHostInfo& host)
 {
@@ -91,7 +92,7 @@ int ApnProxyConfig::loadConfig(string const & strConfFile){
     }
     //获取所有的app
     ApnProxyConfigApp* pApp = NULL;
-    ApnProxyConfigAppChannel appChannel;
+    ApnProxyConfigChannelApp channelApp;
     iter = sessions.begin();
     while(iter != sessions.end()){
         if ((iter->length() > strlen(APN_PROXY_APP_PREFIX)) &&
@@ -121,9 +122,9 @@ int ApnProxyConfig::loadConfig(string const & strConfFile){
                     snprintf(m_szError, 2047, "channel[%s] set by [%s:channel] doesn't exist.", ch_iter->c_str(), iter->c_str());
                     return -1;
                 }
-                appChannel.m_strAppName = pApp->m_strAppName;
-                appChannel.m_strChannelName = *ch_iter;
-                m_appChannels[appChannel]=pApp;
+                channelApp.m_strAppName = pApp->m_strAppName;
+                channelApp.m_strChannelName = *ch_iter;
+                m_channelApps[channelApp]=pApp;
                 ch_iter++;
             }
             ///get cert_file

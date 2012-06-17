@@ -10,11 +10,7 @@ type=dev/release
 thread=5
 type=dev/release
 [app_a]
-channel=ch_1,ch_2
-cert_file=
-key_file=
-ca_path=
-[app_b]
+'[app_b]
 channel=ch_1,ch_2
 cert_file=
 key_file=

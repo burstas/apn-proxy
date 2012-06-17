@@ -94,7 +94,7 @@ public:
     //加载配置文件.-1:failure, 0:success
     int loadConfig(string const & strConfFile);
     //输出加载的配置文件信息
-    void outputConfig(string & strConfig);
+    void outputConfig();
     //获取配置文件加载的失败原因
     char const* getError() { return m_szError; };
 public:

@@ -23,4 +23,9 @@ CWINUX_USING_NAMESPACE
 #define APN_PROXY_APP_DEVICE_BINARY_SIZE  32   ///<设备号的长度
 #define APN_PROXY_APP_MAXPAYLOAD_SIZE     256  ///<消息体的长度
 
+
+#define APN_PROXY_CHANNEL_PREFIX       "ch_" ///<配置文件中channel的前缀
+#define APN_PROXY_APP_PREFIX           "app_" ///<配置文件中app的前缀
+#define APN_PROXY_CHANNEL_TYPE_DEV     "dev"  ///<develope类型的channel
+#define APN_PROXY_CHANNEL_TYPE_RELEASE "release" ///<release类型的channel
 #endif

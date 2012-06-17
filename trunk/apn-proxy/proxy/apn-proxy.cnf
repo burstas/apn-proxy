@@ -2,6 +2,7 @@
 [common]
 home=/usr/home/wenbo/jpool/src/unistor/trunk/unistor/unistor/bin
 listen=127.0.0.1:2181
+conn_connect_milli_second=10
 check_milli_second=1
 [ch_1]
 thread=1
@@ -10,7 +11,7 @@ type=dev/release
 thread=5
 type=dev/release
 [app_a]
-'[app_b]
+[app_b]
 channel=ch_1,ch_2
 cert_file=
 key_file=

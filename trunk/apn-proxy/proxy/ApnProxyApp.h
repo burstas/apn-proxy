@@ -6,25 +6,28 @@
     联系方式：email:cwinux@gmail.com；微博:http://t.sina.com.cn/cwinux
 */
 #include "CwxAppFramework.h"
-#include "CwxEchoConfig.h"
-#include "CwxEchoEventHandler.h"
+#include "ApnProxyConfig.h"
+#include "ApnProxyHandler.h"
+#include "ApnProxyTss.h"
 
-#define ECHO_APP_VERSION "1.0"
-#define ECHO_MODIFY_DATE "2010-08-29"
+#define APN_PROXY_APP_VERSION "0.1"
+#define APN_PROXY_APP_MODIFY_DATE "2012-06-17"
 
 
-///多线程的echo服务，支持TCP与UNIX-DOMAIN两种协议
-class CwxEchoApp : public CwxAppFramework{
+///多线程的apple APN Proxy服务
+class  ApnProxyApp: public CwxAppFramework{
 public:
     enum{
         LOG_FILE_SIZE = 30, ///<每个可循环使用日志文件的MByte
         LOG_FILE_NUM = 7, ///<可循环使用日志文件的数量
-        SVR_TYPE_ECHO = CwxAppFramework::SVR_TYPE_USER_START ///<echo服务的服务类型，及SVR-ID的数值
+        SVR_TYPE_APN = CwxAppFramework::SVR_TYPE_USER_START, ///<proxy服务的服务类型，及SVR-ID的数值
+        APN_MSG_TYPE_NOTICE = 1, ///<notice的消息类型
+        APN_MSG_TYPE_NOTICE_REPLY = 2, ///<notice的reply消息类型
     };
     ///构造函数
-	CwxEchoApp();
+	ApnProxyApp();
     ///析构函数
-	virtual ~CwxEchoApp();
+	virtual ~ApnProxyApp();
     ///重载初始化函数
     virtual int init(int argc, char** argv);
 public:

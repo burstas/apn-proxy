@@ -1,19 +1,19 @@
-#include "CwxEchoApp.h"
+#include "ApnProxyApp.h"
 #include "CwxDate.h"
 
 ///构造函数
-CwxEchoApp::CwxEchoApp()
+ApnProxyApp::ApnProxyApp()
 {
     m_eventHandler = NULL;
     m_threadPool = NULL;
 }
 
 ///析构函数
-CwxEchoApp::~CwxEchoApp(){
+ApnProxyApp::~ApnProxyApp(){
 }
 
 ///初始化
-int CwxEchoApp::init(int argc, char** argv){
+int ApnProxyApp::init(int argc, char** argv){
     string strErrMsg;
     ///首先调用架构的init api
     if (CwxAppFramework::init(argc, argv) == -1) return -1;
@@ -32,7 +32,7 @@ int CwxEchoApp::init(int argc, char** argv){
 }
 
 ///配置运行环境信息
-int CwxEchoApp::initRunEnv(){
+int ApnProxyApp::initRunEnv(){
     ///设置系统的时钟间隔，最小刻度为1ms，此为1s。
     this->setClick(1000);//1s
     ///设置工作目录
@@ -67,7 +67,7 @@ int CwxEchoApp::initRunEnv(){
         this->m_config.m_listen.getPort(),
         false,
         CWX_APP_MSG_MODE,
-        CwxEchoApp::setSockAttr,
+        ApnProxyApp::setSockAttr,
         this))
     {
         CWX_ERROR(("Can't register the echo acceptor port: addr=%s, port=%d",
@@ -99,12 +99,12 @@ int CwxEchoApp::initRunEnv(){
 }
 
 ///时钟函数，什么也没有做
-void CwxEchoApp::onTime(CwxTimeValue const& current){
+void ApnProxyApp::onTime(CwxTimeValue const& current){
     CwxAppFramework::onTime(current);
 }
 
 ///信号处理函数
-void CwxEchoApp::onSignal(int signum){
+void ApnProxyApp::onSignal(int signum){
     switch(signum){
     case SIGQUIT: 
         ///若监控进程通知退出，则推出
@@ -120,7 +120,7 @@ void CwxEchoApp::onSignal(int signum){
 }
 
 ///echo请求的请求消息
-int CwxEchoApp::onRecvMsg(CwxMsgBlock* msg, CwxAppHandler4Msg& conn, CwxMsgHead const& header, bool& bSuspendConn){
+int ApnProxyApp::onRecvMsg(CwxMsgBlock* msg, CwxAppHandler4Msg& conn, CwxMsgHead const& header, bool& bSuspendConn){
 
     msg->event().setSvrId(conn.getConnInfo().getSvrId());
     msg->event().setHostId(conn.getConnInfo().getHostId());
@@ -139,9 +139,9 @@ int CwxEchoApp::onRecvMsg(CwxMsgBlock* msg, CwxAppHandler4Msg& conn, CwxMsgHead 
 
 }
 
-int CwxEchoApp::setSockAttr(CWX_HANDLE handle, void* arg)
+int ApnProxyApp::setSockAttr(CWX_HANDLE handle, void* arg)
 {
-    CwxEchoApp* app=(CwxEchoApp*)arg;
+    ApnProxyApp* app=(ApnProxyApp*)arg;
     int iSockBuf = 1024 * 1024;
     while (setsockopt(handle, SOL_SOCKET, SO_SNDBUF, (void*)&iSockBuf, sizeof(iSockBuf)) < 0)
     {
@@ -192,7 +192,7 @@ int CwxEchoApp::setSockAttr(CWX_HANDLE handle, void* arg)
     return 0;
 }
 
-void CwxEchoApp::destroy()
+void ApnProxyApp::destroy()
 {
     if (m_threadPool){
         m_threadPool->stop();

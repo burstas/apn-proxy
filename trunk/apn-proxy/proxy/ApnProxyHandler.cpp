@@ -7,6 +7,7 @@ int ApnProxyHandler::onRecvMsg(CwxMsgBlock*& msg, CwxTss* tss){
     int ret = APN_PROXY_ERR_SUCCESS;
     char const* szErrMsg = NULL;
     CwxKeyValueItem const* app = NULL;
+    CwxKeyValueItem const* channel = NULL;
     CwxKeyValueItem const* dev = NULL;
     CwxKeyValueItem const* content = NULL;
     CWX_UINT32   uiId = 0;
@@ -24,6 +25,8 @@ int ApnProxyHandler::onRecvMsg(CwxMsgBlock*& msg, CwxTss* tss){
             szErrMsg = pTss->m_pReader->getErrMsg();
             break;
         }
+        ///获取channel
+        channel = pTss->m_pReader->getKey(APN_PROXY_KEY_CH, false);
         ///获取app
         app = pTss->m_pReader->getKey(APN_PROXY_KEY_APP, false);
         if (!app){
@@ -122,6 +125,15 @@ int ApnProxyHandler::onRecvMsg(CwxMsgBlock*& msg, CwxTss* tss){
         }
         
     }while(0);
+
+    CWX_INFO(("notice: channel=%s,app=%s,dev=%s,id=%u,expire=%u,ret=%d,c=%s",
+        channel?channel->m_szData:"",
+        app?app->m_szData:"",
+        dev?dev->m_szData:"",
+        uiId,
+        uiExpire,
+        ret,
+        content?content->m_szData:""));
 
     ApnProxyApp::replyMsg(m_pApp,
         msg->event().getConnId(),

@@ -18,6 +18,7 @@
 class  ApnProxyApp: public CwxAppFramework{
 public:
     enum{
+        APN_MAX_REPLY_BUF_SIZE = 1024 * 1024, ///<状态查询的最大buf size
         LOG_FILE_SIZE = 30, ///<每个可循环使用日志文件的MByte
         LOG_FILE_NUM = 7, ///<可循环使用日志文件的数量
         SVR_TYPE_APN = CwxAppFramework::SVR_TYPE_USER_START, ///<proxy服务的服务类型，及SVR-ID的数值
@@ -52,6 +53,10 @@ protected:
 	virtual int initRunEnv();
     virtual void destroy();
 private:
+    void outputResult(ApnProxyConfigChannel* ch,
+        ApnProxyTss** pTss,
+        char const* szApp,
+        char*& szResult);
     ///收到notice消息；返回值：0，成功；-1：失败
     int  recvNoticeMsg(CwxMsgBlock* msg);
     ///收到channel查询消息；返回值：0，成功；-1：失败
@@ -76,6 +81,7 @@ private:
     map<string, pair<CwxThreadPool*, ApnProxyTss**> >  m_threadPools; ///<线程池map
     ApnProxyConfig               m_config;///<配置文件对象
     ApnProxyTss                  m_tss; ///<主线程的tss对象
+    char                         m_szBuf[APN_MAX_REPLY_BUF_SIZE];
 };
 #endif
 

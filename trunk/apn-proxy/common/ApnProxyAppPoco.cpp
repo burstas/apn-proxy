@@ -49,11 +49,10 @@ int ApnProxyAppPoco::sendEnhancedNotice(ApnProxySsl *ssl, ///<ssl连接
     /* message format is, |COMMAND|TOKENLEN|TOKEN|PAYLOADLEN|PAYLOAD| */
     char* pPos = sendBuf;
     CWX_UINT16  unLen=0;
-    CWX_UINT32  uiValue=0;
 
     /* message format is, |COMMAND|ID|EXPIRY|TOKENLEN|TOKEN|PAYLOADLEN|PAYLOAD| */
     /* command */
-    pPos=ucCmd; pPos++;
+    *pPos=ucCmd; pPos++;
     /* provider preference ordered ID */
     memcpy(pPos, &uiId, sizeof(uiId)); pPos += sizeof(uiId);
     /* expiry date network order */
@@ -77,7 +76,7 @@ int ApnProxyAppPoco::sendEnhancedNotice(ApnProxySsl *ssl, ///<ssl连接
 int ApnProxyAppPoco::readEnhancedNoticeErr(ApnProxySsl *ssl, ///<ssl连接
                                            CWX_UINT8& ucStatus, ///<错误代码
                                            CWX_UINT32& uiId,  ///<对应的消息id
-                                           CWX_UINT32 uiMilliTimeout=1, ///<超时时间
+                                           CWX_UINT32 uiMilliTimeout, ///<超时时间
                                            char* szErr2K ///<错误信息
                                            )
 {

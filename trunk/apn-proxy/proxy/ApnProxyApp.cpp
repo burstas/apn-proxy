@@ -173,20 +173,307 @@ void ApnProxyApp::destroy()
 
 ///收到notice消息；返回值：0，成功；-1：失败
 int  ApnProxyApp::recvNoticeMsg(CwxMsgBlock* msg){
-
+    int ret = APN_PROXY_ERR_SUCCESS;
+    char const* szErrMsg = NULL;
+    CwxKeyValueItem const* app = NULL;
+    CwxKeyValueItem const* channel = NULL;
+    do{
+        if (!m_tss->m_pReader->unpack(msg->rd_ptr(), msg->length(), false, true)){
+            ret = APN_PROXY_ERR_INVALID_PACKAGE;
+            szErrMsg = m_tss->m_pReader->getErrMsg();
+            break;
+        }
+        ///获取app
+        app = m_tss->m_pReader->getKey(APN_PROXY_KEY_APP, false);
+        if (!app){
+            ret = APN_PROXY_ERR_MISSING_APP;
+            szErrMsg = "Missing [app] parameter";
+            break;
+        }
+        ///获取channel
+        channel = m_tss->m_pReader->getKey(APN_PROXY_KEY_CH, false);
+        if (!channel){
+            ret = APN_PROXY_ERR_MISSING_CHANNEL;
+            szErrMsg = "Missing [ch] parameter";
+            break;
+        }
+        ///检查app是否存在
+        if (m_config.m_apps.find(string(app->m_szData)) == m_config.m_apps.end()){
+            ret = APN_PROXY_ERR_NO_APP;
+            szErrMsg = "The app doesn't exist.";
+            break;
+        }
+        ///检查channel是否存在
+        if (m_threadPools.find(string(channel->m_szData)) == m_config.m_channels.end()){
+            ret = APN_PROXY_ERR_NO_CHANNEL;
+            szErrMsg = "The channel doesn't exist.";
+            break;
+        }
+        CwxThreadPool* pool= m_threadPools.find(string(channel->m_szData))->second.first;
+        pool->append(msg);
+        return 0;
+    }while(0);
+    replyMsg(this,
+        msg->event().getConnId(),
+        msg->event().getMsgHeader().getMsgType()+1,
+        msg->event().getMsgHeader().getTaskId(),
+        false,
+        ret,
+        szErrMsg,
+        NULL,
+        0);
+    return 0;
 }
 ///收到channel查询消息；返回值：0，成功；-1：失败
 int  ApnProxyApp::recvQueryChannelMsg(CwxMsgBlock* msg){
+    int ret = APN_PROXY_ERR_SUCCESS;
+    char const* szErrMsg = NULL;
+    char const* szResult = NULL;
+    CwxKeyValueItem const* channel = NULL;
+    CwxThreadPool* pool=NULL;
+    ApnProxyConfigChannel* ch=NULL;
+    do{
+        if (!m_tss->m_pReader->unpack(msg->rd_ptr(), msg->length(), false, true)){
+            ret = APN_PROXY_ERR_INVALID_PACKAGE;
+            szErrMsg = m_tss->m_pReader->getErrMsg();
+            break;
+        }
+        ///获取channel
+        channel = m_tss->m_pReader->getKey(APN_PROXY_KEY_CH, false);
+        if (channel){
+            ///检查channel是否存在
+            if (m_threadPools.find(string(channel->m_szData)) == m_config.m_channels.end()){
+                ret = APN_PROXY_ERR_NO_CHANNEL;
+                szErrMsg = "The channel doesn't exist.";
+                break;
+            }
+            pool= m_threadPools.find(string(channel->m_szData))->second.first;
+            ch = m_config.m_channels.find(string(channel->m_szData))->second;
+            CwxCommon::snprintf(m_szBuf,
+                APN_MAX_REPLY_BUF_SIZE -1,
+                "%s:%u:%s:%u:%s",
+                ch->m_strChannelName.c_str(),
+                ch->m_unThreadNum,
+                ch->m_bRelease?APN_PROXY_CHANNEL_TYPE_RELEASE:APN_PROXY_CHANNEL_TYPE_DEV,
+                pool->getQueuedMsgNum(),
+                ch->m_strApps.c_str());
+            szResult = m_szBuf;
+        }else{
+            map<string, pair<CwxThreadPool*, ApnProxyTss**> >::iterator iter = m_threadPools.begin();
+            szResult = m_szBuf;
+            while(iter != m_threadPools.end()){
+                pool = iter->second.first;
+                ch = m_config.m_channels.find(iter->first)->second;
+                if (szResult != m_szBuf) {
+                    szResult[0] = '\n';
+                    szResult++;
+                }
+                CwxCommon::snprintf(szResult,
+                    APN_MAX_REPLY_BUF_SIZE -(szResult - m_szBuf) - 1,
+                    "%s:%u:%s:%u:%s",
+                    ch->m_strChannelName.c_str(),
+                    ch->m_unThreadNum,
+                    ch->m_bRelease?APN_PROXY_CHANNEL_TYPE_RELEASE:APN_PROXY_CHANNEL_TYPE_DEV,
+                    pool->getQueuedMsgNum(),
+                    ch->m_strApps.c_str());
+                szResult += strlen(szResult);
+                iter++;
+            }
+            szResult = m_szBuf;
+        }
+        return 0;
+    }while(0);
+    replyMsg(this,
+        msg->event().getConnId(),
+        msg->event().getMsgHeader().getMsgType() + 1,
+        msg->event().getMsgHeader().getTaskId(),
+        false,
+        ret,
+        szErrMsg,
+        szResult,
+        0);
+    return 0;
 
 }
 ///收到app查询消息；返回值：0，成功；-1：失败
 int  ApnProxyApp::recvQueryAppMsg(CwxMsgBlock* msg){
-
+    int ret = APN_PROXY_ERR_SUCCESS;
+    char const* szErrMsg = NULL;
+    char const* szResult = NULL;
+    CwxKeyValueItem const* app = NULL;
+    CwxKeyValueItem const* channel = NULL;
+    ApnProxyConfigApp const* pApp=NULL;
+    list<string>::iterator ch_iter;
+    string strValue;
+    do{
+        if (!m_tss->m_pReader->unpack(msg->rd_ptr(), msg->length(), false, true)){
+            ret = APN_PROXY_ERR_INVALID_PACKAGE;
+            szErrMsg = m_tss->m_pReader->getErrMsg();
+            break;
+        }
+        ///获取app
+        app = m_tss->m_pReader->getKey(APN_PROXY_KEY_APP, false);
+        if (app){
+            ///检查app是否存在
+            if (m_config.m_apps.find(string(app->m_szData)) == m_config.m_apps.end()){
+                ret = APN_PROXY_ERR_NO_APP;
+                szErrMsg = "The app doesn't exist.";
+                break;
+            }
+            pApp = m_config.m_apps.find(string(app->m_szData))->second;
+            ch_iter = pApp->m_channels.begin();
+            strValue = "";
+            while(ch_iter != pApp->m_channels.end()){
+                if (strValue.length()) strValue += ",";
+                strValue += *ch_iter;
+                ch_iter++;
+            }
+            CwxCommon::snprintf(m_szBuf,
+                APN_MAX_REPLY_BUF_SIZE -1,
+                "%s:%s",
+                pApp->m_strAppName.c_str(),
+                strValue.c_str());
+            szResult = m_szBuf;
+        }else{
+            map<string, ApnProxyConfigApp*>::iterator iter = m_config.m_apps.begin();
+            szResult = m_szBuf;
+            while(iter != m_config.m_apps.end()){
+                pApp = iter->second;
+                ch_iter = pApp->m_channels.begin();
+                strValue = "";
+                while(ch_iter != pApp->m_channels.end()){
+                    if (strValue.length()) strValue += ",";
+                    strValue += *ch_iter;
+                    ch_iter++;
+                }
+                if (szResult != m_szBuf){
+                    szResult[0]='\n';
+                    szResult++;
+                }
+                CwxCommon::snprintf(szResult,
+                    szResult - m_szBuf - 1,
+                    "%s:%s",
+                    pApp->m_strAppName.c_str(),
+                    strValue.c_str());
+                szResult = strlen(szResult);
+                iter++;
+            }
+            szResult = m_szBuf;
+        }
+        return 0;
+    }while(0);
+    replyMsg(this,
+        msg->event().getConnId(),
+        msg->event().getMsgHeader().getMsgType()+1,
+        msg->event().getMsgHeader().getTaskId(),
+        false,
+        ret,
+        szErrMsg,
+        NULL,
+        0);
+    return 0;
 }
 ///收到thread状态查询消息；返回值：0，成功；-1：失败
 int  ApnProxyApp::recvQueryThreadMsg(CwxMsgBlock* msg){
+    int ret = APN_PROXY_ERR_SUCCESS;
+    char const* szErrMsg = NULL;
+    CwxKeyValueItem const* app = NULL;
+    CwxKeyValueItem const* channel = NULL;
+    char const* szResult = NULL;
+    do{
+        if (!m_tss->m_pReader->unpack(msg->rd_ptr(), msg->length(), false, true)){
+            ret = APN_PROXY_ERR_INVALID_PACKAGE;
+            szErrMsg = m_tss->m_pReader->getErrMsg();
+            break;
+        }
+        ///获取app
+        app = m_tss->m_pReader->getKey(APN_PROXY_KEY_APP, false);
+        ///检查app是否存在
+        if (app && (m_config.m_apps.find(string(app->m_szData)) == m_config.m_apps.end())){
+            ret = APN_PROXY_ERR_NO_APP;
+            szErrMsg = "The app doesn't exist.";
+            break;
+        }
+        ///获取channel
+        channel = m_tss->m_pReader->getKey(APN_PROXY_KEY_CH, false);
+        ///检查channel是否存在
+        if (channel && (m_threadPools.find(string(channel->m_szData)) == m_config.m_channels.end())){
+            ret = APN_PROXY_ERR_NO_CHANNEL;
+            szErrMsg = "The channel doesn't exist.";
+            break;
+        }
+        ApnProxyTss** pTss = NULL;
+        ApnProxyConfigChannel* ch=NULL;
+        map<string, pair<CwxThreadPool*, ApnProxyTss**> >  m_threadPools; ///<线程池map
 
+        if (channel){
+            szResult = m_szBuf;
+            pTss = m_threadPools.find(string(channel->m_szData))->second.second;
+            ch = m_config.m_channels.find(string(channel->m_szData))->second;
+            outputResult(ch, pTss, app?app->m_szData:NULL, szResult);
+            szResult = m_szBuf;
+        }else{
+            map<string, pair<CwxThreadPool*, ApnProxyTss**> >::iterator iter = m_threadPools.begin();
+            szResult = m_szBuf;
+            while(iter != m_threadPools.end()){
+                pTss = iter->second.second;
+                ch = m_config.m_channels.find(iter->first)->second;
+                outputResult(ch, pTss, app?app->m_szData:NULL, szResult);
+                iter++;
+            }
+            szResult = m_szBuf;
+        }
+    }while(0);
+    replyMsg(this,
+        msg->event().getConnId(),
+        msg->event().getMsgHeader().getMsgType()+1,
+        msg->event().getMsgHeader().getTaskId(),
+        false,
+        ret,
+        szErrMsg,
+        szResult,
+        0);
+    return 0;
 }
+
+void ApnProxyApp::outputResult(ApnProxyConfigChannel* ch, ApnProxyTss** pTss, char const* szApp, char*& szResult){
+    CWX_UINT32 i = 0;
+    ApnProxySsl* ssl=NULL;
+    for (i=0; i<ch->m_unThreadNum; i++){
+        if (szResult != m_szBuf){
+            szResult[0] = '\n';
+            szResult++;
+        }
+        if (szApp){
+            ssl = pTss[i]->m_appSsl.find(string(szApp))->second;
+            CwxCommon::snprintf(szResult,
+                APN_MAX_REPLY_BUF_SIZE - (szResult - m_szBuf) - 1,
+                "%s:%s:%u:%s:%s:",
+                ch->m_strChannelName.c_str(),
+                szApp,
+                i,
+                ch->m_bRelease?APN_PROXY_CHANNEL_TYPE_RELEASE:APN_PROXY_CHANNEL_TYPE_DEV,
+                ssl->isConnected());
+            szResult += strlen(szResult);
+        }else{
+            map<string, ApnProxySsl*>::iterator ssl_iter = pTss[i]->m_appSsl.begin();
+            while(ssl_iter != pTss[i]->m_appSsl.end()){
+                ssl = ssl_iter->second;
+                CwxCommon::snprintf(szResult,
+                    APN_MAX_REPLY_BUF_SIZE - (szResult - m_szBuf) - 1,
+                    "%s:%s:%u:%s:%s:",
+                    ch->m_strChannelName.c_str(),
+                    ssl_iter->first.c_str(),
+                    i,
+                    ch->m_bRelease?APN_PROXY_CHANNEL_TYPE_RELEASE:APN_PROXY_CHANNEL_TYPE_DEV,
+                    ssl->isConnected());
+                szResult += strlen(szResult);
+                ssl_iter++;
+            }
+        }
+    }
+}
+
 ///消息回复
 void ApnProxyApp::replyMsg(ApnProxyApp* pApp, ///<app对象
                      CWX_UINT32 uiConnId, ///<连接id

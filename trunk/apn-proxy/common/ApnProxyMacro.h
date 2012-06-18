@@ -34,8 +34,21 @@ CWINUX_USING_NAMESPACE
 #define APN_PROXY_KEY_ERR              "err"
 #define APN_PROXY_KEY_STATUS           "status"
 #define APN_PROXY_KEY_RESULT           "result"
+#define APN_PROXY_KEY_APP              "app"
+#define APN_PROXY_KEY_CH                "ch"
+#define APN_PROXY_KEY_DEV               "dev"
+#define APN_PROXY_KEY_C                 "c"
+#define APN_PROXY_KEY_ID                "id"
+#define APN_PROXY_KEY_E                 "e"
+
+
 
 ///错误代码的定义
 #define APN_PROXY_ERR_SUCCESS           0   ///<成功
 #define APN_PROXY_ERR_UNKNOWN_MSG       1   ///<未知的消息类型
+#define APN_PROXY_ERR_INVALID_PACKAGE   2   ///<数据包无效
+#define APN_PROXY_ERR_MISSING_APP       3   ///<缺少APP
+#define APN_PROXY_ERR_MISSING_CHANNEL   4   ///<缺少channel参数
+#define APN_PROXY_ERR_NO_APP            5   ///<指定的app不存在
+#define APN_PROXY_ERR_NO_CHANNEL        6   ///<指定的channel不存在
 #endif

@@ -20,11 +20,13 @@ public:
             m_strChannelName = item.m_strChannelName;
             m_unThreadNum = item.m_unThreadNum;
             m_bRelease = item.m_bRelease;
+            m_strApps = item.m_strApps;
         }
         return *this;
     }
 public:
     string          m_strChannelName; ///<channel的名字
+    string          m_strApps;       ///<app的列表
     CWX_UINT16      m_unThreadNum; ///<通道的线程数量
     bool            m_bRelease; ///<是否采用release配置
 };

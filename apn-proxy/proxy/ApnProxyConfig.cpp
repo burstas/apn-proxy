@@ -164,6 +164,7 @@ int ApnProxyConfig::loadConfig(string const & strConfFile){
                 snprintf(m_szError, 2047, "[%s:ca_path]'s path doesn't exist, path:%s.", iter->c_str(), value.c_str());
                 return -1;
             }
+            pApp->m_strCaPath = value;
         }
         iter++;
     }

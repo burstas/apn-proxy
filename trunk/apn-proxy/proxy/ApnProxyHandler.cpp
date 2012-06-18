@@ -2,42 +2,135 @@
 #include "ApnProxyApp.h"
 
 ///echo请求的处理函数
-int ApnProxyHandler::onRecvMsg(CwxMsgBlock*& msg, CwxTss* ){
-    ///设置echo回复的消息类型，为请求的消息类型+1
-    msg->event().getMsgHeader().setMsgType(msg->event().getMsgHeader().getMsgType() + 1);
-    ///设置echo回复的数据包长度
-    msg->event().getMsgHeader().setDataLen(msg->length());
-    ///创建回复的数据包
-    CwxMsgBlock* pBlock = CwxMsgBlockAlloc::malloc(msg->length() + CwxMsgHead::MSG_HEAD_LEN);
-    ///拷贝数据包的包头
-    memcpy(pBlock->wr_ptr(), msg->event().getMsgHeader().toNet(), CwxMsgHead::MSG_HEAD_LEN);
-    ///滑动block的写指针
-    pBlock->wr_ptr(CwxMsgHead::MSG_HEAD_LEN);
-    ///拷贝数据包的数据
-    memcpy(pBlock->wr_ptr(), msg->rd_ptr(), msg->length());
-    ///滑动block的写指针
-    pBlock->wr_ptr(msg->length());
-    ///设置回复消息的发送控制信息
-    pBlock->send_ctrl().reset();
-    ///设置回复消息对应连接的svr-id
-    pBlock->send_ctrl().setSvrId(msg->event().getSvrId());
-    ///设置回复消息对应连接的host-id
-    pBlock->send_ctrl().setHostId(msg->event().getHostId());
-    ///设置回复消息的连接id
-    pBlock->send_ctrl().setConnId(msg->event().getConnId());
-    ///回复消息
-    if (0 != this->m_pApp->sendMsgByConn(pBlock))
-    {
-        CWX_ERROR(("Failure to send msg"));
-        return -1;
-    }
-    m_ullMsgNum ++;
-    if (m_ullMsgNum && !(m_ullMsgNum%10000))
-    {
-        char szBuf[64];
-        CwxCommon::toString(m_ullMsgNum, szBuf, 10);
-        CWX_INFO(("Recv echo message num:%s", szBuf));
-    }
+int ApnProxyHandler::onRecvMsg(CwxMsgBlock*& msg, CwxTss* tss){
+    int ret = APN_PROXY_ERR_SUCCESS;
+    char const* szErrMsg = NULL;
+    CwxKeyValueItem const* app = NULL;
+    CwxKeyValueItem const* dev = NULL;
+    CwxKeyValueItem const* content = NULL;
+    CWX_UINT32   uiId = 0;
+    CWX_UINT32   uiExpire=0;
+    CWX_UINT32   uiCheck=0;
+    CWX_UINT8    ucState = 0;
+    CWX_UINT32   i=0;
+    char binDevId[APN_PROXY_APP_DEVICE_BINARY_SIZE];
+    char szTmp[4];
+
+    ApnProxyTss* pTss = (ApnProxyTss*)tss;
+    do{
+        if (!pTss->m_pReader->unpack(msg->rd_ptr(), msg->length(), false, true)){
+            ret = APN_PROXY_ERR_INVALID_PACKAGE;
+            szErrMsg = pTss->m_pReader->getErrMsg();
+            break;
+        }
+        ///获取app
+        app = pTss->m_pReader->getKey(APN_PROXY_KEY_APP, false);
+        if (!app){
+            ret = APN_PROXY_ERR_MISSING_APP;
+            szErrMsg = "Missing [app] parameter";
+            break;
+        }
+        ///检查app是否存在
+        map<string, ApnProxySsl*>::iterator iter = pTss->m_appSsl.find(string(app->m_szData));
+        if ( iter == pTss->m_appSsl.end()){
+            ret = APN_PROXY_ERR_NO_APP;
+            szErrMsg = "The app doesn't exist.";
+            break;
+        }
+        ApnProxySsl* ssl = iter->second;
+        ///获取dev
+        dev = pTss->m_pReader->getKey(APN_PROXY_KEY_DEV, false);
+        if (!dev){
+            ret = APN_PROXY_ERR_MISSING_DEV;
+            szErrMsg = "Missing [dev] parameter";
+            break;
+        }
+        ///转化id
+        memset(binDevId, 0x00, APN_PROXY_APP_DEVICE_BINARY_SIZE);
+        while(i < dev->m_uiDataLen/2){
+            szTmp[0]=dev->m_szData[i*2];
+            szTmp[1]=dev->m_szData[i*2+1];
+            szTmp[2]=0;
+            binDevId[i] = (CWX_UINT8)strtoul(szTmp, NULL, 16);
+            if (i >= APN_PROXY_APP_DEVICE_BINARY_SIZE) break;
+        }
+        if (i < APN_PROXY_APP_DEVICE_BINARY_SIZE){
+            memmove(binDevId + (APN_PROXY_APP_DEVICE_BINARY_SIZE - i), binDevId, i);
+            memset(binDevId, 0x00, APN_PROXY_APP_DEVICE_BINARY_SIZE - i);
+        }
+        ///获取内容
+        content = pTss->m_pReader->getKey(APN_PROXY_KEY_DEV, false);
+        if (!content){
+            ret = APN_PROXY_ERR_MISSING_CONTENT;
+            szErrMsg = "Missing [c] parameter";
+            break;
+        }
+        if (content->m_uiDataLen > APN_PROXY_APP_MAXPAYLOAD_SIZE){
+            ret = APN_PROXY_ERR_CONTENT_TOO_LEN;
+            szErrMsg = "msg is too long";
+            break;
+        }
+        ///获取id
+        pTss->m_pReader->getKey(APN_PROXY_KEY_ID, uiId);
+        ///获取expire
+        pTss->m_pReader->getKey(APN_PROXY_KEY_E, uiExpire);
+        if (uiExpire){
+            if(uiExpire < time(NULL)) uiExpire += (CWX_UINT32)time(NULL);
+        }else if (uiId){
+            uiExpire = time(NULL);
+            uiExpire += APN_PROXY_DEF_EXPIRE;
+        }
+        ///获取check
+        pTss->m_pReader->getKey(APN_PROXY_KEY_CHECK, uiCheck);
+
+        if (!ssl->isConnected()){
+            if (0 != ssl->connect(m_pApp->getConfig()->m_uiConnTimeoutMilliSecond, pTss->m_szBuf2K)){
+                ret = APN_PROXY_ERR_FAIL_CONNECT;
+                szErrMsg = pTss->m_szBuf2K;
+                break;
+            }
+        }
+
+        if (uiExpire){
+            if (0 != ApnProxyAppPoco::sendNotice(ssl, binDevId, content->m_szData, content->m_uiDataLen, pTss->m_szBuf2K)){
+                ssl->disconnect();
+                ret = APN_PROXY_ERR_NOTICE_FAIL;
+                szErrMsg = pTss->m_szBuf2K;
+                break;
+            }
+        }else{
+            if (0 != ApnProxyAppPoco::sendEnhancedNotice(ssl, uiExpire, uiId, binDevId, content->m_szData, content->m_uiDataLen, pTss->m_szBuf2K)){
+                ssl->disconnect();
+                ret = APN_PROXY_ERR_NOTICE_FAIL;
+                szErrMsg = pTss->m_szBuf2K;
+                break;
+            }
+        }
+        if (uiCheck){
+            if (!ssl->isReadReady(m_pApp->getConfig().m_uiCheckMilliSecond)) break;
+            ret = APN_PROXY_ERR_NOTICE_FAIL;
+            szErrMsg = "Failure to send msg.";
+            if (uiExpire){
+                ApnProxyAppPoco::readEnhancedNoticeErr(ssl,
+                    ucState,
+                    uiId,
+                    m_pApp->getConfig().m_uiCheckMilliSecond,
+                    pTss->m_szBuf2K)
+            }
+            break;
+        }
+        
+    }while(0);
+
+    ApnProxyApp::replyMsg(m_pApp,
+        msg->event().getConnId(),
+        msg->event().getMsgHeader().getMsgType(),
+        msg->event().getMsgHeader().getTaskId(),
+        false,
+        ret,
+        szErrMsg,
+        NULL,
+        ucState);
     return 1;
 }
 

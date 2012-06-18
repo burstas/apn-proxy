@@ -84,8 +84,12 @@ public:
 };
 
 ///配置文件加载对象
-class ApnProxyConfig
-{
+class ApnProxyConfig{
+public:
+    enum{
+        APN_PROXY_DEF_CHECK_MILLI_SEC = 10,
+        APN_PROXY_DEF_CONN_TIMEOUT_MILLI_SEC = 1000
+    };
 public:
     ApnProxyConfig(){
         m_uiCheckMilliSecond = 10;

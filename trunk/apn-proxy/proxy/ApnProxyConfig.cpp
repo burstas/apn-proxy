@@ -31,6 +31,7 @@ int ApnProxyConfig::loadConfig(string const & strConfFile){
         return -1;
     }
     m_uiConnTimeoutMilliSecond = strtoul(value.c_str(), NULL, 10);
+    if (!m_uiConnTimeoutMilliSecond) m_uiConnTimeoutMilliSecond = APN_PROXY_DEF_CONN_TIMEOUT_MILLI_SEC;
 
     // load query check_milli_second
 	if (!parser.getAttr("common", "check_milli_second", value) || !value.length()){
@@ -38,6 +39,7 @@ int ApnProxyConfig::loadConfig(string const & strConfFile){
 		return -1;
 	}
 	m_uiCheckMilliSecond = strtoul(value.c_str(), NULL, 10);
+    if (!m_uiCheckMilliSecond) m_uiCheckMilliSecond = APN_PROXY_DEF_CHECK_MILLI_SEC;
 
 	//load listen
 	if (!parser.getAttr("common", "listen", value) || !value.length()){

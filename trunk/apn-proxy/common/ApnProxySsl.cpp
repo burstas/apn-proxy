@@ -214,6 +214,22 @@ int ApnProxySsl::send_n (char const* szDat, CWX_UINT32 uiDatLen, char* szErr2K){
 
 }
 
+///检查是否可读
+bool ApnProxySsl::isReadReady(CWX_UINT32 uiMilliTimeout){
+    if ((-1 == m_stream.getHandle()) || !m_ssl){
+        return true;
+    }
+    CwxTimeValue timeValue(uiMilliTimeout/1000, (uiMilliTimeout%1000)*1000);
+    CwxTimeouter timer(&timeValue);
+    if (uiMilliTimeout){
+        if (CwxSocket::handleReady(m_stream.getHandle(), &timer, true, false, false, true)<=0)
+            return true;
+        if (timer.timeout()) return false;
+        return true;
+    }
+    CwxSocket::handleReady(m_stream.getHandle(), NULL, true, false, false, true);
+    return true;
+}
 
 ///关闭连接
 void ApnProxySsl::disconnect(){

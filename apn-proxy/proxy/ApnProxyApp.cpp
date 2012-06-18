@@ -307,7 +307,7 @@ int  ApnProxyApp::recvQueryAppMsg(CwxMsgBlock* msg){
     CwxKeyValueItem const* app = NULL;
 
     ApnProxyConfigApp const* pApp=NULL;
-    list<string>::iterator ch_iter;
+    list<string>::const_iterator ch_iter;
     string strValue;
     do{
         if (!m_tss.m_pReader->unpack(msg->rd_ptr(), msg->length(), false, true)){

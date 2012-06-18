@@ -41,7 +41,7 @@ public:
     static int readEnhancedNoticeErr(ApnProxySsl *ssl, ///<ssl连接
         CWX_UINT8& ucStatus, ///<错误代码
         CWX_UINT32& uiId,  ///<对应的消息id
-        CWX_UINT32 uiMilliTimeout=1, ///<超时时间
+        CWX_UINT32 uiMilliTimeout, ///<超时时间
         char* szErr2K ///<错误信息
         );
     ///获取错误代码的错误消息

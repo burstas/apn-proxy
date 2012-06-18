@@ -407,8 +407,6 @@ int  ApnProxyApp::recvQueryThreadMsg(CwxMsgBlock* msg){
         }
         ApnProxyTss** pTss = NULL;
         ApnProxyConfigChannel* ch=NULL;
-        map<string, pair<CwxThreadPool*, ApnProxyTss**> >  m_threadPools; ///<Ïß³Ì³Ømap
-
         if (channel){
             szResult = m_szBuf;
             pTss = m_threadPools.find(string(channel->m_szData))->second.second;

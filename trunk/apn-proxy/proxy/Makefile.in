@@ -36,8 +36,8 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-bin_PROGRAMS = cwx_echo$(EXEEXT)
-subdir = echo_svr
+bin_PROGRAMS = apn_proxy$(EXEEXT)
+subdir = proxy
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.in
@@ -48,11 +48,15 @@ CONFIG_CLEAN_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
-am_cwx_echo_OBJECTS = cwx_echo-CwxEchoApp.$(OBJEXT) \
-	cwx_echo-CwxEchoConfig.$(OBJEXT) cwx_echo-cwx_echo.$(OBJEXT) \
-	cwx_echo-CwxEchoEventHandler.$(OBJEXT)
-cwx_echo_OBJECTS = $(am_cwx_echo_OBJECTS)
-cwx_echo_DEPENDENCIES =
+am_apn_proxy_OBJECTS = apn_proxy-ApnProxyApp.$(OBJEXT) \
+	apn_proxy-ApnProxyConfig.$(OBJEXT) \
+	apn_proxy-apn_proxy.$(OBJEXT) \
+	apn_proxy-ApnProxyHandler.$(OBJEXT) \
+	apn_proxy-ApnProxyTss.$(OBJEXT) \
+	apn_proxy-ApnProxyAppPoco.$(OBJEXT) \
+	apn_proxy-ApnProxySsl.$(OBJEXT)
+apn_proxy_OBJECTS = $(am_apn_proxy_OBJECTS)
+apn_proxy_DEPENDENCIES =
 DEFAULT_INCLUDES = -I. -I$(srcdir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -64,8 +68,8 @@ LTCXXCOMPILE = $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) \
 CXXLD = $(CXX)
 CXXLINK = $(LIBTOOL) --tag=CXX --mode=link $(CXXLD) $(AM_CXXFLAGS) \
 	$(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-SOURCES = $(cwx_echo_SOURCES)
-DIST_SOURCES = $(cwx_echo_SOURCES)
+SOURCES = $(apn_proxy_SOURCES)
+DIST_SOURCES = $(apn_proxy_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -104,7 +108,7 @@ INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
 LDFLAGS = @LDFLAGS@
 LIBOBJS = @LIBOBJS@
-LIBS = -lcwxapp -lcwxnet -lcwxcmn -lpthread -ldl -lrt
+LIBS = -lcwxapp -lcwxnet -lcwxcmn  -lssl -lpthread -ldl -lrt -lz
 LIBTOOL = @LIBTOOL@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
@@ -161,6 +165,7 @@ localstatedir = @localstatedir@
 mandir = @mandir@
 mkdir_p = @mkdir_p@
 oldincludedir = @oldincludedir@
+openssl_dir = @openssl_dir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
 sbindir = @sbindir@
@@ -169,16 +174,18 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 pkgconfigdir = 
 BUILD_DATE = $(shell date +%F)
-cwx_echo_CPPFLAGS = -D_BUILD_DATE="$(BUILD_DATE)" -W -Wall
-cwx_echo_SOURCES = \
-	CwxEchoApp.cpp\
-	CwxEchoConfig.cpp\
-	cwx_echo.cpp\
-	CwxEchoEventHandler.cpp
+apn_proxy_CPPFLAGS = -D_BUILD_DATE="$(BUILD_DATE)" -W -Wall
+apn_proxy_SOURCES = ApnProxyApp.cpp\
+		ApnProxyConfig.cpp\
+		apn_proxy.cpp\
+		ApnProxyHandler.cpp\
+		ApnProxyTss.cpp\
+		../common/ApnProxyAppPoco.cpp\
+		../common/ApnProxySsl.cpp
 
-cwx_echo_LDADD = 
-cwx_echo_LDFLAGS = -L@cwinux_dir@/lib
-INCLUDES = -I@cwinux_dir@/include/app -I@cwinux_dir@/include/cmn -I@cwinux_dir@/include/net 
+apn_proxy_LDADD = 
+apn_proxy_LDFLAGS = -L@cwinux_dir@/lib -L@openssl_dir@/lib
+INCLUDES = -I@cwinux_dir@/include/app -I@cwinux_dir@/include/cmn -I@cwinux_dir@/include/net  -I@openssl_dir@/include  -I. -I../common
 all: all-am
 
 .SUFFIXES:
@@ -192,9 +199,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu  echo_svr/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu  proxy/Makefile'; \
 	cd $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu  echo_svr/Makefile
+	  $(AUTOMAKE) --gnu  proxy/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
@@ -240,9 +247,9 @@ clean-binPROGRAMS:
 	  echo " rm -f $$p $$f"; \
 	  rm -f $$p $$f ; \
 	done
-cwx_echo$(EXEEXT): $(cwx_echo_OBJECTS) $(cwx_echo_DEPENDENCIES) 
-	@rm -f cwx_echo$(EXEEXT)
-	$(CXXLINK) $(cwx_echo_LDFLAGS) $(cwx_echo_OBJECTS) $(cwx_echo_LDADD) $(LIBS)
+apn_proxy$(EXEEXT): $(apn_proxy_OBJECTS) $(apn_proxy_DEPENDENCIES) 
+	@rm -f apn_proxy$(EXEEXT)
+	$(CXXLINK) $(apn_proxy_LDFLAGS) $(apn_proxy_OBJECTS) $(apn_proxy_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -250,10 +257,13 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cwx_echo-CwxEchoApp.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cwx_echo-CwxEchoConfig.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cwx_echo-CwxEchoEventHandler.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cwx_echo-cwx_echo.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/apn_proxy-ApnProxyApp.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/apn_proxy-ApnProxyAppPoco.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/apn_proxy-ApnProxyConfig.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/apn_proxy-ApnProxyHandler.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/apn_proxy-ApnProxySsl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/apn_proxy-ApnProxyTss.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/apn_proxy-apn_proxy.Po@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	if $(CXXCOMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ $<; \
@@ -276,61 +286,103 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LTCXXCOMPILE) -c -o $@ $<
 
-cwx_echo-CwxEchoApp.o: CwxEchoApp.cpp
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cwx_echo_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT cwx_echo-CwxEchoApp.o -MD -MP -MF "$(DEPDIR)/cwx_echo-CwxEchoApp.Tpo" -c -o cwx_echo-CwxEchoApp.o `test -f 'CwxEchoApp.cpp' || echo '$(srcdir)/'`CwxEchoApp.cpp; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/cwx_echo-CwxEchoApp.Tpo" "$(DEPDIR)/cwx_echo-CwxEchoApp.Po"; else rm -f "$(DEPDIR)/cwx_echo-CwxEchoApp.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='CwxEchoApp.cpp' object='cwx_echo-CwxEchoApp.o' libtool=no @AMDEPBACKSLASH@
+apn_proxy-ApnProxyApp.o: ApnProxyApp.cpp
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(apn_proxy_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT apn_proxy-ApnProxyApp.o -MD -MP -MF "$(DEPDIR)/apn_proxy-ApnProxyApp.Tpo" -c -o apn_proxy-ApnProxyApp.o `test -f 'ApnProxyApp.cpp' || echo '$(srcdir)/'`ApnProxyApp.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/apn_proxy-ApnProxyApp.Tpo" "$(DEPDIR)/apn_proxy-ApnProxyApp.Po"; else rm -f "$(DEPDIR)/apn_proxy-ApnProxyApp.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='ApnProxyApp.cpp' object='apn_proxy-ApnProxyApp.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cwx_echo_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o cwx_echo-CwxEchoApp.o `test -f 'CwxEchoApp.cpp' || echo '$(srcdir)/'`CwxEchoApp.cpp
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(apn_proxy_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o apn_proxy-ApnProxyApp.o `test -f 'ApnProxyApp.cpp' || echo '$(srcdir)/'`ApnProxyApp.cpp
 
-cwx_echo-CwxEchoApp.obj: CwxEchoApp.cpp
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cwx_echo_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT cwx_echo-CwxEchoApp.obj -MD -MP -MF "$(DEPDIR)/cwx_echo-CwxEchoApp.Tpo" -c -o cwx_echo-CwxEchoApp.obj `if test -f 'CwxEchoApp.cpp'; then $(CYGPATH_W) 'CwxEchoApp.cpp'; else $(CYGPATH_W) '$(srcdir)/CwxEchoApp.cpp'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/cwx_echo-CwxEchoApp.Tpo" "$(DEPDIR)/cwx_echo-CwxEchoApp.Po"; else rm -f "$(DEPDIR)/cwx_echo-CwxEchoApp.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='CwxEchoApp.cpp' object='cwx_echo-CwxEchoApp.obj' libtool=no @AMDEPBACKSLASH@
+apn_proxy-ApnProxyApp.obj: ApnProxyApp.cpp
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(apn_proxy_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT apn_proxy-ApnProxyApp.obj -MD -MP -MF "$(DEPDIR)/apn_proxy-ApnProxyApp.Tpo" -c -o apn_proxy-ApnProxyApp.obj `if test -f 'ApnProxyApp.cpp'; then $(CYGPATH_W) 'ApnProxyApp.cpp'; else $(CYGPATH_W) '$(srcdir)/ApnProxyApp.cpp'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/apn_proxy-ApnProxyApp.Tpo" "$(DEPDIR)/apn_proxy-ApnProxyApp.Po"; else rm -f "$(DEPDIR)/apn_proxy-ApnProxyApp.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='ApnProxyApp.cpp' object='apn_proxy-ApnProxyApp.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cwx_echo_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o cwx_echo-CwxEchoApp.obj `if test -f 'CwxEchoApp.cpp'; then $(CYGPATH_W) 'CwxEchoApp.cpp'; else $(CYGPATH_W) '$(srcdir)/CwxEchoApp.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(apn_proxy_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o apn_proxy-ApnProxyApp.obj `if test -f 'ApnProxyApp.cpp'; then $(CYGPATH_W) 'ApnProxyApp.cpp'; else $(CYGPATH_W) '$(srcdir)/ApnProxyApp.cpp'; fi`
 
-cwx_echo-CwxEchoConfig.o: CwxEchoConfig.cpp
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cwx_echo_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT cwx_echo-CwxEchoConfig.o -MD -MP -MF "$(DEPDIR)/cwx_echo-CwxEchoConfig.Tpo" -c -o cwx_echo-CwxEchoConfig.o `test -f 'CwxEchoConfig.cpp' || echo '$(srcdir)/'`CwxEchoConfig.cpp; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/cwx_echo-CwxEchoConfig.Tpo" "$(DEPDIR)/cwx_echo-CwxEchoConfig.Po"; else rm -f "$(DEPDIR)/cwx_echo-CwxEchoConfig.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='CwxEchoConfig.cpp' object='cwx_echo-CwxEchoConfig.o' libtool=no @AMDEPBACKSLASH@
+apn_proxy-ApnProxyConfig.o: ApnProxyConfig.cpp
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(apn_proxy_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT apn_proxy-ApnProxyConfig.o -MD -MP -MF "$(DEPDIR)/apn_proxy-ApnProxyConfig.Tpo" -c -o apn_proxy-ApnProxyConfig.o `test -f 'ApnProxyConfig.cpp' || echo '$(srcdir)/'`ApnProxyConfig.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/apn_proxy-ApnProxyConfig.Tpo" "$(DEPDIR)/apn_proxy-ApnProxyConfig.Po"; else rm -f "$(DEPDIR)/apn_proxy-ApnProxyConfig.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='ApnProxyConfig.cpp' object='apn_proxy-ApnProxyConfig.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cwx_echo_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o cwx_echo-CwxEchoConfig.o `test -f 'CwxEchoConfig.cpp' || echo '$(srcdir)/'`CwxEchoConfig.cpp
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(apn_proxy_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o apn_proxy-ApnProxyConfig.o `test -f 'ApnProxyConfig.cpp' || echo '$(srcdir)/'`ApnProxyConfig.cpp
 
-cwx_echo-CwxEchoConfig.obj: CwxEchoConfig.cpp
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cwx_echo_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT cwx_echo-CwxEchoConfig.obj -MD -MP -MF "$(DEPDIR)/cwx_echo-CwxEchoConfig.Tpo" -c -o cwx_echo-CwxEchoConfig.obj `if test -f 'CwxEchoConfig.cpp'; then $(CYGPATH_W) 'CwxEchoConfig.cpp'; else $(CYGPATH_W) '$(srcdir)/CwxEchoConfig.cpp'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/cwx_echo-CwxEchoConfig.Tpo" "$(DEPDIR)/cwx_echo-CwxEchoConfig.Po"; else rm -f "$(DEPDIR)/cwx_echo-CwxEchoConfig.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='CwxEchoConfig.cpp' object='cwx_echo-CwxEchoConfig.obj' libtool=no @AMDEPBACKSLASH@
+apn_proxy-ApnProxyConfig.obj: ApnProxyConfig.cpp
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(apn_proxy_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT apn_proxy-ApnProxyConfig.obj -MD -MP -MF "$(DEPDIR)/apn_proxy-ApnProxyConfig.Tpo" -c -o apn_proxy-ApnProxyConfig.obj `if test -f 'ApnProxyConfig.cpp'; then $(CYGPATH_W) 'ApnProxyConfig.cpp'; else $(CYGPATH_W) '$(srcdir)/ApnProxyConfig.cpp'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/apn_proxy-ApnProxyConfig.Tpo" "$(DEPDIR)/apn_proxy-ApnProxyConfig.Po"; else rm -f "$(DEPDIR)/apn_proxy-ApnProxyConfig.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='ApnProxyConfig.cpp' object='apn_proxy-ApnProxyConfig.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cwx_echo_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o cwx_echo-CwxEchoConfig.obj `if test -f 'CwxEchoConfig.cpp'; then $(CYGPATH_W) 'CwxEchoConfig.cpp'; else $(CYGPATH_W) '$(srcdir)/CwxEchoConfig.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(apn_proxy_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o apn_proxy-ApnProxyConfig.obj `if test -f 'ApnProxyConfig.cpp'; then $(CYGPATH_W) 'ApnProxyConfig.cpp'; else $(CYGPATH_W) '$(srcdir)/ApnProxyConfig.cpp'; fi`
 
-cwx_echo-cwx_echo.o: cwx_echo.cpp
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cwx_echo_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT cwx_echo-cwx_echo.o -MD -MP -MF "$(DEPDIR)/cwx_echo-cwx_echo.Tpo" -c -o cwx_echo-cwx_echo.o `test -f 'cwx_echo.cpp' || echo '$(srcdir)/'`cwx_echo.cpp; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/cwx_echo-cwx_echo.Tpo" "$(DEPDIR)/cwx_echo-cwx_echo.Po"; else rm -f "$(DEPDIR)/cwx_echo-cwx_echo.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='cwx_echo.cpp' object='cwx_echo-cwx_echo.o' libtool=no @AMDEPBACKSLASH@
+apn_proxy-apn_proxy.o: apn_proxy.cpp
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(apn_proxy_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT apn_proxy-apn_proxy.o -MD -MP -MF "$(DEPDIR)/apn_proxy-apn_proxy.Tpo" -c -o apn_proxy-apn_proxy.o `test -f 'apn_proxy.cpp' || echo '$(srcdir)/'`apn_proxy.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/apn_proxy-apn_proxy.Tpo" "$(DEPDIR)/apn_proxy-apn_proxy.Po"; else rm -f "$(DEPDIR)/apn_proxy-apn_proxy.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='apn_proxy.cpp' object='apn_proxy-apn_proxy.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cwx_echo_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o cwx_echo-cwx_echo.o `test -f 'cwx_echo.cpp' || echo '$(srcdir)/'`cwx_echo.cpp
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(apn_proxy_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o apn_proxy-apn_proxy.o `test -f 'apn_proxy.cpp' || echo '$(srcdir)/'`apn_proxy.cpp
 
-cwx_echo-cwx_echo.obj: cwx_echo.cpp
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cwx_echo_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT cwx_echo-cwx_echo.obj -MD -MP -MF "$(DEPDIR)/cwx_echo-cwx_echo.Tpo" -c -o cwx_echo-cwx_echo.obj `if test -f 'cwx_echo.cpp'; then $(CYGPATH_W) 'cwx_echo.cpp'; else $(CYGPATH_W) '$(srcdir)/cwx_echo.cpp'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/cwx_echo-cwx_echo.Tpo" "$(DEPDIR)/cwx_echo-cwx_echo.Po"; else rm -f "$(DEPDIR)/cwx_echo-cwx_echo.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='cwx_echo.cpp' object='cwx_echo-cwx_echo.obj' libtool=no @AMDEPBACKSLASH@
+apn_proxy-apn_proxy.obj: apn_proxy.cpp
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(apn_proxy_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT apn_proxy-apn_proxy.obj -MD -MP -MF "$(DEPDIR)/apn_proxy-apn_proxy.Tpo" -c -o apn_proxy-apn_proxy.obj `if test -f 'apn_proxy.cpp'; then $(CYGPATH_W) 'apn_proxy.cpp'; else $(CYGPATH_W) '$(srcdir)/apn_proxy.cpp'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/apn_proxy-apn_proxy.Tpo" "$(DEPDIR)/apn_proxy-apn_proxy.Po"; else rm -f "$(DEPDIR)/apn_proxy-apn_proxy.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='apn_proxy.cpp' object='apn_proxy-apn_proxy.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cwx_echo_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o cwx_echo-cwx_echo.obj `if test -f 'cwx_echo.cpp'; then $(CYGPATH_W) 'cwx_echo.cpp'; else $(CYGPATH_W) '$(srcdir)/cwx_echo.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(apn_proxy_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o apn_proxy-apn_proxy.obj `if test -f 'apn_proxy.cpp'; then $(CYGPATH_W) 'apn_proxy.cpp'; else $(CYGPATH_W) '$(srcdir)/apn_proxy.cpp'; fi`
 
-cwx_echo-CwxEchoEventHandler.o: CwxEchoEventHandler.cpp
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cwx_echo_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT cwx_echo-CwxEchoEventHandler.o -MD -MP -MF "$(DEPDIR)/cwx_echo-CwxEchoEventHandler.Tpo" -c -o cwx_echo-CwxEchoEventHandler.o `test -f 'CwxEchoEventHandler.cpp' || echo '$(srcdir)/'`CwxEchoEventHandler.cpp; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/cwx_echo-CwxEchoEventHandler.Tpo" "$(DEPDIR)/cwx_echo-CwxEchoEventHandler.Po"; else rm -f "$(DEPDIR)/cwx_echo-CwxEchoEventHandler.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='CwxEchoEventHandler.cpp' object='cwx_echo-CwxEchoEventHandler.o' libtool=no @AMDEPBACKSLASH@
+apn_proxy-ApnProxyHandler.o: ApnProxyHandler.cpp
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(apn_proxy_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT apn_proxy-ApnProxyHandler.o -MD -MP -MF "$(DEPDIR)/apn_proxy-ApnProxyHandler.Tpo" -c -o apn_proxy-ApnProxyHandler.o `test -f 'ApnProxyHandler.cpp' || echo '$(srcdir)/'`ApnProxyHandler.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/apn_proxy-ApnProxyHandler.Tpo" "$(DEPDIR)/apn_proxy-ApnProxyHandler.Po"; else rm -f "$(DEPDIR)/apn_proxy-ApnProxyHandler.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='ApnProxyHandler.cpp' object='apn_proxy-ApnProxyHandler.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cwx_echo_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o cwx_echo-CwxEchoEventHandler.o `test -f 'CwxEchoEventHandler.cpp' || echo '$(srcdir)/'`CwxEchoEventHandler.cpp
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(apn_proxy_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o apn_proxy-ApnProxyHandler.o `test -f 'ApnProxyHandler.cpp' || echo '$(srcdir)/'`ApnProxyHandler.cpp
 
-cwx_echo-CwxEchoEventHandler.obj: CwxEchoEventHandler.cpp
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cwx_echo_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT cwx_echo-CwxEchoEventHandler.obj -MD -MP -MF "$(DEPDIR)/cwx_echo-CwxEchoEventHandler.Tpo" -c -o cwx_echo-CwxEchoEventHandler.obj `if test -f 'CwxEchoEventHandler.cpp'; then $(CYGPATH_W) 'CwxEchoEventHandler.cpp'; else $(CYGPATH_W) '$(srcdir)/CwxEchoEventHandler.cpp'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/cwx_echo-CwxEchoEventHandler.Tpo" "$(DEPDIR)/cwx_echo-CwxEchoEventHandler.Po"; else rm -f "$(DEPDIR)/cwx_echo-CwxEchoEventHandler.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='CwxEchoEventHandler.cpp' object='cwx_echo-CwxEchoEventHandler.obj' libtool=no @AMDEPBACKSLASH@
+apn_proxy-ApnProxyHandler.obj: ApnProxyHandler.cpp
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(apn_proxy_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT apn_proxy-ApnProxyHandler.obj -MD -MP -MF "$(DEPDIR)/apn_proxy-ApnProxyHandler.Tpo" -c -o apn_proxy-ApnProxyHandler.obj `if test -f 'ApnProxyHandler.cpp'; then $(CYGPATH_W) 'ApnProxyHandler.cpp'; else $(CYGPATH_W) '$(srcdir)/ApnProxyHandler.cpp'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/apn_proxy-ApnProxyHandler.Tpo" "$(DEPDIR)/apn_proxy-ApnProxyHandler.Po"; else rm -f "$(DEPDIR)/apn_proxy-ApnProxyHandler.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='ApnProxyHandler.cpp' object='apn_proxy-ApnProxyHandler.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cwx_echo_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o cwx_echo-CwxEchoEventHandler.obj `if test -f 'CwxEchoEventHandler.cpp'; then $(CYGPATH_W) 'CwxEchoEventHandler.cpp'; else $(CYGPATH_W) '$(srcdir)/CwxEchoEventHandler.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(apn_proxy_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o apn_proxy-ApnProxyHandler.obj `if test -f 'ApnProxyHandler.cpp'; then $(CYGPATH_W) 'ApnProxyHandler.cpp'; else $(CYGPATH_W) '$(srcdir)/ApnProxyHandler.cpp'; fi`
+
+apn_proxy-ApnProxyTss.o: ApnProxyTss.cpp
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(apn_proxy_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT apn_proxy-ApnProxyTss.o -MD -MP -MF "$(DEPDIR)/apn_proxy-ApnProxyTss.Tpo" -c -o apn_proxy-ApnProxyTss.o `test -f 'ApnProxyTss.cpp' || echo '$(srcdir)/'`ApnProxyTss.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/apn_proxy-ApnProxyTss.Tpo" "$(DEPDIR)/apn_proxy-ApnProxyTss.Po"; else rm -f "$(DEPDIR)/apn_proxy-ApnProxyTss.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='ApnProxyTss.cpp' object='apn_proxy-ApnProxyTss.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(apn_proxy_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o apn_proxy-ApnProxyTss.o `test -f 'ApnProxyTss.cpp' || echo '$(srcdir)/'`ApnProxyTss.cpp
+
+apn_proxy-ApnProxyTss.obj: ApnProxyTss.cpp
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(apn_proxy_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT apn_proxy-ApnProxyTss.obj -MD -MP -MF "$(DEPDIR)/apn_proxy-ApnProxyTss.Tpo" -c -o apn_proxy-ApnProxyTss.obj `if test -f 'ApnProxyTss.cpp'; then $(CYGPATH_W) 'ApnProxyTss.cpp'; else $(CYGPATH_W) '$(srcdir)/ApnProxyTss.cpp'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/apn_proxy-ApnProxyTss.Tpo" "$(DEPDIR)/apn_proxy-ApnProxyTss.Po"; else rm -f "$(DEPDIR)/apn_proxy-ApnProxyTss.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='ApnProxyTss.cpp' object='apn_proxy-ApnProxyTss.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(apn_proxy_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o apn_proxy-ApnProxyTss.obj `if test -f 'ApnProxyTss.cpp'; then $(CYGPATH_W) 'ApnProxyTss.cpp'; else $(CYGPATH_W) '$(srcdir)/ApnProxyTss.cpp'; fi`
+
+apn_proxy-ApnProxyAppPoco.o: ../common/ApnProxyAppPoco.cpp
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(apn_proxy_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT apn_proxy-ApnProxyAppPoco.o -MD -MP -MF "$(DEPDIR)/apn_proxy-ApnProxyAppPoco.Tpo" -c -o apn_proxy-ApnProxyAppPoco.o `test -f '../common/ApnProxyAppPoco.cpp' || echo '$(srcdir)/'`../common/ApnProxyAppPoco.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/apn_proxy-ApnProxyAppPoco.Tpo" "$(DEPDIR)/apn_proxy-ApnProxyAppPoco.Po"; else rm -f "$(DEPDIR)/apn_proxy-ApnProxyAppPoco.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../common/ApnProxyAppPoco.cpp' object='apn_proxy-ApnProxyAppPoco.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(apn_proxy_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o apn_proxy-ApnProxyAppPoco.o `test -f '../common/ApnProxyAppPoco.cpp' || echo '$(srcdir)/'`../common/ApnProxyAppPoco.cpp
+
+apn_proxy-ApnProxyAppPoco.obj: ../common/ApnProxyAppPoco.cpp
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(apn_proxy_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT apn_proxy-ApnProxyAppPoco.obj -MD -MP -MF "$(DEPDIR)/apn_proxy-ApnProxyAppPoco.Tpo" -c -o apn_proxy-ApnProxyAppPoco.obj `if test -f '../common/ApnProxyAppPoco.cpp'; then $(CYGPATH_W) '../common/ApnProxyAppPoco.cpp'; else $(CYGPATH_W) '$(srcdir)/../common/ApnProxyAppPoco.cpp'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/apn_proxy-ApnProxyAppPoco.Tpo" "$(DEPDIR)/apn_proxy-ApnProxyAppPoco.Po"; else rm -f "$(DEPDIR)/apn_proxy-ApnProxyAppPoco.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../common/ApnProxyAppPoco.cpp' object='apn_proxy-ApnProxyAppPoco.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(apn_proxy_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o apn_proxy-ApnProxyAppPoco.obj `if test -f '../common/ApnProxyAppPoco.cpp'; then $(CYGPATH_W) '../common/ApnProxyAppPoco.cpp'; else $(CYGPATH_W) '$(srcdir)/../common/ApnProxyAppPoco.cpp'; fi`
+
+apn_proxy-ApnProxySsl.o: ../common/ApnProxySsl.cpp
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(apn_proxy_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT apn_proxy-ApnProxySsl.o -MD -MP -MF "$(DEPDIR)/apn_proxy-ApnProxySsl.Tpo" -c -o apn_proxy-ApnProxySsl.o `test -f '../common/ApnProxySsl.cpp' || echo '$(srcdir)/'`../common/ApnProxySsl.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/apn_proxy-ApnProxySsl.Tpo" "$(DEPDIR)/apn_proxy-ApnProxySsl.Po"; else rm -f "$(DEPDIR)/apn_proxy-ApnProxySsl.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../common/ApnProxySsl.cpp' object='apn_proxy-ApnProxySsl.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(apn_proxy_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o apn_proxy-ApnProxySsl.o `test -f '../common/ApnProxySsl.cpp' || echo '$(srcdir)/'`../common/ApnProxySsl.cpp
+
+apn_proxy-ApnProxySsl.obj: ../common/ApnProxySsl.cpp
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(apn_proxy_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT apn_proxy-ApnProxySsl.obj -MD -MP -MF "$(DEPDIR)/apn_proxy-ApnProxySsl.Tpo" -c -o apn_proxy-ApnProxySsl.obj `if test -f '../common/ApnProxySsl.cpp'; then $(CYGPATH_W) '../common/ApnProxySsl.cpp'; else $(CYGPATH_W) '$(srcdir)/../common/ApnProxySsl.cpp'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/apn_proxy-ApnProxySsl.Tpo" "$(DEPDIR)/apn_proxy-ApnProxySsl.Po"; else rm -f "$(DEPDIR)/apn_proxy-ApnProxySsl.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../common/ApnProxySsl.cpp' object='apn_proxy-ApnProxySsl.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(apn_proxy_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o apn_proxy-ApnProxySsl.obj `if test -f '../common/ApnProxySsl.cpp'; then $(CYGPATH_W) '../common/ApnProxySsl.cpp'; else $(CYGPATH_W) '$(srcdir)/../common/ApnProxySsl.cpp'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo

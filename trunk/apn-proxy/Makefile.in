@@ -169,8 +169,7 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-zk_dir = @zk_dir@
-SUBDIRS = unistor
+SUBDIRS = proxy
 all: all-recursive
 
 .SUFFIXES:

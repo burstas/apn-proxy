@@ -245,7 +245,7 @@ int  ApnProxyApp::recvQueryChannelMsg(CwxMsgBlock* msg){
         channel = m_tss.m_pReader->getKey(APN_PROXY_KEY_CH, false);
         if (channel){
             ///检查channel是否存在
-            if (m_threadPools.find(string(channel->m_szData)) == m_config.m_channels.end()){
+            if (m_threadPools.find(string(channel->m_szData)) == m_threadPools.end()){
                 ret = APN_PROXY_ERR_NO_CHANNEL;
                 szErrMsg = "The channel doesn't exist.";
                 break;
@@ -303,9 +303,9 @@ int  ApnProxyApp::recvQueryChannelMsg(CwxMsgBlock* msg){
 int  ApnProxyApp::recvQueryAppMsg(CwxMsgBlock* msg){
     int ret = APN_PROXY_ERR_SUCCESS;
     char const* szErrMsg = NULL;
-    char const* szResult = NULL;
+    char* szResult = NULL;
     CwxKeyValueItem const* app = NULL;
-    CwxKeyValueItem const* channel = NULL;
+
     ApnProxyConfigApp const* pApp=NULL;
     list<string>::iterator ch_iter;
     string strValue;
@@ -359,7 +359,7 @@ int  ApnProxyApp::recvQueryAppMsg(CwxMsgBlock* msg){
                     "%s:%s",
                     pApp->m_strAppName.c_str(),
                     strValue.c_str());
-                szResult = strlen(szResult);
+                szResult += strlen(szResult);
                 iter++;
             }
             szResult = m_szBuf;
@@ -384,7 +384,7 @@ int  ApnProxyApp::recvQueryThreadMsg(CwxMsgBlock* msg){
     char const* szErrMsg = NULL;
     CwxKeyValueItem const* app = NULL;
     CwxKeyValueItem const* channel = NULL;
-    char const* szResult = NULL;
+    char * szResult = NULL;
     do{
         if (!m_tss.m_pReader->unpack(msg->rd_ptr(), msg->length(), false, true)){
             ret = APN_PROXY_ERR_INVALID_PACKAGE;
@@ -402,7 +402,7 @@ int  ApnProxyApp::recvQueryThreadMsg(CwxMsgBlock* msg){
         ///获取channel
         channel = m_tss.m_pReader->getKey(APN_PROXY_KEY_CH, false);
         ///检查channel是否存在
-        if (channel && (m_threadPools.find(string(channel->m_szData)) == m_config.m_channels.end())){
+        if (channel && (m_threadPools.find(string(channel->m_szData)) == m_threadPools.end())){
             ret = APN_PROXY_ERR_NO_CHANNEL;
             szErrMsg = "The channel doesn't exist.";
             break;
@@ -498,9 +498,9 @@ void ApnProxyApp::replyMsg(ApnProxyApp* pApp, ///<app对象
         pApp->m_tss.m_pWriter->addKeyValue(APN_PROXY_KEY_ERR, strlen(APN_PROXY_KEY_ERR),  szErrMsg, strlen(szErrMsg), false);
         if (ucStatus) pApp->m_tss.m_pWriter->addKeyValue(APN_PROXY_KEY_STATUS, strlen(APN_PROXY_KEY_STATUS), ucStatus);
     }else{
-        if (result) pApp->m_tss.m_pWriter->addKeyValue(APN_PROXY_KEY_RESULT, stlren(APN_PROXY_KEY_RESULT), result, strlen(result), false);
+        if (result) pApp->m_tss.m_pWriter->addKeyValue(APN_PROXY_KEY_RESULT, strlen(APN_PROXY_KEY_RESULT), result, strlen(result), false);
     }
-    pApp->m_tss.m_pWriter->->pack();
+    pApp->m_tss.m_pWriter->pack();
     CwxMsgHead head(0, 0, unMsgType, uiTaskId, pApp->m_tss.m_pWriter->getMsgSize());
     CwxMsgBlock* msg = CwxMsgBlockAlloc::pack(head, pApp->m_tss.m_pWriter->getMsg(), pApp->m_tss.m_pWriter->getMsgSize());
     if (!msg){

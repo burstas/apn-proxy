@@ -48,6 +48,8 @@ public:
                         CwxMsgHead const& header, ///<收到proxy请求的消息头
                         bool& bSuspendConn///<true：停止此连接继续接受稍息，false：此连接可以继续接受消息
                         );
+public:
+    ApnProxyConfig const& getConfig() const { return  m_config;}
 protected:
     ///重载运行环境设置API
 	virtual int initRunEnv();

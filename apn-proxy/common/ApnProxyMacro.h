@@ -23,6 +23,7 @@ CWINUX_USING_NAMESPACE
 #define APN_PROXY_APP_DEVICE_BINARY_SIZE  32   ///<设备号的长度
 #define APN_PROXY_APP_MAXPAYLOAD_SIZE     256  ///<消息体的长度
 
+#define APN_PROXY_DEF_EXPIRE              24 * 3600 ///<缺省的超时时间
 
 #define APN_PROXY_CHANNEL_PREFIX       "ch_" ///<配置文件中channel的前缀
 #define APN_PROXY_APP_PREFIX           "app_" ///<配置文件中app的前缀
@@ -40,6 +41,7 @@ CWINUX_USING_NAMESPACE
 #define APN_PROXY_KEY_C                 "c"
 #define APN_PROXY_KEY_ID                "id"
 #define APN_PROXY_KEY_E                 "e"
+#define APN_PROXY_KEY_CHECK             "check"
 
 
 
@@ -51,4 +53,10 @@ CWINUX_USING_NAMESPACE
 #define APN_PROXY_ERR_MISSING_CHANNEL   4   ///<缺少channel参数
 #define APN_PROXY_ERR_NO_APP            5   ///<指定的app不存在
 #define APN_PROXY_ERR_NO_CHANNEL        6   ///<指定的channel不存在
+#define APN_PROXY_ERR_MISSING_DEV       7   ///<缺省dev参数
+#define APN_PROXY_ERR_MISSING_CONTENT   8   ///<缺少content参数
+#define APN_PROXY_ERR_FAIL_CONNECT      9   ///<成功
+#define APN_PROXY_ERR_NOTICE_FAIL       10  ///<apn notice fail
+#define APN_PROXY_ERR_CONTENT_TOO_LEN   11  ///<notice的消息太大
+
 #endif

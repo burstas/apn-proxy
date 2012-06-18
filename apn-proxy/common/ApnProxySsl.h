@@ -36,6 +36,8 @@ public:
     int read_n(char* szBuf, CWX_UINT32 uiLen, CWX_UINT32 uiMilliTimeout=0, char* szErr2K=NULL);
     ///发送内容。返回值，-1：失败；0：连接关闭；>0：发送的字节数
     int send_n (char const* szDat, CWX_UINT32 uiDatLen, char* szErr2K=NULL);
+    ///检查是否可读
+    bool isReadReady(CWX_UINT32 uiMilliTimeout=0);
     ///关闭连接
     void disconnect();
     ///是否连接

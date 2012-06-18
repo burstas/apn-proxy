@@ -53,7 +53,6 @@ int ApnProxyConfig::loadConfig(string const & strConfFile){
     set<string> sessions;
     set<string>::iterator iter;
     ApnProxyConfigChannel* channel=NULL;
-    ApnProxyConfigApp* app=NULL;
     parser.getSections(sessions);
     //获取所有的channel
     iter = sessions.begin();

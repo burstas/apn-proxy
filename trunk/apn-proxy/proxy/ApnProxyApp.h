@@ -49,6 +49,18 @@ public:
                         bool& bSuspendConn///<true：停止此连接继续接受稍息，false：此连接可以继续接受消息
                         );
 public:
+    ///消息回复
+    static void replyMsg(ApnProxyApp* pApp, ///<app对象
+        CWX_UINT32 uiConnId, ///<连接id
+        CWX_UINT16 unMsgType, ///<消息类型
+        CWX_UINT32 uiTaskId, ///<任务id
+        bool       bCloseConn, ///<是否关闭连接
+        int        ret, ///<返回的状态值
+        char const* szErrMsg, ///<若出错则返回错误消息
+        char const* result, ///<若是状态查询，则指定result，若为空则不添加
+        CWX_UINT8 ucStatus ///<notice的apn状态值，若为0则不添加
+        );
+    ///获取配置信息
     ApnProxyConfig const& getConfig() const { return  m_config;}
 protected:
     ///重载运行环境设置API
@@ -67,17 +79,6 @@ private:
     int  recvQueryAppMsg(CwxMsgBlock* msg);
     ///收到thread状态查询消息；返回值：0，成功；-1：失败
     int  recvQueryThreadMsg(CwxMsgBlock* msg);
-    ///消息回复
-    static void replyMsg(ApnProxyApp* pApp, ///<app对象
-        CWX_UINT32 uiConnId, ///<连接id
-        CWX_UINT16 unMsgType, ///<消息类型
-        CWX_UINT32 uiTaskId, ///<任务id
-        bool       bCloseConn, ///<是否关闭连接
-        int        ret, ///<返回的状态值
-        char const* szErrMsg, ///<若出错则返回错误消息
-        char const* result, ///<若是状态查询，则指定result，若为空则不添加
-        CWX_UINT8 ucStatus ///<notice的apn状态值，若为0则不添加
-        );
 private:
     ApnProxyHandler*             m_proxyHandler;///<proxy请求处理的commander handle
     map<string, pair<CwxThreadPool*, ApnProxyTss**> >  m_threadPools; ///<线程池map

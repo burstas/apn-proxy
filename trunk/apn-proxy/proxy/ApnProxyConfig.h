@@ -6,6 +6,7 @@
 #include "CwxCommon.h"
 #include "CwxIniParse.h"
 #include "ApnProxyMacro.h"
+#include "CwxLogger.h"
 
 ///channelµÄ¶¨Òå
 class ApnProxyConfigChannel{

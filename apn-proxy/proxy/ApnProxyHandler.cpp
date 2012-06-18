@@ -1,5 +1,6 @@
 #include "ApnProxyHandler.h"
 #include "ApnProxyApp.h"
+#include "ApnProxyAppPoco.h"
 
 ///echo请求的处理函数
 int ApnProxyHandler::onRecvMsg(CwxMsgBlock*& msg, CwxTss* tss){
@@ -84,7 +85,7 @@ int ApnProxyHandler::onRecvMsg(CwxMsgBlock*& msg, CwxTss* tss){
         pTss->m_pReader->getKey(APN_PROXY_KEY_CHECK, uiCheck);
 
         if (!ssl->isConnected()){
-            if (0 != ssl->connect(m_pApp->getConfig()->m_uiConnTimeoutMilliSecond, pTss->m_szBuf2K)){
+            if (0 != ssl->connect(m_pApp->getConfig().m_uiConnTimeoutMilliSecond, pTss->m_szBuf2K)){
                 ret = APN_PROXY_ERR_FAIL_CONNECT;
                 szErrMsg = pTss->m_szBuf2K;
                 break;
@@ -115,7 +116,7 @@ int ApnProxyHandler::onRecvMsg(CwxMsgBlock*& msg, CwxTss* tss){
                     ucState,
                     uiId,
                     m_pApp->getConfig().m_uiCheckMilliSecond,
-                    pTss->m_szBuf2K)
+                    pTss->m_szBuf2K);
             }
             break;
         }
@@ -124,7 +125,7 @@ int ApnProxyHandler::onRecvMsg(CwxMsgBlock*& msg, CwxTss* tss){
 
     ApnProxyApp::replyMsg(m_pApp,
         msg->event().getConnId(),
-        msg->event().getMsgHeader().getMsgType(),
+        msg->event().getMsgHeader().getMsgType() + 1,
         msg->event().getMsgHeader().getTaskId(),
         false,
         ret,

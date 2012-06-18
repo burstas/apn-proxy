@@ -508,7 +508,7 @@ void ApnProxyApp::replyMsg(ApnProxyApp* pApp, ///<app对象
     }
     ///发送回复的数据包
     msg->send_ctrl().setMsgAttr(bCloseConn?CwxMsgSendCtrl::CLOSE_NOTICE:CwxMsgSendCtrl::NONE);
-    msg->send_ctrl().setConnId(uiConnId)
+    msg->send_ctrl().setConnId(uiConnId);
     if (0 != pApp->sendMsgByConn(msg))	{
         CWX_ERROR(("Failure to send msg to client, conn[%u]", uiConnId));
         CwxMsgBlockAlloc::free(msg);

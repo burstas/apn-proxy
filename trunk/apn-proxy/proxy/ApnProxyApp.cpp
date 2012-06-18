@@ -125,14 +125,14 @@ void ApnProxyApp::onSignal(int signum){
 }
 
 ///proxy请求的请求消息
-int ApnProxyApp::onRecvMsg(CwxMsgBlock* msg, CwxAppHandler4Msg& conn, CwxMsgHead const& header, bool& bSuspendConn){
+int ApnProxyApp::onRecvMsg(CwxMsgBlock* msg, CwxAppHandler4Msg& conn, CwxMsgHead const& header, bool& ){
     if (!msg) return -1;
     msg->event().setSvrId(conn.getConnInfo().getSvrId());
     msg->event().setHostId(conn.getConnInfo().getHostId());
     msg->event().setConnId(conn.getConnInfo().getConnId());
     msg->event().setMsgHeader(header);
     msg->event().setEvent(CwxEventInfo::RECV_MSG);
-    switch(header.m_unMsgType){
+    switch(header.getMsgType()){
         case APN_MSG_TYPE_NOTICE:
             return recvNoticeMsg(msg);
         case APN_MSG_TYPE_CHANNEL_INFO:
@@ -150,6 +150,7 @@ int ApnProxyApp::onRecvMsg(CwxMsgBlock* msg, CwxAppHandler4Msg& conn, CwxMsgHead
         header.getTaskId(),
         true,
         APN_PROXY_ERR_UNKNOWN_MSG,
+        m_tss->m_szBuf2K,
         NULL,
         0);
     return 0;
@@ -158,7 +159,7 @@ int ApnProxyApp::onRecvMsg(CwxMsgBlock* msg, CwxAppHandler4Msg& conn, CwxMsgHead
 
 void ApnProxyApp::destroy()
 {
-    map<string, pair<CwxThreadPool*, ApnProxyTss**> >::iterator iter =  m_threadPools.begin;
+    map<string, pair<CwxThreadPool*, ApnProxyTss**> >::iterator iter =  m_threadPools.begin();
     while(iter != m_threadPools.end()){
         iter->second.first->stop();
         delete iter->second.first;

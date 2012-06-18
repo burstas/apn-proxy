@@ -284,7 +284,6 @@ int  ApnProxyApp::recvQueryChannelMsg(CwxMsgBlock* msg){
             }
             szResult = m_szBuf;
         }
-        return 0;
     }while(0);
     replyMsg(this,
         msg->event().getConnId(),
@@ -364,7 +363,6 @@ int  ApnProxyApp::recvQueryAppMsg(CwxMsgBlock* msg){
             }
             szResult = m_szBuf;
         }
-        return 0;
     }while(0);
     replyMsg(this,
         msg->event().getConnId(),

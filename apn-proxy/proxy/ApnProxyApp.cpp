@@ -150,7 +150,7 @@ int ApnProxyApp::onRecvMsg(CwxMsgBlock* msg, CwxAppHandler4Msg& conn, CwxMsgHead
         header.getTaskId(),
         true,
         APN_PROXY_ERR_UNKNOWN_MSG,
-        m_tss->m_szBuf2K,
+        m_tss.m_szBuf2K,
         NULL,
         0);
     return 0;
@@ -205,7 +205,7 @@ int  ApnProxyApp::recvNoticeMsg(CwxMsgBlock* msg){
             break;
         }
         ///¼ì²échannelÊÇ·ñ´æÔÚ
-        if (m_threadPools.find(string(channel->m_szData)) == m_config.m_channels.end()){
+        if (m_threadPools.find(string(channel->m_szData)) == m_threadPools.end()){
             ret = APN_PROXY_ERR_NO_CHANNEL;
             szErrMsg = "The channel doesn't exist.";
             break;
@@ -231,7 +231,7 @@ int  ApnProxyApp::recvNoticeMsg(CwxMsgBlock* msg){
 int  ApnProxyApp::recvQueryChannelMsg(CwxMsgBlock* msg){
     int ret = APN_PROXY_ERR_SUCCESS;
     char const* szErrMsg = NULL;
-    char const* szResult = NULL;
+    char* szResult = NULL;
     CwxKeyValueItem const* channel = NULL;
     CwxThreadPool* pool=NULL;
     ApnProxyConfigChannel* ch=NULL;

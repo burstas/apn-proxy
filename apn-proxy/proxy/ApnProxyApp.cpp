@@ -371,7 +371,7 @@ int  ApnProxyApp::recvQueryAppMsg(CwxMsgBlock* msg){
         false,
         ret,
         szErrMsg,
-        NULL,
+        szResult,
         0);
     CwxMsgBlockAlloc::free(msg);
     return 0;

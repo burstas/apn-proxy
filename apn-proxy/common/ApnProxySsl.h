@@ -3,6 +3,7 @@
 
 #include "ApnProxyMacro.h"
 #include "CwxCommon.h"
+#include "CwxSockStream.h"
 #include <netdb.h>
 #include <unistd.h>
 #include <sys/types.h>
@@ -13,6 +14,7 @@
 #include <openssl/crypto.h>
 #include <openssl/ssl.h>
 #include <openssl/err.h>
+
 
 ///ssl连接对象
 class ApnProxySsl{

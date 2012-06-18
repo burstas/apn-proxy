@@ -46,6 +46,7 @@ public:
         }
         return *this;
     }
+
 public:
     string          m_strAppName; ///<app的名字
     list<string>    m_channels; ///<channel的名字

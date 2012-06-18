@@ -4,6 +4,7 @@
 #include "ApnProxyMacro.h"
 #include "CwxCommon.h"
 #include "CwxSockStream.h"
+#include "CwxINetAddr.h"
 #include <netdb.h>
 #include <unistd.h>
 #include <sys/types.h>

@@ -102,7 +102,7 @@ int ApnProxyConfig::loadConfig(string const & strConfFile){
         {
             pApp = new ApnProxyConfigApp;
             pApp->m_strAppName = iter->c_str() + strlen(APN_PROXY_APP_PREFIX);
-            if (m_apps.find(pApp->m_strAppName) != pApp.end()){
+            if (m_apps.find(pApp->m_strAppName) != m_apps.end()){
                 delete pApp;
                 snprintf(m_szError, 2047, "pApp[%s] is duplicate.", iter->c_str());
                 return -1;                
@@ -120,11 +120,12 @@ int ApnProxyConfig::loadConfig(string const & strConfFile){
                 return -1;
             }
             while(ch_iter != pApp->m_channels.end()){
-                channel = m_channels.find(*ch_iter);
-                if (channel == m_channels.end()){
+                if (m_channels.find(*ch_iter) == m_channels.end()){
                     snprintf(m_szError, 2047, "channel[%s] set by [%s:channel] doesn't exist.", ch_iter->c_str(), iter->c_str());
                     return -1;
                 }
+                channel = m_channels.find(*ch_iter)->second;
+
                 channelApp.m_strAppName = pApp->m_strAppName;
                 channelApp.m_strChannelName = *ch_iter;
                 if (m_channelApps.find(channelApp) == m_channelApps.end()){
@@ -140,7 +141,7 @@ int ApnProxyConfig::loadConfig(string const & strConfFile){
                 snprintf(m_szError, 2047, "Must set [%s:cert_file].", iter->c_str());
                 return -1;
             }
-            if (!CwxFile::isFile(value)){
+            if (!CwxFile::isFile(value.c_str())){
                 snprintf(m_szError, 2047, "[%s:cert_file]'s cert_file doesn't exist, file:%s.", iter->c_str(), value.c_str());
                 return -1;
             }
@@ -150,7 +151,7 @@ int ApnProxyConfig::loadConfig(string const & strConfFile){
                 snprintf(m_szError, 2047, "Must set [%s:key_file].", iter->c_str());
                 return -1;
             }
-            if (!CwxFile::isFile(value)){
+            if (!CwxFile::isFile(value.c_str())){
                 snprintf(m_szError, 2047, "[%s:key_file]'s key_file doesn't exist, file:%s.", iter->c_str(), value.c_str());
                 return -1;
             }
@@ -160,7 +161,7 @@ int ApnProxyConfig::loadConfig(string const & strConfFile){
                 snprintf(m_szError, 2047, "Must set [%s:ca_path].", iter->c_str());
                 return -1;
             }
-            if (!CwxFile::isDir(value)){
+            if (!CwxFile::isDir(value.c_str())){
                 snprintf(m_szError, 2047, "[%s:ca_path]'s path doesn't exist, path:%s.", iter->c_str(), value.c_str());
                 return -1;
             }

@@ -463,7 +463,7 @@ void ApnProxyApp::outputResult(ApnProxyConfigChannel* ch, ApnProxyTss** pTss, ch
                 ssl = ssl_iter->second;
                 CwxCommon::snprintf(szResult,
                     APN_MAX_REPLY_BUF_SIZE - (szResult - m_szBuf) - 1,
-                    "%s:%s:%u:%s:%s:",
+                    "%s:%s:%u:%s:%u",
                     ch->m_strChannelName.c_str(),
                     ssl_iter->first.c_str(),
                     i,

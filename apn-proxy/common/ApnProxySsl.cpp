@@ -1,4 +1,6 @@
 #include "ApnProxySsl.h"
+#include "CwxSockConnector.h"
+
 
 ApnProxySsl::ApnProxySsl(char const* host,
                          CWX_UINT16 port,
@@ -47,7 +49,7 @@ int ApnProxySsl::connect(CWX_UINT32 uiMilliTimeout, char* szErr2K){
         return -1;
     }
     /* Load the client certificate into the SSL_CTX structure */
-    if (SSL_CTX_use_certificate_file(m_ctx, m_strCerFile.c_str, SSL_FILETYPE_PEM) <= 0) {
+    if (SSL_CTX_use_certificate_file(m_ctx, m_strCerFile.c_str(), SSL_FILETYPE_PEM) <= 0) {
         if (szErr2K) ERR_error_string_n(ERR_get_error(), szErr2K, 2047);
         return -1;
     }
@@ -104,7 +106,7 @@ int ApnProxySsl::connect(CWX_UINT32 uiMilliTimeout, char* szErr2K){
     }    
 
     /* Assign the socket into the SSL structure (SSL and socket without BIO) */
-    SSL_set_fd(m_ssl, m_stream.getHandle);
+    SSL_set_fd(m_ssl, m_stream.getHandle());
 
     /* Perform SSL Handshake on the SSL client */
     ret = SSL_connect(m_ssl);
@@ -233,7 +235,6 @@ bool ApnProxySsl::isReadReady(CWX_UINT32 uiMilliTimeout){
 
 ///¹Ø±ÕÁ¬½Ó
 void ApnProxySsl::disconnect(){
-    int ret=0;
     if (!m_method) return;
     m_bConnected = false;
     m_method = NULL;

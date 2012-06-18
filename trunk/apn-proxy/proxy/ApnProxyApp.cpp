@@ -450,7 +450,7 @@ void ApnProxyApp::outputResult(ApnProxyConfigChannel* ch, ApnProxyTss** pTss, ch
             ssl = pTss[i]->m_appSsl.find(string(szApp))->second;
             CwxCommon::snprintf(szResult,
                 APN_MAX_REPLY_BUF_SIZE - (szResult - m_szBuf) - 1,
-                "%s:%s:%u:%s:%s:",
+                "%s:%s:%u:%s:%u",
                 ch->m_strChannelName.c_str(),
                 szApp,
                 i,

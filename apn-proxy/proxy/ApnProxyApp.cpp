@@ -354,7 +354,7 @@ int  ApnProxyApp::recvQueryAppMsg(CwxMsgBlock* msg){
                     szResult++;
                 }
                 CwxCommon::snprintf(szResult,
-                    szResult - m_szBuf - 1,
+                    APN_MAX_REPLY_BUF_SIZE - (szResult - m_szBuf) - 1,
                     "%s:%s",
                     pApp->m_strAppName.c_str(),
                     strValue.c_str());

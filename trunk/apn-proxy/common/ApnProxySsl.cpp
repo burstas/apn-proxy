@@ -188,7 +188,7 @@ int ApnProxySsl::read_n(char* szBuf, CWX_UINT32 uiLen, CWX_UINT32 uiMilliTimeout
             return -1;
         }
         uiPos += ret;
-        if (uiPos == uiLen) break;
+        if (uiPos >= uiLen) break;
     }
     return uiPos;
 }
@@ -209,8 +209,8 @@ int ApnProxySsl::send_n (char const* szDat, CWX_UINT32 uiDatLen, char* szErr2K){
             if (szErr2K) strcpy(szErr2K, "Connection is closed.");
             return 0;
         }
-        uiDatLen -= ret;
-        if (!uiDatLen) break;
+        uiPos += ret;
+        if (uiPos >= uiDatLen) break;
     }
     return uiDatLen;
 

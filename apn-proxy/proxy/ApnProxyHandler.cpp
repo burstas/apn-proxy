@@ -16,7 +16,6 @@ int ApnProxyHandler::onRecvMsg(CwxMsgBlock*& msg, CwxTss* tss){
     CWX_UINT8    ucState = 0;
     CWX_UINT32   i=0;
     char binDevId[APN_PROXY_APP_DEVICE_BINARY_SIZE];
-    char szTmp[4];
 
     ApnProxyTss* pTss = (ApnProxyTss*)tss;
     do{

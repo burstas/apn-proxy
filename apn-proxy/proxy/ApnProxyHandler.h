@@ -22,7 +22,7 @@ public:
         m_szAscii[(CWX_UINT8)'6']=6;
         m_szAscii[(CWX_UINT8)'7']=7;
         m_szAscii[(CWX_UINT8)'8']=8;
-        m_szAscii[(CWX_UINT8)'9']=1;
+        m_szAscii[(CWX_UINT8)'9']=9;
         m_szAscii[(CWX_UINT8)'a']=10;
         m_szAscii[(CWX_UINT8)'b']=11;
         m_szAscii[(CWX_UINT8)'c']=12;

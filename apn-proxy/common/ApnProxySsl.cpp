@@ -175,9 +175,8 @@ int ApnProxySsl::read_n(char* szBuf, CWX_UINT32 uiLen, CWX_UINT32 uiMilliTimeout
     CWX_UINT32 uiPos = 0;
     while(1){
         if (uiMilliTimeout){
-            if (CwxSocket::handleReady(m_stream.getHandle(), &timer, true, false, false, true)<=0)
-                return uiPos;
-            if (timer.timeout()) return uiPos;
+            ret = CwxSocket::handleReady(m_stream.getHandle(), &timer, true, false, false, true);
+            if (ret <=0 ) return uiPos;
         }
         ret = SSL_read(m_ssl, szBuf + uiPos, uiLen - uiPos);
         if (0 > ret){

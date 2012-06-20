@@ -224,9 +224,8 @@ bool ApnProxySsl::isReadReady(CWX_UINT32 uiMilliTimeout){
     CwxTimeValue timeValue(uiMilliTimeout/1000, (uiMilliTimeout%1000)*1000);
     CwxTimeouter timer(&timeValue);
     if (uiMilliTimeout){
-        if (CwxSocket::handleReady(m_stream.getHandle(), &timer, true, false, false, true)<0)
-            return true;
-        if (timer.timeout()) return false;
+        int ret = CwxSocket::handleReady(m_stream.getHandle(), &timer, true, false, false, true);
+        if (0 == ret) return false;
         return true;
     }
     CwxSocket::handleReady(m_stream.getHandle(), NULL, true, false, false, true);

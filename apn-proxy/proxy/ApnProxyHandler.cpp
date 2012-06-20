@@ -124,7 +124,7 @@ int ApnProxyHandler::onRecvMsg(CwxMsgBlock*& msg, CwxTss* tss){
         if (uiCheck){
             if (!ssl->isReadReady(m_pApp->getConfig().m_uiCheckMilliSecond)) break;
             ret = APN_PROXY_ERR_NOTICE_FAIL;
-            szErrMsg = "Failure to send msg.";
+            szErrMsg = "Connection is closed.";
             if (uiExpire){
                 ApnProxyAppPoco::readEnhancedNoticeErr(ssl,
                     ucState,

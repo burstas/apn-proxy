@@ -1,0 +1,23 @@
+#common conf
+[common]
+home=/usr/home/wenbo/cwinux/apn-proxy/trunk/apn-proxy/proxy/bin
+listen=127.0.0.1:6688
+conn_connect_milli_second=1000
+check_milli_second=10
+[ch_c1]
+thread=5
+type=dev
+[ch_c2]
+thread=3
+type=release
+[app_a]
+channel=c1,c2
+cert_file=/usr/home/wenbo/cwinux/apn-proxy/trunk/apn-proxy/proxy/bin/key/app_a/apn-dev-cert.pem
+key_file=/usr/home/wenbo/cwinux/apn-proxy/trunk/apn-proxy/proxy/bin/key/app_a/apn-dev-key.pem
+ca_path=/usr/home/wenbo/cwinux/apn-proxy/trunk/apn-proxy/proxy/bin/key/app_a
+[app_b]
+channel=c1
+cert_file=/usr/home/wenbo/cwinux/apn-proxy/trunk/apn-proxy/proxy/bin/key/app_b/apn-dev-cert.pem
+key_file=/usr/home/wenbo/cwinux/apn-proxy/trunk/apn-proxy/proxy/bin/key/app_b/apn-dev-key.pem
+ca_path=/usr/home/wenbo/cwinux/apn-proxy/trunk/apn-proxy/proxy/bin/key/app_a
+

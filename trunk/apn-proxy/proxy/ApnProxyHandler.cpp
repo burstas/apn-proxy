@@ -95,14 +95,26 @@ int ApnProxyHandler::onRecvMsg(CwxMsgBlock*& msg, CwxTss* tss){
         }
 
         if (uiExpire){
-            if (0 != ApnProxyAppPoco::sendNotice(ssl, binDevId, content->m_szData, content->m_uiDataLen, pTss->m_szBuf2K)){
+            if (0 != ApnProxyAppPoco::sendEnhancedNotice(ssl,
+                uiExpire,
+                uiId,
+                binDevId,
+                content->m_szData,
+                content->m_uiDataLen,
+                pTss->m_szBuf2K))
+            {
                 ssl->disconnect();
                 ret = APN_PROXY_ERR_NOTICE_FAIL;
                 szErrMsg = pTss->m_szBuf2K;
                 break;
             }
         }else{
-            if (0 != ApnProxyAppPoco::sendEnhancedNotice(ssl, uiExpire, uiId, binDevId, content->m_szData, content->m_uiDataLen, pTss->m_szBuf2K)){
+            if (0 != ApnProxyAppPoco::sendNotice(ssl,
+                binDevId,
+                content->m_szData,
+                content->m_uiDataLen,
+                pTss->m_szBuf2K))
+            {
                 ssl->disconnect();
                 ret = APN_PROXY_ERR_NOTICE_FAIL;
                 szErrMsg = pTss->m_szBuf2K;

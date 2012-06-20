@@ -51,11 +51,11 @@ int ApnProxyHandler::onRecvMsg(CwxMsgBlock*& msg, CwxTss* tss){
         }
         ///×ª»¯id
         memset(binDevId, 0x00, APN_PROXY_APP_DEVICE_BINARY_SIZE);
+        i=0;
         while(i < dev->m_uiDataLen/2){
-            szTmp[0]=dev->m_szData[i*2];
-            szTmp[1]=dev->m_szData[i*2+1];
-            szTmp[2]=0;
-            binDevId[i] = (CWX_UINT8)strtoul(szTmp, NULL, 16);
+            binDevId[i]=(m_szAscii[(CWX_UINT8)dev->m_szData[i*2]]<<4);
+            binDevId[i] += m_szAscii[(CWX_UINT8)dev->m_szData[i*2+1]];
+            i++;
             if (i >= APN_PROXY_APP_DEVICE_BINARY_SIZE) break;
         }
         if (i < APN_PROXY_APP_DEVICE_BINARY_SIZE){

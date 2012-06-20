@@ -129,7 +129,7 @@ int ApnProxyConfig::loadConfig(string const & strConfFile){
                 channelApp.m_strChannelName = *ch_iter;
                 if (m_channelApps.find(channelApp) == m_channelApps.end()){
                     m_channelApps[channelApp]=pApp;
-                    if (!channel->m_strApps.length()) channel->m_strApps += ",";
+                    if (channel->m_strApps.length()) channel->m_strApps += ",";
                     channel->m_strApps += channelApp.m_strAppName;
                 }
 

@@ -132,6 +132,7 @@ int ApnProxyHandler::onRecvMsg(CwxMsgBlock*& msg, CwxTss* tss){
                     m_pApp->getConfig().m_uiCheckMilliSecond,
                     pTss->m_szBuf2K);
             }
+            ssl->disconnect();
             break;
         }
         

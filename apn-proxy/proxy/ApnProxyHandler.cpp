@@ -62,7 +62,7 @@ int ApnProxyHandler::onRecvMsg(CwxMsgBlock*& msg, CwxTss* tss){
             memset(binDevId, 0x00, APN_PROXY_APP_DEVICE_BINARY_SIZE - i);
         }
         ///»ñÈ¡ÄÚÈÝ
-        content = pTss->m_pReader->getKey(APN_PROXY_KEY_DEV, false);
+        content = pTss->m_pReader->getKey(APN_PROXY_KEY_C, false);
         if (!content){
             ret = APN_PROXY_ERR_MISSING_CONTENT;
             szErrMsg = "Missing [c] parameter";

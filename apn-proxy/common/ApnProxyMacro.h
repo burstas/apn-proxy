@@ -55,7 +55,7 @@ CWINUX_USING_NAMESPACE
 #define APN_PROXY_ERR_NO_CHANNEL        6   ///<指定的channel不存在
 #define APN_PROXY_ERR_MISSING_DEV       7   ///<缺省dev参数
 #define APN_PROXY_ERR_MISSING_CONTENT   8   ///<缺少content参数
-#define APN_PROXY_ERR_FAIL_CONNECT      9   ///<成功
+#define APN_PROXY_ERR_FAIL_CONNECT      9   ///<连接失败
 #define APN_PROXY_ERR_NOTICE_FAIL       10  ///<apn notice fail
 #define APN_PROXY_ERR_CONTENT_TOO_LEN   11  ///<notice的消息太大
 

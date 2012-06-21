@@ -1,6 +1,12 @@
 #ifndef __APN_PROXY_HANDLER_H__
 #define __APN_PROXY_HANDLER_H__
 
+/*
+版权声明：
+本软件遵循GNU GPL V3（http://www.gnu.org/licenses/gpl.html），
+联系方式：email:cwinux@gmail.com；微博:http://t.sina.com.cn/cwinux
+*/
+
 #include "ApnProxyMacro.h"
 #include "CwxCommander.h"
 

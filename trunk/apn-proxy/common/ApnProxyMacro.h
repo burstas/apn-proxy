@@ -49,6 +49,7 @@ CWINUX_USING_NAMESPACE
 #define APN_PROXY_KEY_CHECK             "check"
 
 
+#define  APN_PROXY_CHANNEL_THREAD_STACK   100 * 1024   ///<定义channel线程的stack大小
 
 ///错误代码的定义
 #define APN_PROXY_ERR_SUCCESS           0   ///<成功

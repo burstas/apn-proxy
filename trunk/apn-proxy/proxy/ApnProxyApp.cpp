@@ -92,7 +92,7 @@ int ApnProxyApp::initRunEnv(){
         m_threadPools[iter->first] = pair<CwxThreadPool*, ApnProxyTss**>(pThreadPool, pTss);
 
         ///启动线程，线程池中线程的线程栈大小为1M。
-        if ( 0 != pThreadPool->start((CwxTss**)pTss)){
+        if ( 0 != pThreadPool->start((CwxTss**)pTss, APN_PROXY_CHANNEL_THREAD_STACK)){
             CWX_ERROR(("Failure to start thread pool"));
             return -1;
         }

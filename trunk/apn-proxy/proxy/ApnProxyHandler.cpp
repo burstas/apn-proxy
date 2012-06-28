@@ -15,9 +15,13 @@ int ApnProxyHandler::onRecvMsg(CwxMsgBlock*& msg, CwxTss* tss){
     CWX_UINT32   uiCheck=0;
     CWX_UINT8    ucState = 0;
     CWX_UINT32   i=0;
+    CWX_UINT32   uiLastId = 0;
+    string       strLastDevId;
+    string       strLastContent;
     char binDevId[APN_PROXY_APP_DEVICE_BINARY_SIZE];
 
     ApnProxyTss* pTss = (ApnProxyTss*)tss;
+    ApnProxySslInfo* sslInfo = NULL;
     do{
         if (!pTss->m_pReader->unpack(msg->rd_ptr(), msg->length(), false, true)){
             ret = APN_PROXY_ERR_INVALID_PACKAGE;
@@ -41,6 +45,7 @@ int ApnProxyHandler::onRecvMsg(CwxMsgBlock*& msg, CwxTss* tss){
             break;
         }
         ApnProxySsl* ssl = iter->second->m_ssl;
+        sslInfo = iter->second;
         ///获取dev
         dev = pTss->m_pReader->getKey(APN_PROXY_KEY_DEV, false);
         if (!dev){
@@ -103,10 +108,33 @@ int ApnProxyHandler::onRecvMsg(CwxMsgBlock*& msg, CwxTss* tss){
                 content->m_uiDataLen,
                 pTss->m_szBuf2K))
             {
+                ///获取上次失败的信息
+                if (sslInfo->m_strLastSendDevId.length()){
+                    uiLastId = sslInfo->m_uiLastSendId;
+                    strLastContent = sslInfo->m_strLastSendContent;
+                    strLastDevId = sslInfo->m_strLastSendDevId;
+                }
                 ssl->disconnect();
-                ret = APN_PROXY_ERR_NOTICE_FAIL;
-                szErrMsg = pTss->m_szBuf2K;
-                break;
+                ///重新建立连接
+                if (0 != ssl->connect(m_pApp->getConfig().m_uiConnTimeoutMilliSecond, pTss->m_szBuf2K)){
+                    ret = APN_PROXY_ERR_FAIL_CONNECT;
+                    szErrMsg = pTss->m_szBuf2K;
+                    break;
+                }
+                ///重试发送
+                if (0 != ApnProxyAppPoco::sendEnhancedNotice(ssl,
+                    uiExpire,
+                    uiId,
+                    binDevId,
+                    content->m_szData,
+                    content->m_uiDataLen,
+                    pTss->m_szBuf2K))
+                {
+                    ssl->disconnect();
+                    ret = APN_PROXY_ERR_NOTICE_FAIL;
+                    szErrMsg = pTss->m_szBuf2K;
+                    break;
+                }
             }
         }else{
             if (0 != ApnProxyAppPoco::sendNotice(ssl,
@@ -115,13 +143,36 @@ int ApnProxyHandler::onRecvMsg(CwxMsgBlock*& msg, CwxTss* tss){
                 content->m_uiDataLen,
                 pTss->m_szBuf2K))
             {
+                ///获取上次失败的信息
+                if (sslInfo->m_strLastSendDevId.length()){
+                    uiLastId = sslInfo->m_uiLastSendId;
+                    strLastContent = sslInfo->m_strLastSendContent;
+                    strLastDevId = sslInfo->m_strLastSendDevId;
+                }
                 ssl->disconnect();
-                ret = APN_PROXY_ERR_NOTICE_FAIL;
-                szErrMsg = pTss->m_szBuf2K;
-                break;
+                ///重新建立连接
+                if (0 != ssl->connect(m_pApp->getConfig().m_uiConnTimeoutMilliSecond, pTss->m_szBuf2K)){
+                    ret = APN_PROXY_ERR_FAIL_CONNECT;
+                    szErrMsg = pTss->m_szBuf2K;
+                    break;
+                }
+                ///重试发送
+                if (0 != ApnProxyAppPoco::sendNotice(ssl,
+                    binDevId,
+                    content->m_szData,
+                    content->m_uiDataLen,
+                    pTss->m_szBuf2K))
+                {
+                    ssl->disconnect();
+                    ret = APN_PROXY_ERR_NOTICE_FAIL;
+                    szErrMsg = pTss->m_szBuf2K;
+                    break;
+                }
+
             }
         }
         if (uiCheck){
+            sslInfo->m_strLastSendDevId.erase(); ///<清空内容
             if (!ssl->isReadReady(m_pApp->getConfig().m_uiCheckMilliSecond)) break;
             ret = APN_PROXY_ERR_NOTICE_FAIL;
             szErrMsg = "Connection is closed.";
@@ -134,6 +185,10 @@ int ApnProxyHandler::onRecvMsg(CwxMsgBlock*& msg, CwxTss* tss){
             }
             ssl->disconnect();
             break;
+        }else{
+            sslInfo->m_uiLastSendId = uiId;
+            sslInfo->m_strLastSendDevId = dev->m_szData;
+            sslInfo->m_strLastSendContent = content->m_szData;
         }
         
     }while(0);
@@ -155,7 +210,10 @@ int ApnProxyHandler::onRecvMsg(CwxMsgBlock*& msg, CwxTss* tss){
         ret,
         szErrMsg,
         NULL,
-        ucState);
+        ucState,
+        strLastDevId.length()?uiLastId:0,
+        strLastDevId.length()?strLastDevId.c_str():NULL,
+        strLastDevId.length()?strLastContent.c_str():NULL);
     return 1;
 }
 

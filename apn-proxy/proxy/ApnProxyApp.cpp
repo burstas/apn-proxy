@@ -447,7 +447,7 @@ void ApnProxyApp::outputResult(ApnProxyConfigChannel* ch, ApnProxyTss** pTss, ch
             szResult++;
         }
         if (szApp){
-            ssl = pTss[i]->m_appSsl.find(string(szApp))->second;
+            ssl = pTss[i]->m_appSsl.find(string(szApp))->second->m_ssl;
             CwxCommon::snprintf(szResult,
                 APN_MAX_REPLY_BUF_SIZE - (szResult - m_szBuf) - 1,
                 "%s:%s:%u:%s:%u",
@@ -458,9 +458,9 @@ void ApnProxyApp::outputResult(ApnProxyConfigChannel* ch, ApnProxyTss** pTss, ch
                 ssl->isConnected());
             szResult += strlen(szResult);
         }else{
-            map<string, ApnProxySsl*>::iterator ssl_iter = pTss[i]->m_appSsl.begin();
+            map<string, ApnProxySslInfo*>::iterator ssl_iter = pTss[i]->m_appSsl.begin();
             while(ssl_iter != pTss[i]->m_appSsl.end()){
-                ssl = ssl_iter->second;
+                ssl = ssl_iter->second->m_ssl;
                 CwxCommon::snprintf(szResult,
                     APN_MAX_REPLY_BUF_SIZE - (szResult - m_szBuf) - 1,
                     "%s:%s:%u:%s:%u",

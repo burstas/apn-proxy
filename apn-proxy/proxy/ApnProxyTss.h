@@ -14,6 +14,19 @@
 #include "ApnProxySsl.h"
 #include "ApnProxyConfig.h"
 
+///apn的连接信息
+class ApnProxySslInfo{
+public:
+    ApnProxySslInfo(){
+        m_ssl = NULL;
+        m_uiLastSendId = 0;
+    }
+public:
+    ApnProxySsl*    m_ssl;  ///<apn的ssl连接
+    CWX_UINT32      m_uiLastSendId; ///<上一次发送的id
+    string          m_strLastSendDevId; ///<上一次发送的设备id
+    string          m_strLastSendContent; ///<上一次发送的内容
+};
 //Apn-proxy的tss
 class ApnProxyTss:public CwxTss{
 public:
@@ -33,7 +46,7 @@ public:
 public:
     CwxPackageReader*         m_pReader; ///<数据包的解包对象
     CwxPackageWriter*         m_pWriter; ///<数据包的pack对象
-    map<string, ApnProxySsl*> m_appSsl; ///<app的ssl对象
+    map<string, ApnProxySslInfo*> m_appSsl; ///<app的ssl对象
 };
 
 #endif

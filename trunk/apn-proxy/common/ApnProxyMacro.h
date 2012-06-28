@@ -36,17 +36,20 @@ CWINUX_USING_NAMESPACE
 #define APN_PROXY_CHANNEL_TYPE_RELEASE "release" ///<release类型的channel
 
 ///key的定义
-#define APN_PROXY_KEY_RET              "ret"
-#define APN_PROXY_KEY_ERR              "err"
-#define APN_PROXY_KEY_STATUS           "status"
-#define APN_PROXY_KEY_RESULT           "result"
-#define APN_PROXY_KEY_APP              "app"
-#define APN_PROXY_KEY_CH                "ch"
-#define APN_PROXY_KEY_DEV               "dev"
-#define APN_PROXY_KEY_C                 "c"
-#define APN_PROXY_KEY_ID                "id"
-#define APN_PROXY_KEY_E                 "e"
-#define APN_PROXY_KEY_CHECK             "check"
+#define APN_PROXY_KEY_RET              "ret"  ///<返回值
+#define APN_PROXY_KEY_ERR              "err"  ///<错误信息
+#define APN_PROXY_KEY_STATUS           "status"  ///<apn返回的错误状态
+#define APN_PROXY_KEY_RESULT           "result"  ///<结果
+#define APN_PROXY_KEY_APP              "app"     ///<app的key
+#define APN_PROXY_KEY_CH                "ch"     ///<channel的key
+#define APN_PROXY_KEY_DEV               "dev"    ///<device 设备号
+#define APN_PROXY_KEY_C                 "c"      ///<发送的消息内容
+#define APN_PROXY_KEY_ID                "id"     ///<enchanced模式的消息id
+#define APN_PROXY_KEY_E                 "e"      ///<enchanced模式的消息expire
+#define APN_PROXY_KEY_CHECK             "check"  ///<是否检测当前消息是否发送成功
+#define APN_PROXY_KEY_LE_DEV            "le_dev"  ///<（连接关闭）若上一次非check模式下的消息发送失败，则返回其对应的设备id。
+#define APN_PROXY_KEY_LE_ID             "le_id"   ///<（连接关闭）若上一次非check模式下的消息发送失败，则返回其对应的enchanced模式的消息id
+#define APN_PROXY_KEY_LE_C              "le_c"    ///<（连接关闭）若上一次非check模式下的消息发送失败，则返回其对应的发送内容
 
 
 #define  APN_PROXY_CHANNEL_THREAD_STACK   100 * 1024   ///<定义channel线程的stack大小

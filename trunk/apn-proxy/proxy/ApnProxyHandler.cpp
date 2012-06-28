@@ -34,13 +34,13 @@ int ApnProxyHandler::onRecvMsg(CwxMsgBlock*& msg, CwxTss* tss){
             break;
         }
         ///检查app是否存在
-        map<string, ApnProxySsl*>::iterator iter = pTss->m_appSsl.find(string(app->m_szData));
+        map<string, ApnProxySslInfo*>::iterator iter = pTss->m_appSsl.find(string(app->m_szData));
         if ( iter == pTss->m_appSsl.end()){
             ret = APN_PROXY_ERR_NO_APP;
             szErrMsg = "The app doesn't exist.";
             break;
         }
-        ApnProxySsl* ssl = iter->second;
+        ApnProxySsl* ssl = iter->second->m_ssl;
         ///获取dev
         dev = pTss->m_pReader->getKey(APN_PROXY_KEY_DEV, false);
         if (!dev){

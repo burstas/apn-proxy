@@ -58,7 +58,10 @@ public:
         int        ret, ///<返回的状态值
         char const* szErrMsg, ///<若出错则返回错误消息
         char const* result, ///<若是状态查询，则指定result，若为空则不添加
-        CWX_UINT8 ucStatus ///<notice的apn状态值，若为0则不添加
+        CWX_UINT8 ucStatus, ///<notice的apn状态值，若为0则不添加
+        CWX_UINT32  uiLastId, ///<上一次的失败id，若为0则不添加
+        char const* szLastDevId, ///<上一次的失败dev id，若为空则不添加
+        char const* szLastContent ///<上一次失败的内容，若为空则不添加
         );
     ///获取配置信息
     ApnProxyConfig const& getConfig() const { return  m_config;}

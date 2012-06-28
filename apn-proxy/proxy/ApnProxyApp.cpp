@@ -152,7 +152,10 @@ int ApnProxyApp::onRecvMsg(CwxMsgBlock* msg, CwxAppHandler4Msg& conn, CwxMsgHead
         APN_PROXY_ERR_UNKNOWN_MSG,
         m_tss.m_szBuf2K,
         NULL,
-        0);
+        0,
+        0,
+        NULL,
+        NULL);
     return 0;
 }
 
@@ -223,7 +226,10 @@ int  ApnProxyApp::recvNoticeMsg(CwxMsgBlock* msg){
         ret,
         szErrMsg,
         NULL,
-        0);
+        0,
+        0,
+        NULL,
+        NULL);
     CwxMsgBlockAlloc::free(msg);
     return 0;
 }
@@ -293,7 +299,10 @@ int  ApnProxyApp::recvQueryChannelMsg(CwxMsgBlock* msg){
         ret,
         szErrMsg,
         szResult,
-        0);
+        0,
+        0,
+        NULL,
+        NULL);
     CwxMsgBlockAlloc::free(msg);
     return 0;
 
@@ -372,7 +381,10 @@ int  ApnProxyApp::recvQueryAppMsg(CwxMsgBlock* msg){
         ret,
         szErrMsg,
         szResult,
-        0);
+        0,
+        0,
+        NULL,
+        NULL);
     CwxMsgBlockAlloc::free(msg);
     return 0;
 }
@@ -433,7 +445,10 @@ int  ApnProxyApp::recvQueryThreadMsg(CwxMsgBlock* msg){
         ret,
         szErrMsg,
         szResult,
-        0);
+        0,
+        0,
+        NULL,
+        NULL);
     CwxMsgBlockAlloc::free(msg);
     return 0;
 }
@@ -485,7 +500,10 @@ void ApnProxyApp::replyMsg(ApnProxyApp* pApp, ///<app对象
                      int        ret, ///<返回的状态值
                      char const* szErrMsg, ///<若出错则返回错误消息
                      char const* result, ///<若是状态查询，则指定result，若为空则不添加
-                     CWX_UINT8 ucStatus ///<notice的apn状态值，若为0则不添加
+                     CWX_UINT8 ucStatus, ///<notice的apn状态值，若为0则不添加
+                     CWX_UINT32  uiLastId, ///<上一次的失败id，若为0则不添加
+                     char const* szLastDevId, ///<上一次的失败dev id，若为空则不添加
+                     char const* szLastContent ///<上一次失败的内容，若为空则不添加
                      )
 {
     pApp->m_tss.m_pWriter->beginPack();
@@ -495,6 +513,11 @@ void ApnProxyApp::replyMsg(ApnProxyApp* pApp, ///<app对象
         if (ucStatus) pApp->m_tss.m_pWriter->addKeyValue(APN_PROXY_KEY_STATUS, strlen(APN_PROXY_KEY_STATUS), ucStatus);
     }else{
         if (result) pApp->m_tss.m_pWriter->addKeyValue(APN_PROXY_KEY_RESULT, strlen(APN_PROXY_KEY_RESULT), result, strlen(result), false);
+    }
+    if (szLastDevId){
+        if (uiLastId) pApp->m_tss->m_pWriter->addKeyValue(APN_PROXY_KEY_LE_ID, strlen(APN_PROXY_KEY_LE_ID), uiLastId);
+        pApp->m_tss->m_pWriter->addKeyValue(APN_PROXY_KEY_LE_DEV, strlen(APN_PROXY_KEY_LE_DEV), szLastDevId, strlen(szLastDevId));
+        if (szLastContent) pApp->m_tss->m_pWriter->addKeyValue(APN_PROXY_KEY_LE_C, strlen(APN_PROXY_KEY_LE_C), szLastContent, strlen(szLastContent));
     }
     pApp->m_tss.m_pWriter->pack();
     CwxMsgHead head(0, 0, unMsgType, uiTaskId, pApp->m_tss.m_pWriter->getMsgSize());

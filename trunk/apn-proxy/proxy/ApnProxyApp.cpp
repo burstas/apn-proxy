@@ -515,9 +515,9 @@ void ApnProxyApp::replyMsg(ApnProxyApp* pApp, ///<app¶ÔÏó
         if (result) pApp->m_tss.m_pWriter->addKeyValue(APN_PROXY_KEY_RESULT, strlen(APN_PROXY_KEY_RESULT), result, strlen(result), false);
     }
     if (szLastDevId){
-        if (uiLastId) pApp->m_tss->m_pWriter->addKeyValue(APN_PROXY_KEY_LE_ID, strlen(APN_PROXY_KEY_LE_ID), uiLastId);
-        pApp->m_tss->m_pWriter->addKeyValue(APN_PROXY_KEY_LE_DEV, strlen(APN_PROXY_KEY_LE_DEV), szLastDevId, strlen(szLastDevId));
-        if (szLastContent) pApp->m_tss->m_pWriter->addKeyValue(APN_PROXY_KEY_LE_C, strlen(APN_PROXY_KEY_LE_C), szLastContent, strlen(szLastContent));
+        if (uiLastId) pApp->m_tss.m_pWriter->addKeyValue(APN_PROXY_KEY_LE_ID, strlen(APN_PROXY_KEY_LE_ID), uiLastId);
+        pApp->m_tss.m_pWriter->addKeyValue(APN_PROXY_KEY_LE_DEV, strlen(APN_PROXY_KEY_LE_DEV), szLastDevId, strlen(szLastDevId));
+        if (szLastContent) pApp->m_tss.m_pWriter->addKeyValue(APN_PROXY_KEY_LE_C, strlen(APN_PROXY_KEY_LE_C), szLastContent, strlen(szLastContent));
     }
     pApp->m_tss.m_pWriter->pack();
     CwxMsgHead head(0, 0, unMsgType, uiTaskId, pApp->m_tss.m_pWriter->getMsgSize());

@@ -1,5 +1,5 @@
-#ifndef __CWX_ECHO_APP_H__
-#define __CWX_ECHO_APP_H__
+#ifndef __APN_PROXY_APP_H__
+#define __APN_PROXY_APP_H__
 /*
 版权声明：
     本软件遵循GNU GPL V3（http://www.gnu.org/licenses/gpl.html），

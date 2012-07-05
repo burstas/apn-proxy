@@ -1,5 +1,5 @@
-#ifndef __APN_PROXY_TSS_H__
-#define __APN_PROXY_TSS_H__
+#ifndef __APN_DPROXY_TSS_H__
+#define __APN_DPROXY_TSS_H__
 /*
 版权声明：
 本软件遵循GNU GPL V3（http://www.gnu.org/licenses/gpl.html），
@@ -15,9 +15,9 @@
 #include "ApnProxyConfig.h"
 
 ///apn的连接信息
-class ApnProxySslInfo{
+class ApnDproxySslInfo{
 public:
-    ApnProxySslInfo(){
+    ApnDproxySslInfo(){
         m_ssl = NULL;
         m_uiLastSendId = 0;
     }
@@ -27,26 +27,25 @@ public:
     string          m_strLastSendDevId; ///<上一次发送的设备id
     string          m_strLastSendContent; ///<上一次发送的内容
 };
-//Apn-proxy的tss
-class ApnProxyTss:public CwxTss{
+//Apn-dproxy的tss
+class ApnDproxyTss:public CwxTss{
 public:
     enum{
         DEF_PACKAGE_SIZE = 1024
     };
 public:
     ///构造函数
-    ApnProxyTss():CwxTss(){
+    ApnDproxyTss():CwxTss(){
     }
     ///析构函数
-    ~ApnProxyTss();
+    ~ApnDproxyTss();
 public:
     ///tss的初始化，0：成功；-1：失败
-    int init(ApnProxyConfigChannel const* channel,
-        map<ApnProxyConfigChannelApp, ApnProxyConfigApp*> const* channelApp);
+    int init();
 public:
     CwxPackageReader*         m_pReader; ///<数据包的解包对象
     CwxPackageWriter*         m_pWriter; ///<数据包的pack对象
-    map<string, ApnProxySslInfo*> m_appSsl; ///<app的ssl对象
+    map<string, ApnDproxySslInfo*> m_appSsl; ///<app的ssl对象
 };
 
 #endif

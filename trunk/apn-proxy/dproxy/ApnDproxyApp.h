@@ -1,21 +1,22 @@
-#ifndef __CWX_ECHO_APP_H__
-#define __CWX_ECHO_APP_H__
+#ifndef __APN_DPROXY_APP_H__
+#define __APN_DPROXY_APP_H__
 /*
 版权声明：
     本软件遵循GNU GPL V3（http://www.gnu.org/licenses/gpl.html），
     联系方式：email:cwinux@gmail.com；微博:http://t.sina.com.cn/cwinux
 */
 #include "CwxAppFramework.h"
-#include "ApnProxyConfig.h"
+#include "ApnDproxyConfig.h"
 #include "ApnProxyHandler.h"
-#include "ApnProxyTss.h"
+#include "ApnDproxyTss.h"
+#include "Mysql.h"
 
-#define APN_PROXY_APP_VERSION "0.1"
-#define APN_PROXY_APP_MODIFY_DATE "2012-06-17"
+#define APN_DPROXY_APP_VERSION "0.1"
+#define APN_DPROXY_APP_MODIFY_DATE "2012-06-17"
 
 
-///多线程的apple APN Proxy服务
-class  ApnProxyApp: public CwxAppFramework{
+///多线程的apple APN DProxy服务
+class  ApnDproxyApp: public CwxAppFramework{
 public:
     enum{
         APN_MAX_REPLY_BUF_SIZE = 1024 * 1024, ///<状态查询的最大buf size
@@ -32,9 +33,9 @@ public:
         APN_MSG_TYPE_THREAD_INFO_REPLY = 8 ///<线程信息的reply消息类型
     };
     ///构造函数
-	ApnProxyApp();
+	ApnDproxyApp();
     ///析构函数
-	virtual ~ApnProxyApp();
+	virtual ~ApnDproxyApp();
     ///重载初始化函数
     virtual int init(int argc, char** argv);
 public:
@@ -64,7 +65,9 @@ public:
         char const* szLastContent ///<上一次失败的内容，若为空则不添加
         );
     ///获取配置信息
-    ApnProxyConfig const& getConfig() const { return  m_config;}
+    ApnDproxyConfig const& getConfig() const { return  m_config;}
+    ///获取mysql对象
+    Mysql& getMysql() { return m_mysql;}
 protected:
     ///重载运行环境设置API
 	virtual int initRunEnv();
@@ -85,8 +88,9 @@ private:
 private:
     ApnProxyHandler*             m_proxyHandler;///<proxy请求处理的commander handle
     map<string, pair<CwxThreadPool*, ApnProxyTss**> >  m_threadPools; ///<线程池map
-    ApnProxyConfig               m_config;///<配置文件对象
+    ApnDproxyConfig              m_config;///<配置文件对象
     ApnProxyTss                  m_tss; ///<主线程的tss对象
+    Mysql                        m_mysql; ///<数据库对象
     char                         m_szBuf[APN_MAX_REPLY_BUF_SIZE];
 };
 #endif

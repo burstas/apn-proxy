@@ -56,6 +56,7 @@ UNIQUE INDEX (channel_id, app_id)
 create table dproxy_change_notice
 (
 id             int unsigned   not null AUTO_INCREMENT PRIMARY key,
+partition      int unsigned   not null,
 comment   varchar(512)   not null,
 create_time datetime   not null,
 UNIQUE INDEX (id)

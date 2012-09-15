@@ -1,4 +1,4 @@
-#include "ApnProxyConfig.h"
+ï»¿#include "ApnProxyConfig.h"
 #include "CwxFile.h"
 
 static bool parseHostPort(string const& strHostPort, CwxHostInfo& host)
@@ -12,7 +12,7 @@ static bool parseHostPort(string const& strHostPort, CwxHostInfo& host)
 int ApnProxyConfig::loadConfig(string const & strConfFile){
 	CwxIniParse parser;
 	string value;
-	//½âÎöÅäÖÃÎÄ¼ş
+	//è§£æé…ç½®æ–‡ä»¶
 	if (false == parser.load(strConfFile)){
 		snprintf(m_szError, 2047, "Failure to Load conf file:%s", strConfFile.c_str());
 		return -1;
@@ -54,7 +54,7 @@ int ApnProxyConfig::loadConfig(string const & strConfFile){
     set<string>::iterator iter;
     ApnProxyConfigChannel* channel=NULL;
     parser.getSections(sessions);
-    //»ñÈ¡ËùÓĞµÄchannel
+    //è·å–æ‰€æœ‰çš„channel
     iter = sessions.begin();
     while(iter != sessions.end()){
         if ((iter->length() > strlen(APN_PROXY_CHANNEL_PREFIX)) &&
@@ -91,7 +91,7 @@ int ApnProxyConfig::loadConfig(string const & strConfFile){
         }
         iter++;
     }
-    //»ñÈ¡ËùÓĞµÄapp
+    //è·å–æ‰€æœ‰çš„app
     ApnProxyConfigApp* pApp = NULL;
     ApnProxyConfigChannelApp channelApp;
     iter = sessions.begin();

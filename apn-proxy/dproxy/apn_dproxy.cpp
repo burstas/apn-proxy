@@ -1,7 +1,7 @@
-/*
-°æÈ¨ÉùÃ÷£º
-±¾Èí¼ş×ñÑ­GNU GPL V3£¨http://www.gnu.org/licenses/gpl.html£©£¬
-ÁªÏµ·½Ê½£ºemail:cwinux@gmail.com£»Î¢²©:http://t.sina.com.cn/cwinux
+ï»¿/*
+ç‰ˆæƒå£°æ˜ï¼š
+æœ¬è½¯ä»¶éµå¾ªGNU GPL V3ï¼ˆhttp://www.gnu.org/licenses/gpl.htmlï¼‰ï¼Œ
+è”ç³»æ–¹å¼ï¼šemail:cwinux@gmail.comï¼›å¾®åš:http://t.sina.com.cn/cwinux
 */
 
 #include "CwxAppProcessMgr.h"
@@ -9,11 +9,11 @@
 
 
 int main(int argc, char** argv){
-    //´´½¨proxyµÄapp¶ÔÏóÊµÀı
+    //åˆ›å»ºproxyçš„appå¯¹è±¡å®ä¾‹
     ApnProxyApp* pApp = new ApnProxyApp();
-    //³õÊ¼»¯Ë«½ø³Ì¹ÜÀíÆ÷
+    //åˆå§‹åŒ–åŒè¿›ç¨‹ç®¡ç†å™¨
     if (0 != CwxAppProcessMgr::init(pApp)) return 1;
-    //Æô¶¯Ë«½ø³Ì£¬Ò»¸öÎª¼à¿Øproxy½ø³ÌµÄ¼à¿Ø½ø³Ì£¬Ò»¸öÎªÌá¹©proxy·şÎñµÄ¹¤×÷½ø³Ì¡£
+    //å¯åŠ¨åŒè¿›ç¨‹ï¼Œä¸€ä¸ªä¸ºç›‘æ§proxyè¿›ç¨‹çš„ç›‘æ§è¿›ç¨‹ï¼Œä¸€ä¸ªä¸ºæä¾›proxyæœåŠ¡çš„å·¥ä½œè¿›ç¨‹ã€‚
     CwxAppProcessMgr::start(argc, argv, 200, 300);
     return 0;
 }

@@ -1,8 +1,8 @@
-#include "ApnProxyHandler.h"
+Ôªø#include "ApnProxyHandler.h"
 #include "ApnProxyApp.h"
 #include "ApnProxyAppPoco.h"
 
-///echo«Î«Ûµƒ¥¶¿Ì∫Ø ˝
+///echoËØ∑Ê±ÇÁöÑÂ§ÑÁêÜÂáΩÊï∞
 int ApnProxyHandler::onRecvMsg(CwxMsgBlock*& msg, CwxTss* tss){
     int ret = APN_PROXY_ERR_SUCCESS;
     char const* szErrMsg = NULL;
@@ -28,16 +28,16 @@ int ApnProxyHandler::onRecvMsg(CwxMsgBlock*& msg, CwxTss* tss){
             szErrMsg = pTss->m_pReader->getErrMsg();
             break;
         }
-        ///ªÒ»°channel
+        ///Ëé∑Âèñchannel
         channel = pTss->m_pReader->getKey(APN_PROXY_KEY_CH, false);
-        ///ªÒ»°app
+        ///Ëé∑Âèñapp
         app = pTss->m_pReader->getKey(APN_PROXY_KEY_APP, false);
         if (!app){
             ret = APN_PROXY_ERR_MISSING_APP;
             szErrMsg = "Missing [app] parameter";
             break;
         }
-        ///ºÏ≤Èapp «∑Ò¥Ê‘⁄
+        ///Ê£ÄÊü•appÊòØÂê¶Â≠òÂú®
         map<string, ApnProxySslInfo*>::iterator iter = pTss->m_appSsl.find(string(app->m_szData));
         if ( iter == pTss->m_appSsl.end()){
             ret = APN_PROXY_ERR_NO_APP;
@@ -46,14 +46,14 @@ int ApnProxyHandler::onRecvMsg(CwxMsgBlock*& msg, CwxTss* tss){
         }
         ApnProxySsl* ssl = iter->second->m_ssl;
         sslInfo = iter->second;
-        ///ªÒ»°dev
+        ///Ëé∑Âèñdev
         dev = pTss->m_pReader->getKey(APN_PROXY_KEY_DEV, false);
         if (!dev){
             ret = APN_PROXY_ERR_MISSING_DEV;
             szErrMsg = "Missing [dev] parameter";
             break;
         }
-        ///◊™ªØid
+        ///ËΩ¨Âåñid
         memset(binDevId, 0x00, APN_PROXY_APP_DEVICE_BINARY_SIZE);
         i=0;
         while(i < dev->m_uiDataLen/2){
@@ -66,7 +66,7 @@ int ApnProxyHandler::onRecvMsg(CwxMsgBlock*& msg, CwxTss* tss){
             memmove(binDevId + (APN_PROXY_APP_DEVICE_BINARY_SIZE - i), binDevId, i);
             memset(binDevId, 0x00, APN_PROXY_APP_DEVICE_BINARY_SIZE - i);
         }
-        ///ªÒ»°ƒ⁄»›
+        ///Ëé∑ÂèñÂÜÖÂÆπ
         content = pTss->m_pReader->getKey(APN_PROXY_KEY_C, false);
         if (!content){
             ret = APN_PROXY_ERR_MISSING_CONTENT;
@@ -78,9 +78,9 @@ int ApnProxyHandler::onRecvMsg(CwxMsgBlock*& msg, CwxTss* tss){
             szErrMsg = "msg is too long";
             break;
         }
-        ///ªÒ»°id
+        ///Ëé∑Âèñid
         pTss->m_pReader->getKey(APN_PROXY_KEY_ID, uiId);
-        ///ªÒ»°expire
+        ///Ëé∑Âèñexpire
         pTss->m_pReader->getKey(APN_PROXY_KEY_E, uiExpire);
         if (uiExpire){
             if(uiExpire < time(NULL)) uiExpire += (CWX_UINT32)time(NULL);
@@ -88,7 +88,7 @@ int ApnProxyHandler::onRecvMsg(CwxMsgBlock*& msg, CwxTss* tss){
             uiExpire = time(NULL);
             uiExpire += APN_PROXY_DEF_EXPIRE;
         }
-        ///ªÒ»°check
+        ///Ëé∑Âèñcheck
         pTss->m_pReader->getKey(APN_PROXY_KEY_CHECK, uiCheck);
 
         if (!ssl->isConnected()){
@@ -108,20 +108,20 @@ int ApnProxyHandler::onRecvMsg(CwxMsgBlock*& msg, CwxTss* tss){
                 content->m_uiDataLen,
                 pTss->m_szBuf2K))
             {
-                ///ªÒ»°…œ¥Œ ß∞‹µƒ–≈œ¢
+                ///Ëé∑Âèñ‰∏äÊ¨°Â§±Ë¥•ÁöÑ‰ø°ÊÅØ
                 if (sslInfo->m_strLastSendDevId.length()){
                     uiLastId = sslInfo->m_uiLastSendId;
                     strLastContent = sslInfo->m_strLastSendContent;
                     strLastDevId = sslInfo->m_strLastSendDevId;
                 }
                 ssl->disconnect();
-                ///÷ÿ–¬Ω®¡¢¡¨Ω”
+                ///ÈáçÊñ∞Âª∫Á´ãËøûÊé•
                 if (0 != ssl->connect(m_pApp->getConfig().m_uiConnTimeoutMilliSecond, pTss->m_szBuf2K)){
                     ret = APN_PROXY_ERR_FAIL_CONNECT;
                     szErrMsg = pTss->m_szBuf2K;
                     break;
                 }
-                ///÷ÿ ‘∑¢ÀÕ
+                ///ÈáçËØïÂèëÈÄÅ
                 if (0 != ApnProxyAppPoco::sendEnhancedNotice(ssl,
                     uiExpire,
                     uiId,
@@ -143,20 +143,20 @@ int ApnProxyHandler::onRecvMsg(CwxMsgBlock*& msg, CwxTss* tss){
                 content->m_uiDataLen,
                 pTss->m_szBuf2K))
             {
-                ///ªÒ»°…œ¥Œ ß∞‹µƒ–≈œ¢
+                ///Ëé∑Âèñ‰∏äÊ¨°Â§±Ë¥•ÁöÑ‰ø°ÊÅØ
                 if (sslInfo->m_strLastSendDevId.length()){
                     uiLastId = sslInfo->m_uiLastSendId;
                     strLastContent = sslInfo->m_strLastSendContent;
                     strLastDevId = sslInfo->m_strLastSendDevId;
                 }
                 ssl->disconnect();
-                ///÷ÿ–¬Ω®¡¢¡¨Ω”
+                ///ÈáçÊñ∞Âª∫Á´ãËøûÊé•
                 if (0 != ssl->connect(m_pApp->getConfig().m_uiConnTimeoutMilliSecond, pTss->m_szBuf2K)){
                     ret = APN_PROXY_ERR_FAIL_CONNECT;
                     szErrMsg = pTss->m_szBuf2K;
                     break;
                 }
-                ///÷ÿ ‘∑¢ÀÕ
+                ///ÈáçËØïÂèëÈÄÅ
                 if (0 != ApnProxyAppPoco::sendNotice(ssl,
                     binDevId,
                     content->m_szData,
@@ -172,7 +172,7 @@ int ApnProxyHandler::onRecvMsg(CwxMsgBlock*& msg, CwxTss* tss){
             }
         }
         if (uiCheck){
-            sslInfo->m_strLastSendDevId.erase(); ///<«Âø’ƒ⁄»›
+            sslInfo->m_strLastSendDevId.erase(); ///<Ê∏ÖÁ©∫ÂÜÖÂÆπ
             if (!ssl->isReadReady(m_pApp->getConfig().m_uiCheckMilliSecond)) break;
             ret = APN_PROXY_ERR_NOTICE_FAIL;
             szErrMsg = "Connection is closed.";

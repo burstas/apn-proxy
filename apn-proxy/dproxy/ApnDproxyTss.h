@@ -1,9 +1,9 @@
-#ifndef __APN_DPROXY_TSS_H__
+ï»¿#ifndef __APN_DPROXY_TSS_H__
 #define __APN_DPROXY_TSS_H__
 /*
-°æÈ¨ÉùÃ÷£º
-±¾Èí¼ş×ñÑ­GNU GPL V3£¨http://www.gnu.org/licenses/gpl.html£©£¬
-ÁªÏµ·½Ê½£ºemail:cwinux@gmail.com£»Î¢²©:http://t.sina.com.cn/cwinux
+ç‰ˆæƒå£°æ˜ï¼š
+æœ¬è½¯ä»¶éµå¾ªGNU GPL V3ï¼ˆhttp://www.gnu.org/licenses/gpl.htmlï¼‰ï¼Œ
+è”ç³»æ–¹å¼ï¼šemail:cwinux@gmail.comï¼›å¾®åš:http://t.sina.com.cn/cwinux
 */
 
 #include "ApnProxyMacro.h"
@@ -14,7 +14,7 @@
 #include "ApnProxySsl.h"
 #include "ApnProxyConfig.h"
 
-///apnµÄÁ¬½ÓĞÅÏ¢
+///apnçš„è¿æ¥ä¿¡æ¯
 class ApnDproxySslInfo{
 public:
     ApnDproxySslInfo(){
@@ -22,30 +22,30 @@ public:
         m_uiLastSendId = 0;
     }
 public:
-    ApnProxySsl*    m_ssl;  ///<apnµÄsslÁ¬½Ó
-    CWX_UINT32      m_uiLastSendId; ///<ÉÏÒ»´Î·¢ËÍµÄid
-    string          m_strLastSendDevId; ///<ÉÏÒ»´Î·¢ËÍµÄÉè±¸id
-    string          m_strLastSendContent; ///<ÉÏÒ»´Î·¢ËÍµÄÄÚÈİ
+    ApnProxySsl*    m_ssl;  ///<apnçš„sslè¿æ¥
+    CWX_UINT32      m_uiLastSendId; ///<ä¸Šä¸€æ¬¡å‘é€çš„id
+    string          m_strLastSendDevId; ///<ä¸Šä¸€æ¬¡å‘é€çš„è®¾å¤‡id
+    string          m_strLastSendContent; ///<ä¸Šä¸€æ¬¡å‘é€çš„å†…å®¹
 };
-//Apn-dproxyµÄtss
+//Apn-dproxyçš„tss
 class ApnDproxyTss:public CwxTss{
 public:
     enum{
         DEF_PACKAGE_SIZE = 1024
     };
 public:
-    ///¹¹Ôìº¯Êı
+    ///æ„é€ å‡½æ•°
     ApnDproxyTss():CwxTss(){
     }
-    ///Îö¹¹º¯Êı
+    ///ææ„å‡½æ•°
     ~ApnDproxyTss();
 public:
-    ///tssµÄ³õÊ¼»¯£¬0£º³É¹¦£»-1£ºÊ§°Ü
+    ///tssçš„åˆå§‹åŒ–ï¼Œ0ï¼šæˆåŠŸï¼›-1ï¼šå¤±è´¥
     int init();
 public:
-    CwxPackageReader*         m_pReader; ///<Êı¾İ°üµÄ½â°ü¶ÔÏó
-    CwxPackageWriter*         m_pWriter; ///<Êı¾İ°üµÄpack¶ÔÏó
-    map<string, ApnDproxySslInfo*> m_appSsl; ///<appµÄssl¶ÔÏó
+    CwxPackageReader*         m_pReader; ///<æ•°æ®åŒ…çš„è§£åŒ…å¯¹è±¡
+    CwxPackageWriter*         m_pWriter; ///<æ•°æ®åŒ…çš„packå¯¹è±¡
+    map<string, ApnDproxySslInfo*> m_appSsl; ///<appçš„sslå¯¹è±¡
 };
 
 #endif

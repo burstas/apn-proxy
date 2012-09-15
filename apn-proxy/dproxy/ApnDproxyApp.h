@@ -1,9 +1,9 @@
-#ifndef __APN_DPROXY_APP_H__
+ï»¿#ifndef __APN_DPROXY_APP_H__
 #define __APN_DPROXY_APP_H__
 /*
-°æÈ¨ÉùÃ÷£º
-    ±¾Èí¼ş×ñÑ­GNU GPL V3£¨http://www.gnu.org/licenses/gpl.html£©£¬
-    ÁªÏµ·½Ê½£ºemail:cwinux@gmail.com£»Î¢²©:http://t.sina.com.cn/cwinux
+ç‰ˆæƒå£°æ˜ï¼š
+    æœ¬è½¯ä»¶éµå¾ªGNU GPL V3ï¼ˆhttp://www.gnu.org/licenses/gpl.htmlï¼‰ï¼Œ
+    è”ç³»æ–¹å¼ï¼šemail:cwinux@gmail.comï¼›å¾®åš:http://t.sina.com.cn/cwinux
 */
 #include "CwxAppFramework.h"
 #include "ApnDproxyConfig.h"
@@ -15,61 +15,61 @@
 #define APN_DPROXY_APP_MODIFY_DATE "2012-06-17"
 
 
-///¶àÏß³ÌµÄapple APN DProxy·şÎñ
+///å¤šçº¿ç¨‹çš„apple APN DProxyæœåŠ¡
 class  ApnDproxyApp: public CwxAppFramework{
 public:
     enum{
-        APN_MAX_REPLY_BUF_SIZE = 1024 * 1024, ///<×´Ì¬²éÑ¯µÄ×î´óbuf size
-        LOG_FILE_SIZE = 30, ///<Ã¿¸ö¿ÉÑ­»·Ê¹ÓÃÈÕÖ¾ÎÄ¼şµÄMByte
-        LOG_FILE_NUM = 7, ///<¿ÉÑ­»·Ê¹ÓÃÈÕÖ¾ÎÄ¼şµÄÊıÁ¿
-        SVR_TYPE_APN = CwxAppFramework::SVR_TYPE_USER_START, ///<proxy·şÎñµÄ·şÎñÀàĞÍ£¬¼°SVR-IDµÄÊıÖµ
-        APN_MSG_TYPE_NOTICE = 1, ///<noticeµÄÏûÏ¢ÀàĞÍ
-        APN_MSG_TYPE_NOTICE_REPLY = 2, ///<noticeµÄreplyÏûÏ¢ÀàĞÍ
-        APN_MSG_TYPE_CHANNEL_INFO = 3, ///<»ñÈ¡channelµÄĞÅÏ¢
-        APN_MSG_TYPE_CHANNEL_INFO_REPLY = 4, ///<channelĞÅÏ¢µÄreplyÏûÏ¢ÀàĞÍ
-        APN_MSG_TYPE_APP_INFO = 5, ///<»ñÈ¡appµÄĞÅÏ¢
-        APN_MSG_TYPE_APP_INFO_REPLY = 6, ///<appĞÅÏ¢µÄreplyÏûÏ¢ÀàĞÍ
-        APN_MSG_TYPE_THREAD_INFO = 7, ///<»ñÈ¡Ïß³ÌĞÅÏ¢
-        APN_MSG_TYPE_THREAD_INFO_REPLY = 8 ///<Ïß³ÌĞÅÏ¢µÄreplyÏûÏ¢ÀàĞÍ
+        APN_MAX_REPLY_BUF_SIZE = 1024 * 1024, ///<çŠ¶æ€æŸ¥è¯¢çš„æœ€å¤§buf size
+        LOG_FILE_SIZE = 30, ///<æ¯ä¸ªå¯å¾ªç¯ä½¿ç”¨æ—¥å¿—æ–‡ä»¶çš„MByte
+        LOG_FILE_NUM = 7, ///<å¯å¾ªç¯ä½¿ç”¨æ—¥å¿—æ–‡ä»¶çš„æ•°é‡
+        SVR_TYPE_APN = CwxAppFramework::SVR_TYPE_USER_START, ///<proxyæœåŠ¡çš„æœåŠ¡ç±»å‹ï¼ŒåŠSVR-IDçš„æ•°å€¼
+        APN_MSG_TYPE_NOTICE = 1, ///<noticeçš„æ¶ˆæ¯ç±»å‹
+        APN_MSG_TYPE_NOTICE_REPLY = 2, ///<noticeçš„replyæ¶ˆæ¯ç±»å‹
+        APN_MSG_TYPE_CHANNEL_INFO = 3, ///<è·å–channelçš„ä¿¡æ¯
+        APN_MSG_TYPE_CHANNEL_INFO_REPLY = 4, ///<channelä¿¡æ¯çš„replyæ¶ˆæ¯ç±»å‹
+        APN_MSG_TYPE_APP_INFO = 5, ///<è·å–appçš„ä¿¡æ¯
+        APN_MSG_TYPE_APP_INFO_REPLY = 6, ///<appä¿¡æ¯çš„replyæ¶ˆæ¯ç±»å‹
+        APN_MSG_TYPE_THREAD_INFO = 7, ///<è·å–çº¿ç¨‹ä¿¡æ¯
+        APN_MSG_TYPE_THREAD_INFO_REPLY = 8 ///<çº¿ç¨‹ä¿¡æ¯çš„replyæ¶ˆæ¯ç±»å‹
     };
-    ///¹¹Ôìº¯Êı
+    ///æ„é€ å‡½æ•°
 	ApnDproxyApp();
-    ///Îö¹¹º¯Êı
+    ///ææ„å‡½æ•°
 	virtual ~ApnDproxyApp();
-    ///ÖØÔØ³õÊ¼»¯º¯Êı
+    ///é‡è½½åˆå§‹åŒ–å‡½æ•°
     virtual int init(int argc, char** argv);
 public:
-    ///Ê±ÖÓÏìÓ¦º¯Êı
+    ///æ—¶é’Ÿå“åº”å‡½æ•°
     virtual void onTime(CwxTimeValue const& current);
-    ///signalÏìÓ¦º¯Êı
+    ///signalå“åº”å‡½æ•°
     virtual void onSignal(int signum);
-    ///ÊÕµ½echoÏûÏ¢µÄÏìÓ¦º¯Êı
-    virtual int onRecvMsg(CwxMsgBlock* msg,///<ÊÕµ½µÄproxyÇëÇóÊı¾İ°ü
-                        CwxAppHandler4Msg& conn,///<ÊÕµ½proxyÇëÇóµÄÁ¬½Ó¶ÔÏó
-                        CwxMsgHead const& header, ///<ÊÕµ½proxyÇëÇóµÄÏûÏ¢Í·
-                        bool& bSuspendConn///<true£ºÍ£Ö¹´ËÁ¬½Ó¼ÌĞø½ÓÊÜÉÔÏ¢£¬false£º´ËÁ¬½Ó¿ÉÒÔ¼ÌĞø½ÓÊÜÏûÏ¢
+    ///æ”¶åˆ°echoæ¶ˆæ¯çš„å“åº”å‡½æ•°
+    virtual int onRecvMsg(CwxMsgBlock* msg,///<æ”¶åˆ°çš„proxyè¯·æ±‚æ•°æ®åŒ…
+                        CwxAppHandler4Msg& conn,///<æ”¶åˆ°proxyè¯·æ±‚çš„è¿æ¥å¯¹è±¡
+                        CwxMsgHead const& header, ///<æ”¶åˆ°proxyè¯·æ±‚çš„æ¶ˆæ¯å¤´
+                        bool& bSuspendConn///<trueï¼šåœæ­¢æ­¤è¿æ¥ç»§ç»­æ¥å—ç¨æ¯ï¼Œfalseï¼šæ­¤è¿æ¥å¯ä»¥ç»§ç»­æ¥å—æ¶ˆæ¯
                         );
 public:
-    ///ÏûÏ¢»Ø¸´
-    static void replyMsg(ApnProxyApp* pApp, ///<app¶ÔÏó
-        CWX_UINT32 uiConnId, ///<Á¬½Óid
-        CWX_UINT16 unMsgType, ///<ÏûÏ¢ÀàĞÍ
-        CWX_UINT32 uiTaskId, ///<ÈÎÎñid
-        bool       bCloseConn, ///<ÊÇ·ñ¹Ø±ÕÁ¬½Ó
-        int        ret, ///<·µ»ØµÄ×´Ì¬Öµ
-        char const* szErrMsg, ///<Èô³ö´íÔò·µ»Ø´íÎóÏûÏ¢
-        char const* result, ///<ÈôÊÇ×´Ì¬²éÑ¯£¬ÔòÖ¸¶¨result£¬ÈôÎª¿ÕÔò²»Ìí¼Ó
-        CWX_UINT8 ucStatus, ///<noticeµÄapn×´Ì¬Öµ£¬ÈôÎª0Ôò²»Ìí¼Ó
-        CWX_UINT32  uiLastId, ///<ÉÏÒ»´ÎµÄÊ§°Üid£¬ÈôÎª0Ôò²»Ìí¼Ó
-        char const* szLastDevId, ///<ÉÏÒ»´ÎµÄÊ§°Üdev id£¬ÈôÎª¿ÕÔò²»Ìí¼Ó
-        char const* szLastContent ///<ÉÏÒ»´ÎÊ§°ÜµÄÄÚÈİ£¬ÈôÎª¿ÕÔò²»Ìí¼Ó
+    ///æ¶ˆæ¯å›å¤
+    static void replyMsg(ApnProxyApp* pApp, ///<appå¯¹è±¡
+        CWX_UINT32 uiConnId, ///<è¿æ¥id
+        CWX_UINT16 unMsgType, ///<æ¶ˆæ¯ç±»å‹
+        CWX_UINT32 uiTaskId, ///<ä»»åŠ¡id
+        bool       bCloseConn, ///<æ˜¯å¦å…³é—­è¿æ¥
+        int        ret, ///<è¿”å›çš„çŠ¶æ€å€¼
+        char const* szErrMsg, ///<è‹¥å‡ºé”™åˆ™è¿”å›é”™è¯¯æ¶ˆæ¯
+        char const* result, ///<è‹¥æ˜¯çŠ¶æ€æŸ¥è¯¢ï¼Œåˆ™æŒ‡å®šresultï¼Œè‹¥ä¸ºç©ºåˆ™ä¸æ·»åŠ 
+        CWX_UINT8 ucStatus, ///<noticeçš„apnçŠ¶æ€å€¼ï¼Œè‹¥ä¸º0åˆ™ä¸æ·»åŠ 
+        CWX_UINT32  uiLastId, ///<ä¸Šä¸€æ¬¡çš„å¤±è´¥idï¼Œè‹¥ä¸º0åˆ™ä¸æ·»åŠ 
+        char const* szLastDevId, ///<ä¸Šä¸€æ¬¡çš„å¤±è´¥dev idï¼Œè‹¥ä¸ºç©ºåˆ™ä¸æ·»åŠ 
+        char const* szLastContent ///<ä¸Šä¸€æ¬¡å¤±è´¥çš„å†…å®¹ï¼Œè‹¥ä¸ºç©ºåˆ™ä¸æ·»åŠ 
         );
-    ///»ñÈ¡ÅäÖÃĞÅÏ¢
+    ///è·å–é…ç½®ä¿¡æ¯
     ApnDproxyConfig const& getConfig() const { return  m_config;}
-    ///»ñÈ¡mysql¶ÔÏó
+    ///è·å–mysqlå¯¹è±¡
     Mysql& getMysql() { return m_mysql;}
 protected:
-    ///ÖØÔØÔËĞĞ»·¾³ÉèÖÃAPI
+    ///é‡è½½è¿è¡Œç¯å¢ƒè®¾ç½®API
 	virtual int initRunEnv();
     virtual void destroy();
 private:
@@ -77,20 +77,20 @@ private:
         ApnProxyTss** pTss,
         char const* szApp,
         char*& szResult);
-    ///ÊÕµ½noticeÏûÏ¢£»·µ»ØÖµ£º0£¬³É¹¦£»-1£ºÊ§°Ü
+    ///æ”¶åˆ°noticeæ¶ˆæ¯ï¼›è¿”å›å€¼ï¼š0ï¼ŒæˆåŠŸï¼›-1ï¼šå¤±è´¥
     int  recvNoticeMsg(CwxMsgBlock* msg);
-    ///ÊÕµ½channel²éÑ¯ÏûÏ¢£»·µ»ØÖµ£º0£¬³É¹¦£»-1£ºÊ§°Ü
+    ///æ”¶åˆ°channelæŸ¥è¯¢æ¶ˆæ¯ï¼›è¿”å›å€¼ï¼š0ï¼ŒæˆåŠŸï¼›-1ï¼šå¤±è´¥
     int  recvQueryChannelMsg(CwxMsgBlock* msg);
-    ///ÊÕµ½app²éÑ¯ÏûÏ¢£»·µ»ØÖµ£º0£¬³É¹¦£»-1£ºÊ§°Ü
+    ///æ”¶åˆ°appæŸ¥è¯¢æ¶ˆæ¯ï¼›è¿”å›å€¼ï¼š0ï¼ŒæˆåŠŸï¼›-1ï¼šå¤±è´¥
     int  recvQueryAppMsg(CwxMsgBlock* msg);
-    ///ÊÕµ½thread×´Ì¬²éÑ¯ÏûÏ¢£»·µ»ØÖµ£º0£¬³É¹¦£»-1£ºÊ§°Ü
+    ///æ”¶åˆ°threadçŠ¶æ€æŸ¥è¯¢æ¶ˆæ¯ï¼›è¿”å›å€¼ï¼š0ï¼ŒæˆåŠŸï¼›-1ï¼šå¤±è´¥
     int  recvQueryThreadMsg(CwxMsgBlock* msg);
 private:
-    ApnProxyHandler*             m_proxyHandler;///<proxyÇëÇó´¦ÀíµÄcommander handle
-    map<string, pair<CwxThreadPool*, ApnProxyTss**> >  m_threadPools; ///<Ïß³Ì³Ømap
-    ApnDproxyConfig              m_config;///<ÅäÖÃÎÄ¼ş¶ÔÏó
-    ApnProxyTss                  m_tss; ///<Ö÷Ïß³ÌµÄtss¶ÔÏó
-    Mysql                        m_mysql; ///<Êı¾İ¿â¶ÔÏó
+    ApnProxyHandler*             m_proxyHandler;///<proxyè¯·æ±‚å¤„ç†çš„commander handle
+    map<string, pair<CwxThreadPool*, ApnProxyTss**> >  m_threadPools; ///<çº¿ç¨‹æ± map
+    ApnDproxyConfig              m_config;///<é…ç½®æ–‡ä»¶å¯¹è±¡
+    ApnProxyTss                  m_tss; ///<ä¸»çº¿ç¨‹çš„tsså¯¹è±¡
+    Mysql                        m_mysql; ///<æ•°æ®åº“å¯¹è±¡
     char                         m_szBuf[APN_MAX_REPLY_BUF_SIZE];
 };
 #endif

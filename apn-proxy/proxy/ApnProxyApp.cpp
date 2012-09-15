@@ -1,45 +1,45 @@
-#include "ApnProxyApp.h"
+ï»¿#include "ApnProxyApp.h"
 #include "CwxDate.h"
 
-///¹¹Ôìº¯Êý
+///æž„é€ å‡½æ•°
 ApnProxyApp::ApnProxyApp(){
     m_proxyHandler = NULL;
 }
 
-///Îö¹¹º¯Êý
+///æžæž„å‡½æ•°
 ApnProxyApp::~ApnProxyApp(){
 }
 
-///³õÊ¼»¯
+///åˆå§‹åŒ–
 int ApnProxyApp::init(int argc, char** argv){
     string strErrMsg;
-    ///Ê×ÏÈµ÷ÓÃ¼Ü¹¹µÄinit api
+    ///é¦–å…ˆè°ƒç”¨æž¶æž„çš„init api
     if (CwxAppFramework::init(argc, argv) == -1) return -1;
-    ///¼ì²éÊÇ·ñÍ¨¹ý-fÖ¸¶¨ÁËÅäÖÃÎÄ¼þ£¬ÈôÃ»ÓÐ£¬Ôò²ÉÓÃÄ¬ÈÏµÄÅäÖÃÎÄ¼þ
+    ///æ£€æŸ¥æ˜¯å¦é€šè¿‡-fæŒ‡å®šäº†é…ç½®æ–‡ä»¶ï¼Œè‹¥æ²¡æœ‰ï¼Œåˆ™é‡‡ç”¨é»˜è®¤çš„é…ç½®æ–‡ä»¶
     if ((NULL == this->getConfFile()) || (strlen(this->getConfFile()) == 0)){
         this->setConfFile("apn_proxy.cnf");
     }
-    ///¼ÓÔØÅäÖÃÎÄ¼þ£¬ÈôÊ§°ÜÔòÍË³ö
+    ///åŠ è½½é…ç½®æ–‡ä»¶ï¼Œè‹¥å¤±è´¥åˆ™é€€å‡º
     if (0 != m_config.loadConfig(getConfFile())){
         CWX_ERROR((m_config.getError()));
         return -1;
     }
-    ///ÉèÖÃÔËÐÐÈÕÖ¾µÄÊä³ölevel
+    ///è®¾ç½®è¿è¡Œæ—¥å¿—çš„è¾“å‡ºlevel
     setLogLevel(CwxLogger::LEVEL_ERROR|CwxLogger::LEVEL_INFO|CwxLogger::LEVEL_WARNING);
     return 0;
 }
 
-///ÅäÖÃÔËÐÐ»·¾³ÐÅÏ¢
+///é…ç½®è¿è¡ŒçŽ¯å¢ƒä¿¡æ¯
 int ApnProxyApp::initRunEnv(){
-    ///ÉèÖÃÏµÍ³µÄÊ±ÖÓ¼ä¸ô£¬×îÐ¡¿Ì¶ÈÎª1ms£¬´ËÎª1s¡£
+    ///è®¾ç½®ç³»ç»Ÿçš„æ—¶é’Ÿé—´éš”ï¼Œæœ€å°åˆ»åº¦ä¸º1msï¼Œæ­¤ä¸º1sã€‚
     this->setClick(100);//0.1s
-    ///ÉèÖÃ¹¤×÷Ä¿Â¼
+    ///è®¾ç½®å·¥ä½œç›®å½•
     this->setWorkDir(this->m_config.m_strWorkDir.c_str());
-    ///ÉèÖÃÑ­»·ÔËÐÐÈÕÖ¾µÄÊýÁ¿
+    ///è®¾ç½®å¾ªçŽ¯è¿è¡Œæ—¥å¿—çš„æ•°é‡
     this->setLogFileNum(LOG_FILE_NUM);
-    ///ÉèÖÃÃ¿¸öÈÕÖ¾ÎÄ¼þµÄ´óÐ¡
+    ///è®¾ç½®æ¯ä¸ªæ—¥å¿—æ–‡ä»¶çš„å¤§å°
     this->setLogFileSize(LOG_FILE_SIZE*1024*1024);
-    ///µ÷ÓÃ¼Ü¹¹µÄinitRunEnv£¬Ê¹ÒÔÉÏÉèÖÃµÄ²ÎÊýÉúÐ§
+    ///è°ƒç”¨æž¶æž„çš„initRunEnvï¼Œä½¿ä»¥ä¸Šè®¾ç½®çš„å‚æ•°ç”Ÿæ•ˆ
     if (CwxAppFramework::initRunEnv() == -1 ) return -1;
     blockSignal(SIGPIPE);
     //set version
@@ -49,18 +49,18 @@ int ApnProxyApp::initRunEnv(){
     //set compile date
     this->setLastCompileDatetime(CWX_COMPILE_DATE(_BUILD_DATE));
 
-    ///½«¼ÓÔØµÄÅäÖÃÎÄ¼þÐÅÏ¢Êä³öµ½ÈÕÖ¾ÎÄ¼þÖÐ£¬ÒÔ¹©²é¿´¼ì²é
+    ///å°†åŠ è½½çš„é…ç½®æ–‡ä»¶ä¿¡æ¯è¾“å‡ºåˆ°æ—¥å¿—æ–‡ä»¶ä¸­ï¼Œä»¥ä¾›æŸ¥çœ‹æ£€æŸ¥
     m_config.outputConfig();
 
-    ///³õÊ¼»¯tss
+    ///åˆå§‹åŒ–tss
     m_tss.init(NULL, NULL);
     
-    ///×¢²áproxyÇëÇóµÄ´¦Àíhandle
+    ///æ³¨å†Œproxyè¯·æ±‚çš„å¤„ç†handle
     m_proxyHandler = new ApnProxyHandler(this);         
     this->getCommander().regHandle(SVR_TYPE_APN, m_proxyHandler);
 
-    ///¼àÌýTCPÁ¬½Ó£¬Æä½¨Á¢µÄÁ¬½ÓµÄsvr-id¶¼ÎªSVR_TYPE_APN£¬½ÓÊÕµÄÏûÏ¢µÄsvr-id¶¼ÎªSVR_TYPE_APN¡£
-    ///È«²¿ÓÉm_proxyHandler¶ÔÏóÀ´´¦Àí
+    ///ç›‘å¬TCPè¿žæŽ¥ï¼Œå…¶å»ºç«‹çš„è¿žæŽ¥çš„svr-idéƒ½ä¸ºSVR_TYPE_APNï¼ŒæŽ¥æ”¶çš„æ¶ˆæ¯çš„svr-idéƒ½ä¸ºSVR_TYPE_APNã€‚
+    ///å…¨éƒ¨ç”±m_proxyHandlerå¯¹è±¡æ¥å¤„ç†
     if (0 > this->noticeTcpListen(SVR_TYPE_APN, 
         this->m_config.m_listen.getHostName().c_str(),
         this->m_config.m_listen.getPort(),
@@ -72,7 +72,7 @@ int ApnProxyApp::initRunEnv(){
             this->m_config.m_listen.getPort()));
         return -1;
     }
-    ///´´½¨Ïß³Ì³Ø¶ÔÏó£¬´ËÏß³Ì³ØÖÐÏß³ÌµÄgroup-idÎª2
+    ///åˆ›å»ºçº¿ç¨‹æ± å¯¹è±¡ï¼Œæ­¤çº¿ç¨‹æ± ä¸­çº¿ç¨‹çš„group-idä¸º2
     CWX_UINT16 i=0;
     CWX_UINT16 uiThreadId = 2;
     CwxThreadPool* pThreadPool = NULL;
@@ -83,7 +83,7 @@ int ApnProxyApp::initRunEnv(){
             getThreadPoolMgr(),
             &getCommander());
 
-        ///Æô¶¯Ïß³Ì
+        ///å¯åŠ¨çº¿ç¨‹
         ApnProxyTss**pTss = new ApnProxyTss*[iter->second->m_unThreadNum];
         for (i=0; i<iter->second->m_unThreadNum; i++){
             pTss[i] = new ApnProxyTss();
@@ -91,7 +91,7 @@ int ApnProxyApp::initRunEnv(){
         }
         m_threadPools[iter->first] = pair<CwxThreadPool*, ApnProxyTss**>(pThreadPool, pTss);
 
-        ///Æô¶¯Ïß³Ì£¬Ïß³Ì³ØÖÐÏß³ÌµÄÏß³ÌÕ»´óÐ¡Îª1M¡£
+        ///å¯åŠ¨çº¿ç¨‹ï¼Œçº¿ç¨‹æ± ä¸­çº¿ç¨‹çš„çº¿ç¨‹æ ˆå¤§å°ä¸º1Mã€‚
         if ( 0 != pThreadPool->start((CwxTss**)pTss, APN_PROXY_CHANNEL_THREAD_STACK)){
             CWX_ERROR(("Failure to start thread pool"));
             return -1;
@@ -103,28 +103,28 @@ int ApnProxyApp::initRunEnv(){
 
 }
 
-///Ê±ÖÓº¯Êý£¬Ê²Ã´Ò²Ã»ÓÐ×ö
+///æ—¶é’Ÿå‡½æ•°ï¼Œä»€ä¹ˆä¹Ÿæ²¡æœ‰åš
 void ApnProxyApp::onTime(CwxTimeValue const& current){
     CwxAppFramework::onTime(current);
 }
 
-///ÐÅºÅ´¦Àíº¯Êý
+///ä¿¡å·å¤„ç†å‡½æ•°
 void ApnProxyApp::onSignal(int signum){
     switch(signum){
     case SIGQUIT: 
-        ///Èô¼à¿Ø½ø³ÌÍ¨ÖªÍË³ö£¬ÔòÍÆ³ö
+        ///è‹¥ç›‘æŽ§è¿›ç¨‹é€šçŸ¥é€€å‡ºï¼Œåˆ™æŽ¨å‡º
         CWX_INFO(("Recv exit signal , exit right now."));
         this->stop();
         break;
     default:
-        ///ÆäËûÐÅºÅ£¬È«²¿ºöÂÔ
+        ///å…¶ä»–ä¿¡å·ï¼Œå…¨éƒ¨å¿½ç•¥
         CWX_INFO(("Recv signal=%d, ignore it.", signum));
         break;
     }
 
 }
 
-///proxyÇëÇóµÄÇëÇóÏûÏ¢
+///proxyè¯·æ±‚çš„è¯·æ±‚æ¶ˆæ¯
 int ApnProxyApp::onRecvMsg(CwxMsgBlock* msg, CwxAppHandler4Msg& conn, CwxMsgHead const& header, bool& ){
     if (!msg) return -1;
     msg->event().setSvrId(conn.getConnInfo().getSvrId());
@@ -175,7 +175,7 @@ void ApnProxyApp::destroy()
     CwxAppFramework::destroy();
 }
 
-///ÊÕµ½noticeÏûÏ¢£»·µ»ØÖµ£º0£¬³É¹¦£»-1£ºÊ§°Ü
+///æ”¶åˆ°noticeæ¶ˆæ¯ï¼›è¿”å›žå€¼ï¼š0ï¼ŒæˆåŠŸï¼›-1ï¼šå¤±è´¥
 int  ApnProxyApp::recvNoticeMsg(CwxMsgBlock* msg){
     int ret = APN_PROXY_ERR_SUCCESS;
     char const* szErrMsg = NULL;
@@ -187,27 +187,27 @@ int  ApnProxyApp::recvNoticeMsg(CwxMsgBlock* msg){
             szErrMsg = m_tss.m_pReader->getErrMsg();
             break;
         }
-        ///»ñÈ¡app
+        ///èŽ·å–app
         app = m_tss.m_pReader->getKey(APN_PROXY_KEY_APP, false);
         if (!app){
             ret = APN_PROXY_ERR_MISSING_APP;
             szErrMsg = "Missing [app] parameter";
             break;
         }
-        ///»ñÈ¡channel
+        ///èŽ·å–channel
         channel = m_tss.m_pReader->getKey(APN_PROXY_KEY_CH, false);
         if (!channel){
             ret = APN_PROXY_ERR_MISSING_CHANNEL;
             szErrMsg = "Missing [ch] parameter";
             break;
         }
-        ///¼ì²éappÊÇ·ñ´æÔÚ
+        ///æ£€æŸ¥appæ˜¯å¦å­˜åœ¨
         if (m_config.m_apps.find(string(app->m_szData)) == m_config.m_apps.end()){
             ret = APN_PROXY_ERR_NO_APP;
             szErrMsg = "The app doesn't exist.";
             break;
         }
-        ///¼ì²échannelÊÇ·ñ´æÔÚ
+        ///æ£€æŸ¥channelæ˜¯å¦å­˜åœ¨
         if (m_threadPools.find(string(channel->m_szData)) == m_threadPools.end()){
             ret = APN_PROXY_ERR_NO_CHANNEL;
             szErrMsg = "The channel doesn't exist.";
@@ -233,7 +233,7 @@ int  ApnProxyApp::recvNoticeMsg(CwxMsgBlock* msg){
     CwxMsgBlockAlloc::free(msg);
     return 0;
 }
-///ÊÕµ½channel²éÑ¯ÏûÏ¢£»·µ»ØÖµ£º0£¬³É¹¦£»-1£ºÊ§°Ü
+///æ”¶åˆ°channelæŸ¥è¯¢æ¶ˆæ¯ï¼›è¿”å›žå€¼ï¼š0ï¼ŒæˆåŠŸï¼›-1ï¼šå¤±è´¥
 int  ApnProxyApp::recvQueryChannelMsg(CwxMsgBlock* msg){
     int ret = APN_PROXY_ERR_SUCCESS;
     char const* szErrMsg = NULL;
@@ -247,10 +247,10 @@ int  ApnProxyApp::recvQueryChannelMsg(CwxMsgBlock* msg){
             szErrMsg = m_tss.m_pReader->getErrMsg();
             break;
         }
-        ///»ñÈ¡channel
+        ///èŽ·å–channel
         channel = m_tss.m_pReader->getKey(APN_PROXY_KEY_CH, false);
         if (channel){
-            ///¼ì²échannelÊÇ·ñ´æÔÚ
+            ///æ£€æŸ¥channelæ˜¯å¦å­˜åœ¨
             if (m_threadPools.find(string(channel->m_szData)) == m_threadPools.end()){
                 ret = APN_PROXY_ERR_NO_CHANNEL;
                 szErrMsg = "The channel doesn't exist.";
@@ -307,7 +307,7 @@ int  ApnProxyApp::recvQueryChannelMsg(CwxMsgBlock* msg){
     return 0;
 
 }
-///ÊÕµ½app²éÑ¯ÏûÏ¢£»·µ»ØÖµ£º0£¬³É¹¦£»-1£ºÊ§°Ü
+///æ”¶åˆ°appæŸ¥è¯¢æ¶ˆæ¯ï¼›è¿”å›žå€¼ï¼š0ï¼ŒæˆåŠŸï¼›-1ï¼šå¤±è´¥
 int  ApnProxyApp::recvQueryAppMsg(CwxMsgBlock* msg){
     int ret = APN_PROXY_ERR_SUCCESS;
     char const* szErrMsg = NULL;
@@ -323,10 +323,10 @@ int  ApnProxyApp::recvQueryAppMsg(CwxMsgBlock* msg){
             szErrMsg = m_tss.m_pReader->getErrMsg();
             break;
         }
-        ///»ñÈ¡app
+        ///èŽ·å–app
         app = m_tss.m_pReader->getKey(APN_PROXY_KEY_APP, false);
         if (app){
-            ///¼ì²éappÊÇ·ñ´æÔÚ
+            ///æ£€æŸ¥appæ˜¯å¦å­˜åœ¨
             if (m_config.m_apps.find(string(app->m_szData)) == m_config.m_apps.end()){
                 ret = APN_PROXY_ERR_NO_APP;
                 szErrMsg = "The app doesn't exist.";
@@ -388,7 +388,7 @@ int  ApnProxyApp::recvQueryAppMsg(CwxMsgBlock* msg){
     CwxMsgBlockAlloc::free(msg);
     return 0;
 }
-///ÊÕµ½thread×´Ì¬²éÑ¯ÏûÏ¢£»·µ»ØÖµ£º0£¬³É¹¦£»-1£ºÊ§°Ü
+///æ”¶åˆ°threadçŠ¶æ€æŸ¥è¯¢æ¶ˆæ¯ï¼›è¿”å›žå€¼ï¼š0ï¼ŒæˆåŠŸï¼›-1ï¼šå¤±è´¥
 int  ApnProxyApp::recvQueryThreadMsg(CwxMsgBlock* msg){
     int ret = APN_PROXY_ERR_SUCCESS;
     char const* szErrMsg = NULL;
@@ -401,17 +401,17 @@ int  ApnProxyApp::recvQueryThreadMsg(CwxMsgBlock* msg){
             szErrMsg = m_tss.m_pReader->getErrMsg();
             break;
         }
-        ///»ñÈ¡app
+        ///èŽ·å–app
         app = m_tss.m_pReader->getKey(APN_PROXY_KEY_APP, false);
-        ///¼ì²éappÊÇ·ñ´æÔÚ
+        ///æ£€æŸ¥appæ˜¯å¦å­˜åœ¨
         if (app && (m_config.m_apps.find(string(app->m_szData)) == m_config.m_apps.end())){
             ret = APN_PROXY_ERR_NO_APP;
             szErrMsg = "The app doesn't exist.";
             break;
         }
-        ///»ñÈ¡channel
+        ///èŽ·å–channel
         channel = m_tss.m_pReader->getKey(APN_PROXY_KEY_CH, false);
-        ///¼ì²échannelÊÇ·ñ´æÔÚ
+        ///æ£€æŸ¥channelæ˜¯å¦å­˜åœ¨
         if (channel && (m_threadPools.find(string(channel->m_szData)) == m_threadPools.end())){
             ret = APN_PROXY_ERR_NO_CHANNEL;
             szErrMsg = "The channel doesn't exist.";
@@ -491,19 +491,19 @@ void ApnProxyApp::outputResult(ApnProxyConfigChannel* ch, ApnProxyTss** pTss, ch
     }
 }
 
-///ÏûÏ¢»Ø¸´
-void ApnProxyApp::replyMsg(ApnProxyApp* pApp, ///<app¶ÔÏó
-                     CWX_UINT32 uiConnId, ///<Á¬½Óid
-                     CWX_UINT16 unMsgType, ///<ÏûÏ¢ÀàÐÍ
-                     CWX_UINT32 uiTaskId, ///<ÈÎÎñid
-                     bool       bCloseConn, ///<ÊÇ·ñ¹Ø±ÕÁ¬½Ó
-                     int        ret, ///<·µ»ØµÄ×´Ì¬Öµ
-                     char const* szErrMsg, ///<Èô³ö´íÔò·µ»Ø´íÎóÏûÏ¢
-                     char const* result, ///<ÈôÊÇ×´Ì¬²éÑ¯£¬ÔòÖ¸¶¨result£¬ÈôÎª¿ÕÔò²»Ìí¼Ó
-                     CWX_UINT8 ucStatus, ///<noticeµÄapn×´Ì¬Öµ£¬ÈôÎª0Ôò²»Ìí¼Ó
-                     CWX_UINT32  uiLastId, ///<ÉÏÒ»´ÎµÄÊ§°Üid£¬ÈôÎª0Ôò²»Ìí¼Ó
-                     char const* szLastDevId, ///<ÉÏÒ»´ÎµÄÊ§°Üdev id£¬ÈôÎª¿ÕÔò²»Ìí¼Ó
-                     char const* szLastContent ///<ÉÏÒ»´ÎÊ§°ÜµÄÄÚÈÝ£¬ÈôÎª¿ÕÔò²»Ìí¼Ó
+///æ¶ˆæ¯å›žå¤
+void ApnProxyApp::replyMsg(ApnProxyApp* pApp, ///<appå¯¹è±¡
+                     CWX_UINT32 uiConnId, ///<è¿žæŽ¥id
+                     CWX_UINT16 unMsgType, ///<æ¶ˆæ¯ç±»åž‹
+                     CWX_UINT32 uiTaskId, ///<ä»»åŠ¡id
+                     bool       bCloseConn, ///<æ˜¯å¦å…³é—­è¿žæŽ¥
+                     int        ret, ///<è¿”å›žçš„çŠ¶æ€å€¼
+                     char const* szErrMsg, ///<è‹¥å‡ºé”™åˆ™è¿”å›žé”™è¯¯æ¶ˆæ¯
+                     char const* result, ///<è‹¥æ˜¯çŠ¶æ€æŸ¥è¯¢ï¼Œåˆ™æŒ‡å®šresultï¼Œè‹¥ä¸ºç©ºåˆ™ä¸æ·»åŠ 
+                     CWX_UINT8 ucStatus, ///<noticeçš„apnçŠ¶æ€å€¼ï¼Œè‹¥ä¸º0åˆ™ä¸æ·»åŠ 
+                     CWX_UINT32  uiLastId, ///<ä¸Šä¸€æ¬¡çš„å¤±è´¥idï¼Œè‹¥ä¸º0åˆ™ä¸æ·»åŠ 
+                     char const* szLastDevId, ///<ä¸Šä¸€æ¬¡çš„å¤±è´¥dev idï¼Œè‹¥ä¸ºç©ºåˆ™ä¸æ·»åŠ 
+                     char const* szLastContent ///<ä¸Šä¸€æ¬¡å¤±è´¥çš„å†…å®¹ï¼Œè‹¥ä¸ºç©ºåˆ™ä¸æ·»åŠ 
                      )
 {
     pApp->m_tss.m_pWriter->beginPack();
@@ -527,7 +527,7 @@ void ApnProxyApp::replyMsg(ApnProxyApp* pApp, ///<app¶ÔÏó
         pApp->noticeCloseConn(uiConnId);
         return;
     }
-    ///·¢ËÍ»Ø¸´µÄÊý¾Ý°ü
+    ///å‘é€å›žå¤çš„æ•°æ®åŒ…
     msg->send_ctrl().setMsgAttr(bCloseConn?CwxMsgSendCtrl::CLOSE_NOTICE:CwxMsgSendCtrl::NONE);
     msg->send_ctrl().setConnId(uiConnId);
     if (0 != pApp->sendMsgByConn(msg))	{

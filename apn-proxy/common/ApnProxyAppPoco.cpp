@@ -1,11 +1,11 @@
-#include "ApnProxyAppPoco.h"
+ï»¿#include "ApnProxyAppPoco.h"
 
-///·¢ËÍÒ»¸önotice¡£·µ»ØÖµ£¬0£º³É¹¦£»-1£ºÊ§°Ü¡£
-int ApnProxyAppPoco::sendNotice(ApnProxySsl *ssl, ///<sslÁ¬½Ó
-                                char const* devBinToken, ///<¶þ½øÖÆµÄÉè±¸ºÅ
-                                char const* payloadBuf, ///<·¢ËÍµÄnoticeµÄpayload£¬²»ÄÜ³¬¹ýAPN_PROXY_APP_MAXPAYLOAD_SIZE
-                                size_t payloadLen,  ///<Êý¾ÝµÄ³¤¶È
-                                char* szErr2K ///<´íÎóÐÅÏ¢
+///å‘é€ä¸€ä¸ªnoticeã€‚è¿”å›žå€¼ï¼Œ0ï¼šæˆåŠŸï¼›-1ï¼šå¤±è´¥ã€‚
+int ApnProxyAppPoco::sendNotice(ApnProxySsl *ssl, ///<sslè¿žæŽ¥
+                                char const* devBinToken, ///<äºŒè¿›åˆ¶çš„è®¾å¤‡å·
+                                char const* payloadBuf, ///<å‘é€çš„noticeçš„payloadï¼Œä¸èƒ½è¶…è¿‡APN_PROXY_APP_MAXPAYLOAD_SIZE
+                                size_t payloadLen,  ///<æ•°æ®çš„é•¿åº¦
+                                char* szErr2K ///<é”™è¯¯ä¿¡æ¯
                                 )
 {
     CWX_UINT8 ucCmd = 0; /* command number */
@@ -33,14 +33,14 @@ int ApnProxyAppPoco::sendNotice(ApnProxySsl *ssl, ///<sslÁ¬½Ó
     return 0;
 }
 
-///·¢ËÍÒ»¸öenhanced notice¡£·µ»ØÖµ£¬0£º³É¹¦£»-1£ºÊ§°Ü¡£
-int ApnProxyAppPoco::sendEnhancedNotice(ApnProxySsl *ssl, ///<sslÁ¬½Ó
-                                        CWX_UINT32 uiExpire, ///<ÓÐÐ§Ê±¼ä
-                                        CWX_UINT32 uiId, ///<ÏûÏ¢µÄid
-                                        char const* devBinToken, ///<¶þ½øÖÆµÄÉè±¸ºÅ
-                                        char const* payloadBuf, ///<·¢ËÍµÄnoticeµÄpayload£¬²»ÄÜ³¬¹ýAPN_PROXY_APP_MAXPAYLOAD_SIZE
-                                        size_t payloadLen, ///<Êý¾ÝµÄ³¤¶È
-                                        char* szErr2K ///<´íÎóÐÅÏ¢
+///å‘é€ä¸€ä¸ªenhanced noticeã€‚è¿”å›žå€¼ï¼Œ0ï¼šæˆåŠŸï¼›-1ï¼šå¤±è´¥ã€‚
+int ApnProxyAppPoco::sendEnhancedNotice(ApnProxySsl *ssl, ///<sslè¿žæŽ¥
+                                        CWX_UINT32 uiExpire, ///<æœ‰æ•ˆæ—¶é—´
+                                        CWX_UINT32 uiId, ///<æ¶ˆæ¯çš„id
+                                        char const* devBinToken, ///<äºŒè¿›åˆ¶çš„è®¾å¤‡å·
+                                        char const* payloadBuf, ///<å‘é€çš„noticeçš„payloadï¼Œä¸èƒ½è¶…è¿‡APN_PROXY_APP_MAXPAYLOAD_SIZE
+                                        size_t payloadLen, ///<æ•°æ®çš„é•¿åº¦
+                                        char* szErr2K ///<é”™è¯¯ä¿¡æ¯
                                         )
 {
     CWX_UINT8 ucCmd = 1; /* command number */
@@ -72,12 +72,12 @@ int ApnProxyAppPoco::sendEnhancedNotice(ApnProxySsl *ssl, ///<sslÁ¬½Ó
     if (ssl->send_n(sendBuf, pPos - sendBuf, szErr2K) <=0) return -1;
     return 0;
 }
-///»ñÈ¡enhanced noticeµÄ´íÎóÐÅÏ¢¡£·µ»ØÖµ£¬0£º²»´æÔÚ£»1£º³É¹¦·µ»Ø
-int ApnProxyAppPoco::readEnhancedNoticeErr(ApnProxySsl *ssl, ///<sslÁ¬½Ó
-                                           CWX_UINT8& ucStatus, ///<´íÎó´úÂë
-                                           CWX_UINT32& uiId,  ///<¶ÔÓ¦µÄÏûÏ¢id
-                                           CWX_UINT32 uiMilliTimeout, ///<³¬Ê±Ê±¼ä
-                                           char* szErr2K ///<´íÎóÐÅÏ¢
+///èŽ·å–enhanced noticeçš„é”™è¯¯ä¿¡æ¯ã€‚è¿”å›žå€¼ï¼Œ0ï¼šä¸å­˜åœ¨ï¼›1ï¼šæˆåŠŸè¿”å›ž
+int ApnProxyAppPoco::readEnhancedNoticeErr(ApnProxySsl *ssl, ///<sslè¿žæŽ¥
+                                           CWX_UINT8& ucStatus, ///<é”™è¯¯ä»£ç 
+                                           CWX_UINT32& uiId,  ///<å¯¹åº”çš„æ¶ˆæ¯id
+                                           CWX_UINT32 uiMilliTimeout, ///<è¶…æ—¶æ—¶é—´
+                                           char* szErr2K ///<é”™è¯¯ä¿¡æ¯
                                            )
 {
     char szBuf[8];

@@ -1,9 +1,9 @@
-#ifndef __APN_PROXY_CONFIG_H__
+ï»¿#ifndef __APN_PROXY_CONFIG_H__
 #define __APN_PROXY_CONFIG_H__
 /*
-°æÈ¨ÉùÃ÷£º
-±¾Èí¼ş×ñÑ­GNU GPL V3£¨http://www.gnu.org/licenses/gpl.html£©£¬
-ÁªÏµ·½Ê½£ºemail:cwinux@gmail.com£»Î¢²©:http://t.sina.com.cn/cwinux
+ç‰ˆæƒå£°æ˜ï¼š
+æœ¬è½¯ä»¶éµå¾ªGNU GPL V3ï¼ˆhttp://www.gnu.org/licenses/gpl.htmlï¼‰ï¼Œ
+è”ç³»æ–¹å¼ï¼šemail:cwinux@gmail.comï¼›å¾®åš:http://t.sina.com.cn/cwinux
 */
 #include "CwxGlobalMacro.h"
 #include "CwxHostInfo.h"
@@ -12,7 +12,7 @@
 #include "ApnProxyMacro.h"
 #include "CwxLogger.h"
 
-///channelµÄ¶¨Òå
+///channelçš„å®šä¹‰
 class ApnProxyConfigChannel{
 public:
     ApnProxyConfigChannel(){
@@ -30,13 +30,13 @@ public:
         return *this;
     }
 public:
-    string          m_strChannelName; ///<channelµÄÃû×Ö
-    string          m_strApps;       ///<appµÄÁĞ±í
-    CWX_UINT16      m_unThreadNum; ///<Í¨µÀµÄÏß³ÌÊıÁ¿
-    bool            m_bRelease; ///<ÊÇ·ñ²ÉÓÃreleaseÅäÖÃ
+    string          m_strChannelName; ///<channelçš„åå­—
+    string          m_strApps;       ///<appçš„åˆ—è¡¨
+    CWX_UINT16      m_unThreadNum; ///<é€šé“çš„çº¿ç¨‹æ•°é‡
+    bool            m_bRelease; ///<æ˜¯å¦é‡‡ç”¨releaseé…ç½®
 };
 
-//appµÄ¶¨Òå
+//appçš„å®šä¹‰
 class ApnProxyConfigApp{
 public:
     ApnProxyConfigApp(){}
@@ -53,20 +53,20 @@ public:
     }
 
 public:
-    string          m_strAppName; ///<appµÄÃû×Ö
-    list<string>    m_channels; ///<channelµÄÃû×Ö
-    string          m_strCertFile; ///<certÎÄ¼şµÄÃû×Ö
-    string          m_strKeyFile; ///<keyÎÄ¼şµÄÃû×Ö
-    string          m_strCaPath; ///<caµÄpath
+    string          m_strAppName; ///<appçš„åå­—
+    list<string>    m_channels; ///<channelçš„åå­—
+    string          m_strCertFile; ///<certæ–‡ä»¶çš„åå­—
+    string          m_strKeyFile; ///<keyæ–‡ä»¶çš„åå­—
+    string          m_strCaPath; ///<caçš„path
 };
 
-///appÓëchannelµÄ¶ÔÏó
+///appä¸channelçš„å¯¹è±¡
 class ApnProxyConfigChannelApp{
 public:
-    ///¹¹Ôìº¯Êı
+    ///æ„é€ å‡½æ•°
     ApnProxyConfigChannelApp(){}
 public:
-    ///¸´ÖÆ²Ù×÷
+    ///å¤åˆ¶æ“ä½œ
     ApnProxyConfigChannelApp& operator=(ApnProxyConfigChannelApp const& item){
         if (this != &item){
             m_strAppName = item.m_strAppName;
@@ -74,22 +74,22 @@ public:
         }
         return *this;
     }
-    ///equal±È½Ï²Ù×÷
+    ///equalæ¯”è¾ƒæ“ä½œ
     bool operator == (ApnProxyConfigChannelApp const& item) const{
         return (m_strAppName==item.m_strAppName) && (m_strChannelName == item.m_strChannelName);
     }
-    ///<±È½Ï²Ù×÷
+    ///<æ¯”è¾ƒæ“ä½œ
     bool operator < (ApnProxyConfigChannelApp const& item) const{
         if (m_strChannelName < item.m_strChannelName) return true;
         if (m_strChannelName > item.m_strChannelName) return false;
         return m_strAppName < item.m_strAppName;
     }
 public:
-    string          m_strAppName; ///<appµÄÃû×Ö
-    string          m_strChannelName; ///<channelµÄÃû×Ö
+    string          m_strAppName; ///<appçš„åå­—
+    string          m_strChannelName; ///<channelçš„åå­—
 };
 
-///ÅäÖÃÎÄ¼ş¼ÓÔØ¶ÔÏó
+///é…ç½®æ–‡ä»¶åŠ è½½å¯¹è±¡
 class ApnProxyConfig{
 public:
     enum{
@@ -104,7 +104,7 @@ public:
     
     ~ApnProxyConfig(){
         {
-            map<string, ApnProxyConfigChannel*>::iterator iter = m_channels.begin(); ///<channelµÄ¶¨Òå
+            map<string, ApnProxyConfigChannel*>::iterator iter = m_channels.begin(); ///<channelçš„å®šä¹‰
             while(iter != m_channels.end()){
                 delete iter->second;
                 iter++;
@@ -112,7 +112,7 @@ public:
 
         }
         {
-            map<string, ApnProxyConfigApp*>::iterator iter = m_apps.begin(); ///<ËùÓĞµÄapp
+            map<string, ApnProxyConfigApp*>::iterator iter = m_apps.begin(); ///<æ‰€æœ‰çš„app
             while(iter != m_apps.end()){
                 delete iter->second;
                 iter++;
@@ -122,21 +122,21 @@ public:
 
     }
 public:
-    //¼ÓÔØÅäÖÃÎÄ¼ş.-1:failure, 0:success
+    //åŠ è½½é…ç½®æ–‡ä»¶.-1:failure, 0:success
     int loadConfig(string const & strConfFile);
-    //Êä³ö¼ÓÔØµÄÅäÖÃÎÄ¼şĞÅÏ¢
+    //è¾“å‡ºåŠ è½½çš„é…ç½®æ–‡ä»¶ä¿¡æ¯
     void outputConfig();
-    //»ñÈ¡ÅäÖÃÎÄ¼ş¼ÓÔØµÄÊ§°ÜÔ­Òò
+    //è·å–é…ç½®æ–‡ä»¶åŠ è½½çš„å¤±è´¥åŸå› 
     char const* getError() { return m_szError; };
 public:
-    string              m_strWorkDir;///<¹¤×÷Ä¿Â¼
-    CwxHostInfo         m_listen;///<tcpµÄ¼àÌıip/port
-    CWX_UINT32          m_uiConnTimeoutMilliSecond; ///<Á¬½ÓµÄ³¬Ê±Ê±¼ä
-    CWX_UINT32          m_uiCheckMilliSecond; ///<·¢ËÍ³É¹¦¼ì²âµÄÊ±¼ä
-    map<string, ApnProxyConfigChannel*>  m_channels; ///<channelµÄ¶¨Òå
-    map<string, ApnProxyConfigApp*> m_apps; ///<ËùÓĞµÄapp
-    map<ApnProxyConfigChannelApp, ApnProxyConfigApp*>   m_channelApps; ///<channel appµÄ¼¯ºÏ
-    char                m_szError[2048];///<´íÎóÏûÏ¢µÄbuf
+    string              m_strWorkDir;///<å·¥ä½œç›®å½•
+    CwxHostInfo         m_listen;///<tcpçš„ç›‘å¬ip/port
+    CWX_UINT32          m_uiConnTimeoutMilliSecond; ///<è¿æ¥çš„è¶…æ—¶æ—¶é—´
+    CWX_UINT32          m_uiCheckMilliSecond; ///<å‘é€æˆåŠŸæ£€æµ‹çš„æ—¶é—´
+    map<string, ApnProxyConfigChannel*>  m_channels; ///<channelçš„å®šä¹‰
+    map<string, ApnProxyConfigApp*> m_apps; ///<æ‰€æœ‰çš„app
+    map<ApnProxyConfigChannelApp, ApnProxyConfigApp*>   m_channelApps; ///<channel appçš„é›†åˆ
+    char                m_szError[2048];///<é”™è¯¯æ¶ˆæ¯çš„buf
 };
 
 #endif

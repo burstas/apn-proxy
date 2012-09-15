@@ -1,4 +1,4 @@
-#include "Mysql.h"
+ï»¿#include "Mysql.h"
 
 
 bool Mysql::init(){
@@ -90,7 +90,7 @@ int Mysql::execute(char const* szSql){
     return this->m_iAffectedRow;
 }
 
-///»ñÈ¡sqlµÄcountÊıÁ¿,-1±íÊ¾Ê§°Ü
+///è·å–sqlçš„countæ•°é‡,-1è¡¨ç¤ºå¤±è´¥
 bool Mysql::count(char const* szSql, CWX_UINT32& num){
     if (!query(szSql)){
         freeResult();

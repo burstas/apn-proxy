@@ -1,16 +1,16 @@
-#ifndef __APN_PROXY_APP_POCO_H__
+ï»¿#ifndef __APN_PROXY_APP_POCO_H__
 #define __APN_PROXY_APP_POCO_H__
 
 /*
-°æÈ¨ÉùÃ÷£º
-±¾Èí¼ş×ñÑ­GNU GPL V3£¨http://www.gnu.org/licenses/gpl.html£©£¬
-ÁªÏµ·½Ê½£ºemail:cwinux@gmail.com£»Î¢²©:http://t.sina.com.cn/cwinux
+ç‰ˆæƒå£°æ˜ï¼š
+æœ¬è½¯ä»¶éµå¾ªGNU GPL V3ï¼ˆhttp://www.gnu.org/licenses/gpl.htmlï¼‰ï¼Œ
+è”ç³»æ–¹å¼ï¼šemail:cwinux@gmail.comï¼›å¾®åš:http://t.sina.com.cn/cwinux
 */
 
 #include "ApnProxySsl.h"
 
 
-///Õâ¸öÀàÊÇ¶àÏß³Ì°²È«µÄ
+///è¿™ä¸ªç±»æ˜¯å¤šçº¿ç¨‹å®‰å…¨çš„
 class ApnProxyAppPoco{
 public:
     enum{
@@ -26,30 +26,30 @@ public:
         APN_ERR_UNKNOWN=255 ///<None (unknown)
     };
 public:
-    ///·¢ËÍÒ»¸önotice¡£·µ»ØÖµ£¬0£º³É¹¦£»-1£ºÊ§°Ü¡£
-    static int sendNotice(ApnProxySsl *ssl, ///<sslÁ¬½Ó
-        char const* devBinToken, ///<¶ş½øÖÆµÄÉè±¸ºÅ
-        char const* payloadBuf, ///<·¢ËÍµÄnoticeµÄpayload£¬²»ÄÜ³¬¹ıAPN_PROXY_APP_MAXPAYLOAD_SIZE
-        size_t payloadLen,  ///<Êı¾İµÄ³¤¶È
-        char* szErr2K ///<´íÎóĞÅÏ¢
+    ///å‘é€ä¸€ä¸ªnoticeã€‚è¿”å›å€¼ï¼Œ0ï¼šæˆåŠŸï¼›-1ï¼šå¤±è´¥ã€‚
+    static int sendNotice(ApnProxySsl *ssl, ///<sslè¿æ¥
+        char const* devBinToken, ///<äºŒè¿›åˆ¶çš„è®¾å¤‡å·
+        char const* payloadBuf, ///<å‘é€çš„noticeçš„payloadï¼Œä¸èƒ½è¶…è¿‡APN_PROXY_APP_MAXPAYLOAD_SIZE
+        size_t payloadLen,  ///<æ•°æ®çš„é•¿åº¦
+        char* szErr2K ///<é”™è¯¯ä¿¡æ¯
         );
-    ///·¢ËÍÒ»¸öenhanced notice¡£·µ»ØÖµ£¬0£º³É¹¦£»-1£ºÊ§°Ü¡£
-    static int sendEnhancedNotice(ApnProxySsl *ssl, ///<sslÁ¬½Ó
-        CWX_UINT32 uiExpire, ///<ÓĞĞ§Ê±¼ä
-        CWX_UINT32 uiId, ///<ÏûÏ¢µÄid
-        char const* devBinToken, ///<¶ş½øÖÆµÄÉè±¸ºÅ
-        char const* payloadBuf, ///<·¢ËÍµÄnoticeµÄpayload£¬²»ÄÜ³¬¹ıAPN_PROXY_APP_MAXPAYLOAD_SIZE
-        size_t payloadLen, ///<Êı¾İµÄ³¤¶È
-        char* szErr2K ///<´íÎóĞÅÏ¢
+    ///å‘é€ä¸€ä¸ªenhanced noticeã€‚è¿”å›å€¼ï¼Œ0ï¼šæˆåŠŸï¼›-1ï¼šå¤±è´¥ã€‚
+    static int sendEnhancedNotice(ApnProxySsl *ssl, ///<sslè¿æ¥
+        CWX_UINT32 uiExpire, ///<æœ‰æ•ˆæ—¶é—´
+        CWX_UINT32 uiId, ///<æ¶ˆæ¯çš„id
+        char const* devBinToken, ///<äºŒè¿›åˆ¶çš„è®¾å¤‡å·
+        char const* payloadBuf, ///<å‘é€çš„noticeçš„payloadï¼Œä¸èƒ½è¶…è¿‡APN_PROXY_APP_MAXPAYLOAD_SIZE
+        size_t payloadLen, ///<æ•°æ®çš„é•¿åº¦
+        char* szErr2K ///<é”™è¯¯ä¿¡æ¯
         );
-    ///»ñÈ¡enhanced noticeµÄ´íÎóĞÅÏ¢¡£·µ»ØÖµ£¬0£º²»´æÔÚ£»1£º³É¹¦·µ»Ø
-    static int readEnhancedNoticeErr(ApnProxySsl *ssl, ///<sslÁ¬½Ó
-        CWX_UINT8& ucStatus, ///<´íÎó´úÂë
-        CWX_UINT32& uiId,  ///<¶ÔÓ¦µÄÏûÏ¢id
-        CWX_UINT32 uiMilliTimeout, ///<³¬Ê±Ê±¼ä
-        char* szErr2K ///<´íÎóĞÅÏ¢
+    ///è·å–enhanced noticeçš„é”™è¯¯ä¿¡æ¯ã€‚è¿”å›å€¼ï¼Œ0ï¼šä¸å­˜åœ¨ï¼›1ï¼šæˆåŠŸè¿”å›
+    static int readEnhancedNoticeErr(ApnProxySsl *ssl, ///<sslè¿æ¥
+        CWX_UINT8& ucStatus, ///<é”™è¯¯ä»£ç 
+        CWX_UINT32& uiId,  ///<å¯¹åº”çš„æ¶ˆæ¯id
+        CWX_UINT32 uiMilliTimeout, ///<è¶…æ—¶æ—¶é—´
+        char* szErr2K ///<é”™è¯¯ä¿¡æ¯
         );
-    ///»ñÈ¡´íÎó´úÂëµÄ´íÎóÏûÏ¢
+    ///è·å–é”™è¯¯ä»£ç çš„é”™è¯¯æ¶ˆæ¯
     static char const* getErrStatusMsg(CWX_UINT8 ucStatus);
 private:
     ApnProxyAppPoco(){}

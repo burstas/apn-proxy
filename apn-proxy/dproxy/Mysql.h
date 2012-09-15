@@ -1,9 +1,9 @@
-#ifndef __MYSQL_H__
+ï»¿#ifndef __MYSQL_H__
 #define __MYSQL_H__
 
 /**
 @file Mysql.h
-@brief MysqlÊı¾İ¿âµÄ½Ó¿ÚÀàMysql¡£
+@brief Mysqlæ•°æ®åº“çš„æ¥å£ç±»Mysqlã€‚
 @author cwinux@gmail.com
 @version 0.1
 @date 2011-11-10
@@ -24,35 +24,35 @@
 
 /**
 @class Mysql
-@brief MysqlÊı¾İ¿âµÄÁ¬½Ó¶ÔÏó¡£
+@brief Mysqlæ•°æ®åº“çš„è¿æ¥å¯¹è±¡ã€‚
 */
 class CWX_API Mysql{
 public:
-    ///¹¹Ôìº¯Êı
+    ///æ„é€ å‡½æ•°
     Mysql(){
         m_bInit = false;
         m_bConnected = false;
         m_iAffectedRow = 0;
         m_result = NULL;
     }
-    ///Îö¹¹º¯Êı
+    ///ææ„å‡½æ•°
     ~Mysql(){
         disconnect();
     }
 public:
-    ///³õÊ¼»¯Êı¾İ¿âÁ¬½Ó¶ÔÏó
+    ///åˆå§‹åŒ–æ•°æ®åº“è¿æ¥å¯¹è±¡
     bool init();
     /**
-    @brief Á¬½ÓMYSQLÊı¾İ¿â¡£
-    @param [in] szSvrName Êı¾İ¿âµÄ·şÎñÆ÷
-    @param [in] szUser Êı¾İ¿âÁ¬½ÓµÄÓÃ»§Ãû
-    @param [in] szPasswd ÓÃ»§¿ÚÁî
-    @param [in] szDbName Á¬½ÓÊı¾İ¿âÃû×Ö
-    @param [in] unPort Á¬½ÓµÄ¶Ë¿ÚºÅ£¬Ä¬ÈÏÎª3306
-    @param [in] szUnixsock ÈôÊÇ²ÉÓÃUNIX DOMAIN£¬ÔòÖ¸¶¨ÆäsockÎÄ¼ş
-    @param [in] uiClientFlag Á¬½ÓµÄÊôĞÔ£¬È±Ê¡ÎªCLIENT_MULTI_STATEMENTS|CLIENT_FOUND_ROWS
-    @param [in] uiTimeoutSecond Á¬½ÓµÄ³¬Ê±Ê±¼ä£¬Ä¬ÈÏÎª×èÈûÁ¬½Ó
-    @return false£ºÁ¬½ÓÊ§°Ü£»true£ºÁ¬½Ó³É¹¦¡£ÔÚÊ§°ÜµÄÇé¿öÏÂ£¬getErrMsg()»ñÈ¡´íÎóĞÅÏ¢¡£
+    @brief è¿æ¥MYSQLæ•°æ®åº“ã€‚
+    @param [in] szSvrName æ•°æ®åº“çš„æœåŠ¡å™¨
+    @param [in] szUser æ•°æ®åº“è¿æ¥çš„ç”¨æˆ·å
+    @param [in] szPasswd ç”¨æˆ·å£ä»¤
+    @param [in] szDbName è¿æ¥æ•°æ®åº“åå­—
+    @param [in] unPort è¿æ¥çš„ç«¯å£å·ï¼Œé»˜è®¤ä¸º3306
+    @param [in] szUnixsock è‹¥æ˜¯é‡‡ç”¨UNIX DOMAINï¼Œåˆ™æŒ‡å®šå…¶sockæ–‡ä»¶
+    @param [in] uiClientFlag è¿æ¥çš„å±æ€§ï¼Œç¼ºçœä¸ºCLIENT_MULTI_STATEMENTS|CLIENT_FOUND_ROWS
+    @param [in] uiTimeoutSecond è¿æ¥çš„è¶…æ—¶æ—¶é—´ï¼Œé»˜è®¤ä¸ºé˜»å¡è¿æ¥
+    @return falseï¼šè¿æ¥å¤±è´¥ï¼›trueï¼šè¿æ¥æˆåŠŸã€‚åœ¨å¤±è´¥çš„æƒ…å†µä¸‹ï¼ŒgetErrMsg()è·å–é”™è¯¯ä¿¡æ¯ã€‚
     */
     bool connect(char const* szSvrName,
                  char const* szUser,
@@ -62,56 +62,56 @@ public:
                  char const* szUnixsock = NULL,
                  unsigned long uiClientFlag = CLIENT_MULTI_STATEMENTS|CLIENT_FOUND_ROWS,
                  unsigned long uiTimeoutSecond=0);
-    ///¹Ø±ÕÁ¬½Ó
+    ///å…³é—­è¿æ¥
     void disconnect();
-    ///ÉèÖÃÁ¬½ÓµÄ×Ö·û¼¯£¬ÈôĞèÒªÉèÖÃ£¬±ØĞëÔÚinit()ºóÉè¶¨¡£
+    ///è®¾ç½®è¿æ¥çš„å­—ç¬¦é›†ï¼Œè‹¥éœ€è¦è®¾ç½®ï¼Œå¿…é¡»åœ¨init()åè®¾å®šã€‚
     bool setCharacterSet(char const* szCharsetName);
-    ///ÉèÖÃÁ¬½ÓµÄÊôĞÔ£¬ÈôĞèÒªÉèÖÃ£¬±ØĞëÔÚinit()ºóÉè¶¨¡£
+    ///è®¾ç½®è¿æ¥çš„å±æ€§ï¼Œè‹¥éœ€è¦è®¾ç½®ï¼Œå¿…é¡»åœ¨init()åè®¾å®šã€‚
     void setOption(mysql_option option, const char *arg);
-    ///ÉèÖÃ×Ô¶¯Ìá½»Ä£Ê½
+    ///è®¾ç½®è‡ªåŠ¨æäº¤æ¨¡å¼
     bool setAutoCommit(bool bAutoCommit);
-    ///Ìá½»Êı¾İµÄĞŞ¸Ä£¬Ö»ÊÇ·Ç×Ô¶¯Ìá½»µÄÄ£Ê½ÏÂÓĞĞ¡
+    ///æäº¤æ•°æ®çš„ä¿®æ”¹ï¼Œåªæ˜¯éè‡ªåŠ¨æäº¤çš„æ¨¡å¼ä¸‹æœ‰å°
     bool commit();
-    ///»Ø¹ö¶ÔÊı¾İ¿âµÄĞŞ¸Ä
+    ///å›æ»šå¯¹æ•°æ®åº“çš„ä¿®æ”¹
     bool rollback();
-    ///Ö´ĞĞ·ÇqueryµÄÊı¾İ¿â²Ù×÷£¬·µ»ØÖµ£º-1£ºÊ§°Ü£¬>=0£º²Ù×÷Ó°ÏìµÄÊı¾İ¼ÇÂ¼ÊıÁ¿
+    ///æ‰§è¡Œéqueryçš„æ•°æ®åº“æ“ä½œï¼Œè¿”å›å€¼ï¼š-1ï¼šå¤±è´¥ï¼Œ>=0ï¼šæ“ä½œå½±å“çš„æ•°æ®è®°å½•æ•°é‡
     int  execute(char const* szSql);
-    ///»ñÈ¡sqlµÄcountÊıÁ¿,-1±íÊ¾Ê§°Ü
+    ///è·å–sqlçš„countæ•°é‡,-1è¡¨ç¤ºå¤±è´¥
     bool count(char const* szSql, CWX_UINT32& num);
-    ///Ö´ĞĞÊı¾İ²éÑ¯²Ù×÷¡£false£º²éÑ¯Ê§°Ü£»true£º²éÑ¯³É¹¦
+    ///æ‰§è¡Œæ•°æ®æŸ¥è¯¢æ“ä½œã€‚falseï¼šæŸ¥è¯¢å¤±è´¥ï¼›trueï¼šæŸ¥è¯¢æˆåŠŸ
     bool query(char const* szSql);
-    ///Ö´ĞĞbinary sqlµÄ²éÑ¯¡£false£º²éÑ¯Ê§°Ü£»true£º²éÑ¯³É¹¦
+    ///æ‰§è¡Œbinary sqlçš„æŸ¥è¯¢ã€‚falseï¼šæŸ¥è¯¢å¤±è´¥ï¼›trueï¼šæŸ¥è¯¢æˆåŠŸ
     bool query(char const* szSql, unsigned long uiSqlLen);
-    ///»ñÈ¡query½á¹û¼¯µÄÏÂÒ»Ìõ¼ÇÂ¼£¬·µ»ØÖµ£º-1:failure; 0: finish; 1: get one row
+    ///è·å–queryç»“æœé›†çš„ä¸‹ä¸€æ¡è®°å½•ï¼Œè¿”å›å€¼ï¼š-1:failure; 0: finish; 1: get one row
     int	 next();
-    ///»ñÈ¡µ±Ç°¼ÇÂ¼µÄµÚuiFieldIndex¸ö×Ö¶Î,²¢Í¨¹ıbNull·µ»ØÆäÊÇ·ñÎªNULL¡£
+    ///è·å–å½“å‰è®°å½•çš„ç¬¬uiFieldIndexä¸ªå­—æ®µ,å¹¶é€šè¿‡bNullè¿”å›å…¶æ˜¯å¦ä¸ºNULLã€‚
     char const*  fetch(unsigned long uiFieldIndex, bool& bNull);
-    ///»ñÈ¡µ±Ç°¼ÇÂ¼µÄµÚuiFieldIndex¸ö×Ö¶ÎµÄÃû×Ö¡£
+    ///è·å–å½“å‰è®°å½•çš„ç¬¬uiFieldIndexä¸ªå­—æ®µçš„åå­—ã€‚
     char const* getFieldName(unsigned long uiFieldIndex);
-    ///»ñÈ¡µ±Ç°¼ÇÂ¼µÄµÚuiFieldIndex¸ö×Ö¶ÎµÄĞÅÏ¢¡£
+    ///è·å–å½“å‰è®°å½•çš„ç¬¬uiFieldIndexä¸ªå­—æ®µçš„ä¿¡æ¯ã€‚
     MYSQL_FIELD* getFieldInfo(unsigned long uiFieldIndex);
-    ///»ñÈ¡µ±Ç°½á¹û¼¯µÄ×Ö¶ÎÊıÁ¿
+    ///è·å–å½“å‰ç»“æœé›†çš„å­—æ®µæ•°é‡
     int	 getFieldNum();
-    ///»ñÈ¡Ç°Ò»¸öÊı¾İ¿â²Ù×÷Ó°ÏìµÄÊı¾İ¿â¼ÇÂ¼ÊıÁ¿
+    ///è·å–å‰ä¸€ä¸ªæ•°æ®åº“æ“ä½œå½±å“çš„æ•°æ®åº“è®°å½•æ•°é‡
     int  getAffectedRow() const { return m_iAffectedRow;}
-    ///ÊÍ·Åµ±Ç°µÄ²éÑ¯½á¹û¼¯
+    ///é‡Šæ”¾å½“å‰çš„æŸ¥è¯¢ç»“æœé›†
     int	 freeResult();
-    ///¼ì²éÊı¾İ¿âÁ¬½ÓÊÇ·ñÓĞĞ§
+    ///æ£€æŸ¥æ•°æ®åº“è¿æ¥æ˜¯å¦æœ‰æ•ˆ
     bool ping();
-    ///ÔÚÊı¾İ¿â²Ù×÷Ê§°ÜµÄÇé¿öÏÂ£¬»ñÈ¡Ê§°ÜµÄ´íÎóĞÅÏ¢
+    ///åœ¨æ•°æ®åº“æ“ä½œå¤±è´¥çš„æƒ…å†µä¸‹ï¼Œè·å–å¤±è´¥çš„é”™è¯¯ä¿¡æ¯
     char const* getErrMsg() const { return m_strErrMsg.c_str();}
-    ///¼ì²éÊÇ·ñ½¨Á¢ÁËÊı¾İ¿âÁ¬½Ó
+    ///æ£€æŸ¥æ˜¯å¦å»ºç«‹äº†æ•°æ®åº“è¿æ¥
     bool IsConnected() const {return m_bConnected;}
-    ///»ñÈ¡MYSQLµÄÁ¬½Ó¾ä±ú
+    ///è·å–MYSQLçš„è¿æ¥å¥æŸ„
     MYSQL& getHandle() { return m_handle;}
 private:
-    MYSQL	    m_handle;///<mysqlµÄÁ´½Ó¾ä±ú
-    MYSQL_RES*  m_result;///<²éÑ¯²Ù×÷·µ»ØµÄ½á¹û¼¯
-    MYSQL_ROW   m_row;///<½á¹û¼¯µÄµ±Ç°ĞĞ
-    bool        m_bInit;///<¶ÔÏóÊÇ·ñ³õÊ¼»¯
-    bool	    m_bConnected;///<Êı¾İ¿âµÄÁ´½ÓÊÇ·ñ½¨Á¢
-    long       m_iAffectedRow;///<Êı¾İ¿â²Ù×÷Ó°ÏìµÄÊı¾İ¿âµÄ¼ÇÂ¼ÊıÁ¿
-    string	    m_strErrMsg;///<²Ù×÷Ê§°ÜÊ±µÄ´íÎóĞÅÏ¢
+    MYSQL	    m_handle;///<mysqlçš„é“¾æ¥å¥æŸ„
+    MYSQL_RES*  m_result;///<æŸ¥è¯¢æ“ä½œè¿”å›çš„ç»“æœé›†
+    MYSQL_ROW   m_row;///<ç»“æœé›†çš„å½“å‰è¡Œ
+    bool        m_bInit;///<å¯¹è±¡æ˜¯å¦åˆå§‹åŒ–
+    bool	    m_bConnected;///<æ•°æ®åº“çš„é“¾æ¥æ˜¯å¦å»ºç«‹
+    long       m_iAffectedRow;///<æ•°æ®åº“æ“ä½œå½±å“çš„æ•°æ®åº“çš„è®°å½•æ•°é‡
+    string	    m_strErrMsg;///<æ“ä½œå¤±è´¥æ—¶çš„é”™è¯¯ä¿¡æ¯
 };
 
 

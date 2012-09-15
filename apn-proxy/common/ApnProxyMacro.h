@@ -1,10 +1,10 @@
-#ifndef __APN_PROXY_MACRO_H__
+ï»¿#ifndef __APN_PROXY_MACRO_H__
 #define __APN_PROXY_MACRO_H__
 
 /*
-°æÈ¨ÉùÃ÷£º
-±¾Èí¼ş×ñÑ­GNU GPL V3£¨http://www.gnu.org/licenses/gpl.html£©£¬
-ÁªÏµ·½Ê½£ºemail:cwinux@gmail.com£»Î¢²©:http://t.sina.com.cn/cwinux
+ç‰ˆæƒå£°æ˜ï¼š
+æœ¬è½¯ä»¶éµå¾ªGNU GPL V3ï¼ˆhttp://www.gnu.org/licenses/gpl.htmlï¼‰ï¼Œ
+è”ç³»æ–¹å¼ï¼šemail:cwinux@gmail.comï¼›å¾®åš:http://t.sina.com.cn/cwinux
 */
 
 #include "CwxGlobalMacro.h"
@@ -25,47 +25,47 @@ CWINUX_USING_NAMESPACE
 #define APN_PROXY_RELEASE_FEEDBACK_HOST "feedback.push.apple.com"
 #define APN_PROXY_RELEASE_FEEDBACK_PORT 2196
 
-#define APN_PROXY_APP_DEVICE_BINARY_SIZE  32   ///<Éè±¸ºÅµÄ³¤¶È
-#define APN_PROXY_APP_MAXPAYLOAD_SIZE     256  ///<ÏûÏ¢ÌåµÄ³¤¶È
+#define APN_PROXY_APP_DEVICE_BINARY_SIZE  32   ///<è®¾å¤‡å·çš„é•¿åº¦
+#define APN_PROXY_APP_MAXPAYLOAD_SIZE     256  ///<æ¶ˆæ¯ä½“çš„é•¿åº¦
 
-#define APN_PROXY_DEF_EXPIRE              24 * 3600 ///<È±Ê¡µÄ³¬Ê±Ê±¼ä
+#define APN_PROXY_DEF_EXPIRE              24 * 3600 ///<ç¼ºçœçš„è¶…æ—¶æ—¶é—´
 
-#define APN_PROXY_CHANNEL_PREFIX       "ch_" ///<ÅäÖÃÎÄ¼şÖĞchannelµÄÇ°×º
-#define APN_PROXY_APP_PREFIX           "app_" ///<ÅäÖÃÎÄ¼şÖĞappµÄÇ°×º
-#define APN_PROXY_CHANNEL_TYPE_DEV     "dev"  ///<developeÀàĞÍµÄchannel
-#define APN_PROXY_CHANNEL_TYPE_RELEASE "release" ///<releaseÀàĞÍµÄchannel
+#define APN_PROXY_CHANNEL_PREFIX       "ch_" ///<é…ç½®æ–‡ä»¶ä¸­channelçš„å‰ç¼€
+#define APN_PROXY_APP_PREFIX           "app_" ///<é…ç½®æ–‡ä»¶ä¸­appçš„å‰ç¼€
+#define APN_PROXY_CHANNEL_TYPE_DEV     "dev"  ///<developeç±»å‹çš„channel
+#define APN_PROXY_CHANNEL_TYPE_RELEASE "release" ///<releaseç±»å‹çš„channel
 
-///keyµÄ¶¨Òå
-#define APN_PROXY_KEY_RET              "ret"  ///<·µ»ØÖµ
-#define APN_PROXY_KEY_ERR              "err"  ///<´íÎóĞÅÏ¢
-#define APN_PROXY_KEY_STATUS           "status"  ///<apn·µ»ØµÄ´íÎó×´Ì¬
-#define APN_PROXY_KEY_RESULT           "result"  ///<½á¹û
-#define APN_PROXY_KEY_APP              "app"     ///<appµÄkey
-#define APN_PROXY_KEY_CH                "ch"     ///<channelµÄkey
-#define APN_PROXY_KEY_DEV               "dev"    ///<device Éè±¸ºÅ
-#define APN_PROXY_KEY_C                 "c"      ///<·¢ËÍµÄÏûÏ¢ÄÚÈİ
-#define APN_PROXY_KEY_ID                "id"     ///<enchancedÄ£Ê½µÄÏûÏ¢id
-#define APN_PROXY_KEY_E                 "e"      ///<enchancedÄ£Ê½µÄÏûÏ¢expire
-#define APN_PROXY_KEY_CHECK             "check"  ///<ÊÇ·ñ¼ì²âµ±Ç°ÏûÏ¢ÊÇ·ñ·¢ËÍ³É¹¦
-#define APN_PROXY_KEY_LE_DEV            "le_dev"  ///<£¨Á¬½Ó¹Ø±Õ£©ÈôÉÏÒ»´Î·ÇcheckÄ£Ê½ÏÂµÄÏûÏ¢·¢ËÍÊ§°Ü£¬Ôò·µ»ØÆä¶ÔÓ¦µÄÉè±¸id¡£
-#define APN_PROXY_KEY_LE_ID             "le_id"   ///<£¨Á¬½Ó¹Ø±Õ£©ÈôÉÏÒ»´Î·ÇcheckÄ£Ê½ÏÂµÄÏûÏ¢·¢ËÍÊ§°Ü£¬Ôò·µ»ØÆä¶ÔÓ¦µÄenchancedÄ£Ê½µÄÏûÏ¢id
-#define APN_PROXY_KEY_LE_C              "le_c"    ///<£¨Á¬½Ó¹Ø±Õ£©ÈôÉÏÒ»´Î·ÇcheckÄ£Ê½ÏÂµÄÏûÏ¢·¢ËÍÊ§°Ü£¬Ôò·µ»ØÆä¶ÔÓ¦µÄ·¢ËÍÄÚÈİ
+///keyçš„å®šä¹‰
+#define APN_PROXY_KEY_RET              "ret"  ///<è¿”å›å€¼
+#define APN_PROXY_KEY_ERR              "err"  ///<é”™è¯¯ä¿¡æ¯
+#define APN_PROXY_KEY_STATUS           "status"  ///<apnè¿”å›çš„é”™è¯¯çŠ¶æ€
+#define APN_PROXY_KEY_RESULT           "result"  ///<ç»“æœ
+#define APN_PROXY_KEY_APP              "app"     ///<appçš„key
+#define APN_PROXY_KEY_CH                "ch"     ///<channelçš„key
+#define APN_PROXY_KEY_DEV               "dev"    ///<device è®¾å¤‡å·
+#define APN_PROXY_KEY_C                 "c"      ///<å‘é€çš„æ¶ˆæ¯å†…å®¹
+#define APN_PROXY_KEY_ID                "id"     ///<enchancedæ¨¡å¼çš„æ¶ˆæ¯id
+#define APN_PROXY_KEY_E                 "e"      ///<enchancedæ¨¡å¼çš„æ¶ˆæ¯expire
+#define APN_PROXY_KEY_CHECK             "check"  ///<æ˜¯å¦æ£€æµ‹å½“å‰æ¶ˆæ¯æ˜¯å¦å‘é€æˆåŠŸ
+#define APN_PROXY_KEY_LE_DEV            "le_dev"  ///<ï¼ˆè¿æ¥å…³é—­ï¼‰è‹¥ä¸Šä¸€æ¬¡écheckæ¨¡å¼ä¸‹çš„æ¶ˆæ¯å‘é€å¤±è´¥ï¼Œåˆ™è¿”å›å…¶å¯¹åº”çš„è®¾å¤‡idã€‚
+#define APN_PROXY_KEY_LE_ID             "le_id"   ///<ï¼ˆè¿æ¥å…³é—­ï¼‰è‹¥ä¸Šä¸€æ¬¡écheckæ¨¡å¼ä¸‹çš„æ¶ˆæ¯å‘é€å¤±è´¥ï¼Œåˆ™è¿”å›å…¶å¯¹åº”çš„enchancedæ¨¡å¼çš„æ¶ˆæ¯id
+#define APN_PROXY_KEY_LE_C              "le_c"    ///<ï¼ˆè¿æ¥å…³é—­ï¼‰è‹¥ä¸Šä¸€æ¬¡écheckæ¨¡å¼ä¸‹çš„æ¶ˆæ¯å‘é€å¤±è´¥ï¼Œåˆ™è¿”å›å…¶å¯¹åº”çš„å‘é€å†…å®¹
 
 
-#define  APN_PROXY_CHANNEL_THREAD_STACK   100 * 1024   ///<¶¨ÒåchannelÏß³ÌµÄstack´óĞ¡
+#define  APN_PROXY_CHANNEL_THREAD_STACK   100 * 1024   ///<å®šä¹‰channelçº¿ç¨‹çš„stackå¤§å°
 
-///´íÎó´úÂëµÄ¶¨Òå
-#define APN_PROXY_ERR_SUCCESS           0   ///<³É¹¦
-#define APN_PROXY_ERR_UNKNOWN_MSG       1   ///<Î´ÖªµÄÏûÏ¢ÀàĞÍ
-#define APN_PROXY_ERR_INVALID_PACKAGE   2   ///<Êı¾İ°üÎŞĞ§
-#define APN_PROXY_ERR_MISSING_APP       3   ///<È±ÉÙAPP
-#define APN_PROXY_ERR_MISSING_CHANNEL   4   ///<È±ÉÙchannel²ÎÊı
-#define APN_PROXY_ERR_NO_APP            5   ///<Ö¸¶¨µÄapp²»´æÔÚ
-#define APN_PROXY_ERR_NO_CHANNEL        6   ///<Ö¸¶¨µÄchannel²»´æÔÚ
-#define APN_PROXY_ERR_MISSING_DEV       7   ///<È±Ê¡dev²ÎÊı
-#define APN_PROXY_ERR_MISSING_CONTENT   8   ///<È±ÉÙcontent²ÎÊı
-#define APN_PROXY_ERR_FAIL_CONNECT      9   ///<Á¬½ÓÊ§°Ü
+///é”™è¯¯ä»£ç çš„å®šä¹‰
+#define APN_PROXY_ERR_SUCCESS           0   ///<æˆåŠŸ
+#define APN_PROXY_ERR_UNKNOWN_MSG       1   ///<æœªçŸ¥çš„æ¶ˆæ¯ç±»å‹
+#define APN_PROXY_ERR_INVALID_PACKAGE   2   ///<æ•°æ®åŒ…æ— æ•ˆ
+#define APN_PROXY_ERR_MISSING_APP       3   ///<ç¼ºå°‘APP
+#define APN_PROXY_ERR_MISSING_CHANNEL   4   ///<ç¼ºå°‘channelå‚æ•°
+#define APN_PROXY_ERR_NO_APP            5   ///<æŒ‡å®šçš„appä¸å­˜åœ¨
+#define APN_PROXY_ERR_NO_CHANNEL        6   ///<æŒ‡å®šçš„channelä¸å­˜åœ¨
+#define APN_PROXY_ERR_MISSING_DEV       7   ///<ç¼ºçœdevå‚æ•°
+#define APN_PROXY_ERR_MISSING_CONTENT   8   ///<ç¼ºå°‘contentå‚æ•°
+#define APN_PROXY_ERR_FAIL_CONNECT      9   ///<è¿æ¥å¤±è´¥
 #define APN_PROXY_ERR_NOTICE_FAIL       10  ///<apn notice fail
-#define APN_PROXY_ERR_CONTENT_TOO_LEN   11  ///<noticeµÄÏûÏ¢Ì«´ó
+#define APN_PROXY_ERR_CONTENT_TOO_LEN   11  ///<noticeçš„æ¶ˆæ¯å¤ªå¤§
 
 #endif

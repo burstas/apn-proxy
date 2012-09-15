@@ -1,4 +1,4 @@
-#include "ApnProxySsl.h"
+ï»¿#include "ApnProxySsl.h"
 #include "CwxSockConnector.h"
 
 
@@ -21,15 +21,15 @@ ApnProxySsl::ApnProxySsl(char const* host,
     m_bConnected = false;
 }
 
-///Îö¹¹º¯Êı
+///ææ„å‡½æ•°
 ApnProxySsl::~ApnProxySsl(){
     disconnect();
 }
 
-///Á¬½Ó£»·µ»ØÖµ£º0£¬³É¹¦£»-1£ºÊ§°Ü
+///è¿æ¥ï¼›è¿”å›å€¼ï¼š0ï¼ŒæˆåŠŸï¼›-1ï¼šå¤±è´¥
 int ApnProxySsl::connect(CWX_UINT32 uiMilliTimeout, char* szErr2K){
     int ret = 0;
-    ///È·±£Á¬½Ó¹Ø±Õ
+    ///ç¡®ä¿è¿æ¥å…³é—­
     disconnect();
     /* Load encryption & hashing algorithms for the SSL program */
     SSL_library_init();
@@ -122,7 +122,7 @@ int ApnProxySsl::connect(CWX_UINT32 uiMilliTimeout, char* szErr2K){
     return 0;
 }
 
-///¶ÁÈ¡ÄÚÈİ¡£·µ»ØÖµ£¬-1£ºÊ§°Ü£»0£ºÃ»ÓĞÊı¾İ£»>0£ºÊÕµ½µÄ×Ö½ÚÊı¡£
+///è¯»å–å†…å®¹ã€‚è¿”å›å€¼ï¼Œ-1ï¼šå¤±è´¥ï¼›0ï¼šæ²¡æœ‰æ•°æ®ï¼›>0ï¼šæ”¶åˆ°çš„å­—èŠ‚æ•°ã€‚
 int ApnProxySsl::read(char* szBuf, CWX_UINT32 uiBufLen, CWX_UINT32 uiMilliTimeout, char* szErr2K){
     if ((-1 == m_stream.getHandle()) || !m_ssl){
         if (szErr2K) strcpy(szErr2K, "No connect.");
@@ -144,7 +144,7 @@ int ApnProxySsl::read(char* szBuf, CWX_UINT32 uiBufLen, CWX_UINT32 uiMilliTimeou
     }
     return ret;
 }
-///·¢ËÍÄÚÈİ¡£·µ»ØÖµ£¬-1£ºÊ§°Ü£»0£ºÁ¬½Ó¹Ø±Õ£»>0£º·¢ËÍµÄ×Ö½ÚÊı
+///å‘é€å†…å®¹ã€‚è¿”å›å€¼ï¼Œ-1ï¼šå¤±è´¥ï¼›0ï¼šè¿æ¥å…³é—­ï¼›>0ï¼šå‘é€çš„å­—èŠ‚æ•°
 int ApnProxySsl::send (char const* szDat, CWX_UINT32 uiDatLen, char* szErr2K){
     if ((-1 == m_stream.getHandle()) || !m_ssl){
         if (szErr2K) strcpy(szErr2K, "No connect.");
@@ -162,7 +162,7 @@ int ApnProxySsl::send (char const* szDat, CWX_UINT32 uiDatLen, char* szErr2K){
 
 }
 
-///¶ÁÈ¡ÄÚÈİ¡£·µ»ØÖµ£¬-1£ºÊ§°Ü£»0£ºÃ»ÓĞÊı¾İ£»>0£ºÊÕµ½µÄ×Ö½ÚÊı¡£
+///è¯»å–å†…å®¹ã€‚è¿”å›å€¼ï¼Œ-1ï¼šå¤±è´¥ï¼›0ï¼šæ²¡æœ‰æ•°æ®ï¼›>0ï¼šæ”¶åˆ°çš„å­—èŠ‚æ•°ã€‚
 int ApnProxySsl::read_n(char* szBuf, CWX_UINT32 uiLen, CWX_UINT32 uiMilliTimeout, char* szErr2K)
 {
     if ((-1 == m_stream.getHandle()) || !m_ssl){
@@ -191,7 +191,7 @@ int ApnProxySsl::read_n(char* szBuf, CWX_UINT32 uiLen, CWX_UINT32 uiMilliTimeout
     }
     return uiPos;
 }
-///·¢ËÍÄÚÈİ¡£·µ»ØÖµ£¬-1£ºÊ§°Ü£»0£ºÁ¬½Ó¹Ø±Õ£»>0£º·¢ËÍµÄ×Ö½ÚÊı
+///å‘é€å†…å®¹ã€‚è¿”å›å€¼ï¼Œ-1ï¼šå¤±è´¥ï¼›0ï¼šè¿æ¥å…³é—­ï¼›>0ï¼šå‘é€çš„å­—èŠ‚æ•°
 int ApnProxySsl::send_n (char const* szDat, CWX_UINT32 uiDatLen, char* szErr2K){
     if ((-1 == m_stream.getHandle()) || !m_ssl){
         if (szErr2K) strcpy(szErr2K, "No connect.");
@@ -215,7 +215,7 @@ int ApnProxySsl::send_n (char const* szDat, CWX_UINT32 uiDatLen, char* szErr2K){
 
 }
 
-///¼ì²éÊÇ·ñ¿É¶Á
+///æ£€æŸ¥æ˜¯å¦å¯è¯»
 bool ApnProxySsl::isReadReady(CWX_UINT32 uiMilliTimeout){
     if ((-1 == m_stream.getHandle()) || !m_ssl){
         return true;
@@ -231,7 +231,7 @@ bool ApnProxySsl::isReadReady(CWX_UINT32 uiMilliTimeout){
     return true;
 }
 
-///¹Ø±ÕÁ¬½Ó
+///å…³é—­è¿æ¥
 void ApnProxySsl::disconnect(){
     if (!m_method) return;
     m_bConnected = false;

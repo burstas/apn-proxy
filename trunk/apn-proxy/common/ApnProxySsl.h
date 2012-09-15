@@ -1,10 +1,10 @@
-#ifndef __APN_PROXY_SSL_H__
+ï»¿#ifndef __APN_PROXY_SSL_H__
 #define __APN_PROXY_SSL_H__
 
 /*
-°æÈ¨ÉùÃ÷£º
-±¾Èí¼ş×ñÑ­GNU GPL V3£¨http://www.gnu.org/licenses/gpl.html£©£¬
-ÁªÏµ·½Ê½£ºemail:cwinux@gmail.com£»Î¢²©:http://t.sina.com.cn/cwinux
+ç‰ˆæƒå£°æ˜ï¼š
+æœ¬è½¯ä»¶éµå¾ªGNU GPL V3ï¼ˆhttp://www.gnu.org/licenses/gpl.htmlï¼‰ï¼Œ
+è”ç³»æ–¹å¼ï¼šemail:cwinux@gmail.comï¼›å¾®åš:http://t.sina.com.cn/cwinux
 */
 #include "ApnProxyMacro.h"
 #include "CwxCommon.h"
@@ -22,49 +22,49 @@
 #include <openssl/err.h>
 
 
-///sslÁ¬½Ó¶ÔÏó
+///sslè¿æ¥å¯¹è±¡
 class ApnProxySsl{
 public:
-    ///¹¹Ôìº¯Êı
+    ///æ„é€ å‡½æ•°
     ApnProxySsl(char const* host,
         CWX_UINT16 port,
         char const *cerfile,
         char const *keyfile,
         char const *capath);
-    ///Îö¹¹º¯Êı
+    ///ææ„å‡½æ•°
     ~ApnProxySsl();
 public:
-    ///Á¬½Ó£»·µ»ØÖµ£º0£¬³É¹¦£»-1£ºÊ§°Ü
+    ///è¿æ¥ï¼›è¿”å›å€¼ï¼š0ï¼ŒæˆåŠŸï¼›-1ï¼šå¤±è´¥
     int connect(CWX_UINT32 uiMilliTimeout=0, char* szErr2K=NULL);
-    ///¶ÁÈ¡ÄÚÈİ¡£·µ»ØÖµ£¬-1£ºÊ§°Ü£»0£ºÃ»ÓĞÊı¾İ£»>0£ºÊÕµ½µÄ×Ö½ÚÊı¡£
+    ///è¯»å–å†…å®¹ã€‚è¿”å›å€¼ï¼Œ-1ï¼šå¤±è´¥ï¼›0ï¼šæ²¡æœ‰æ•°æ®ï¼›>0ï¼šæ”¶åˆ°çš„å­—èŠ‚æ•°ã€‚
     int read(char* szBuf, CWX_UINT32 uiBufLen, CWX_UINT32 uiMilliTimeout=0, char* szErr2K=NULL);
-    ///·¢ËÍÄÚÈİ¡£·µ»ØÖµ£¬-1£ºÊ§°Ü£»0£ºÁ¬½Ó¹Ø±Õ£»>0£º·¢ËÍµÄ×Ö½ÚÊı
+    ///å‘é€å†…å®¹ã€‚è¿”å›å€¼ï¼Œ-1ï¼šå¤±è´¥ï¼›0ï¼šè¿æ¥å…³é—­ï¼›>0ï¼šå‘é€çš„å­—èŠ‚æ•°
     int send (char const* szDat, CWX_UINT32 uiDatLen, char* szErr2K=NULL);
-    ///¶ÁÈ¡ÄÚÈİ¡£·µ»ØÖµ£¬-1£ºÊ§°Ü£»0£ºÃ»ÓĞÊı¾İ£»>0£ºÊÕµ½µÄ×Ö½ÚÊı¡£
+    ///è¯»å–å†…å®¹ã€‚è¿”å›å€¼ï¼Œ-1ï¼šå¤±è´¥ï¼›0ï¼šæ²¡æœ‰æ•°æ®ï¼›>0ï¼šæ”¶åˆ°çš„å­—èŠ‚æ•°ã€‚
     int read_n(char* szBuf, CWX_UINT32 uiLen, CWX_UINT32 uiMilliTimeout=0, char* szErr2K=NULL);
-    ///·¢ËÍÄÚÈİ¡£·µ»ØÖµ£¬-1£ºÊ§°Ü£»0£ºÁ¬½Ó¹Ø±Õ£»>0£º·¢ËÍµÄ×Ö½ÚÊı
+    ///å‘é€å†…å®¹ã€‚è¿”å›å€¼ï¼Œ-1ï¼šå¤±è´¥ï¼›0ï¼šè¿æ¥å…³é—­ï¼›>0ï¼šå‘é€çš„å­—èŠ‚æ•°
     int send_n (char const* szDat, CWX_UINT32 uiDatLen, char* szErr2K=NULL);
-    ///¼ì²éÊÇ·ñ¿É¶Á
+    ///æ£€æŸ¥æ˜¯å¦å¯è¯»
     bool isReadReady(CWX_UINT32 uiMilliTimeout=0);
-    ///¹Ø±ÕÁ¬½Ó
+    ///å…³é—­è¿æ¥
     void disconnect();
-    ///ÊÇ·ñÁ¬½Ó
+    ///æ˜¯å¦è¿æ¥
     inline bool isConnected() const{
         return m_bConnected;
     }
 private:
-    string                  m_strHost; ///<Ö÷»úµØÖ·
-    CWX_UINT16              m_unPort;  ///<¶Ë¿ÚĞÅÏ¢
-    string                  m_strCerFile; ///<ÈÏÖ¤ÎÄ¼ş
-    string                  m_strKeyFile; ///<keyÎÄ¼ş
-    string                  m_strCaPath; ///<ÈÏÖ¤µÄÄ¿Â¼
-    SSL_CTX*                m_ctx; ///<sslµÄcontext
-    SSL*                    m_ssl;  ///<sslµÄÁ¬½Ó
-    SSL_METHOD*             m_method; ///<sslµÄmethod
-    X509*                   m_cert; ///<sslµÄÖ¤Êé
-    EVP_PKEY*               m_key; ///<sslµÄkey
-    CwxSockStream           m_stream; ///<socketµÄÁ¬½Ó
-    bool                    m_bConnected; ///<Á¬½ÓÊÇ·ñ½¨Á¢
+    string                  m_strHost; ///<ä¸»æœºåœ°å€
+    CWX_UINT16              m_unPort;  ///<ç«¯å£ä¿¡æ¯
+    string                  m_strCerFile; ///<è®¤è¯æ–‡ä»¶
+    string                  m_strKeyFile; ///<keyæ–‡ä»¶
+    string                  m_strCaPath; ///<è®¤è¯çš„ç›®å½•
+    SSL_CTX*                m_ctx; ///<sslçš„context
+    SSL*                    m_ssl;  ///<sslçš„è¿æ¥
+    SSL_METHOD*             m_method; ///<sslçš„method
+    X509*                   m_cert; ///<sslçš„è¯ä¹¦
+    EVP_PKEY*               m_key; ///<sslçš„key
+    CwxSockStream           m_stream; ///<socketçš„è¿æ¥
+    bool                    m_bConnected; ///<è¿æ¥æ˜¯å¦å»ºç«‹
 };
 
 #endif

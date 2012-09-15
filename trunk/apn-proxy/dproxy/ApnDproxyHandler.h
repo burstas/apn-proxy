@@ -1,10 +1,10 @@
-#ifndef __APN_PROXY_HANDLER_H__
+ï»¿#ifndef __APN_PROXY_HANDLER_H__
 #define __APN_PROXY_HANDLER_H__
 
 /*
-°æÈ¨ÉùÃ÷£º
-±¾Èí¼ş×ñÑ­GNU GPL V3£¨http://www.gnu.org/licenses/gpl.html£©£¬
-ÁªÏµ·½Ê½£ºemail:cwinux@gmail.com£»Î¢²©:http://t.sina.com.cn/cwinux
+ç‰ˆæƒå£°æ˜ï¼š
+æœ¬è½¯ä»¶éµå¾ªGNU GPL V3ï¼ˆhttp://www.gnu.org/licenses/gpl.htmlï¼‰ï¼Œ
+è”ç³»æ–¹å¼ï¼šemail:cwinux@gmail.comï¼›å¾®åš:http://t.sina.com.cn/cwinux
 */
 
 #include "ApnProxyMacro.h"
@@ -12,11 +12,11 @@
 
 
 class ApnProxyApp;
-///ÏûÏ¢´¦Àíº¯Êıhandle
+///æ¶ˆæ¯å¤„ç†å‡½æ•°handle
 class ApnProxyHandler : public CwxCmdOp 
 {
 public:
-    ///¹¹Ôìº¯Êı
+    ///æ„é€ å‡½æ•°
     ApnProxyHandler(ApnProxyApp* pApp):m_pApp(pApp){
         memset(m_szAscii, 0x00, 255);
         m_szAscii[(CWX_UINT8)'0']=0;
@@ -42,16 +42,16 @@ public:
         m_szAscii[(CWX_UINT8)'E']=14;
         m_szAscii[(CWX_UINT8)'F']=15;
     }
-    ///Îö¹¹º¯Êı
+    ///ææ„å‡½æ•°
     virtual ~ApnProxyHandler(){
     }
 public:
-    ///ÊÕµ½ÇëÇóµÄ´¦Àíº¯Êı
-    virtual int onRecvMsg(CwxMsgBlock*& msg,///<echoÊı¾İ°ü¼°Ïà¹ØµÄÇëÇóÁ¬½ÓĞÅÏ¢
-                            CwxTss* pThrEnv///<´¦ÀíÏß³ÌµÄthread-specific-store
+    ///æ”¶åˆ°è¯·æ±‚çš„å¤„ç†å‡½æ•°
+    virtual int onRecvMsg(CwxMsgBlock*& msg,///<echoæ•°æ®åŒ…åŠç›¸å…³çš„è¯·æ±‚è¿æ¥ä¿¡æ¯
+                            CwxTss* pThrEnv///<å¤„ç†çº¿ç¨‹çš„thread-specific-store
                             );
 private:
-    ApnProxyApp*     m_pApp;  ///<app¶ÔÏó
+    ApnProxyApp*     m_pApp;  ///<appå¯¹è±¡
     unsigned char    m_szAscii[256];
 };
 

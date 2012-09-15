@@ -1,6 +1,6 @@
-#include "ApnDproxyTss.h"
+ï»¿#include "ApnDproxyTss.h"
 
-///¹¹Ôìº¯Êý
+///æž„é€ å‡½æ•°
 ApnDproxyTss::~ApnDproxyTss(){
     if (m_pReader) delete m_pReader;
     if (m_pWriter) delete m_pWriter;

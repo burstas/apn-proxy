@@ -1,6 +1,6 @@
-#include "ApnProxyTss.h"
+ï»¿#include "ApnProxyTss.h"
 
-///¹¹Ôìº¯Êý
+///æž„é€ å‡½æ•°
 ApnProxyTss::~ApnProxyTss(){
     if (m_pReader) delete m_pReader;
     if (m_pWriter) delete m_pWriter;

@@ -1,9 +1,9 @@
-#ifndef __APN_DPROXY_CONFIG_H__
+ï»¿#ifndef __APN_DPROXY_CONFIG_H__
 #define __APN_DPROXY_CONFIG_H__
 /*
-°æÈ¨ÉùÃ÷£º
-±¾Èí¼ş×ñÑ­GNU GPL V3£¨http://www.gnu.org/licenses/gpl.html£©£¬
-ÁªÏµ·½Ê½£ºemail:cwinux@gmail.com£»Î¢²©:http://t.sina.com.cn/cwinux
+ç‰ˆæƒå£°æ˜ï¼š
+æœ¬è½¯ä»¶éµå¾ªGNU GPL V3ï¼ˆhttp://www.gnu.org/licenses/gpl.htmlï¼‰ï¼Œ
+è”ç³»æ–¹å¼ï¼šemail:cwinux@gmail.comï¼›å¾®åš:http://t.sina.com.cn/cwinux
 */
 #include "CwxGlobalMacro.h"
 #include "CwxHostInfo.h"
@@ -12,7 +12,7 @@
 #include "ApnProxyMacro.h"
 #include "CwxLogger.h"
 
-///ÅäÖÃÎÄ¼ş¼ÓÔØ¶ÔÏó
+///é…ç½®æ–‡ä»¶åŠ è½½å¯¹è±¡
 class ApnDproxyConfig{
 public:
     enum{
@@ -28,24 +28,24 @@ public:
     ~ApnDproxyConfig(){
     }
 public:
-    //¼ÓÔØÅäÖÃÎÄ¼ş.-1:failure, 0:success
+    //åŠ è½½é…ç½®æ–‡ä»¶.-1:failure, 0:success
     int loadConfig(string const & strConfFile);
-    //Êä³ö¼ÓÔØµÄÅäÖÃÎÄ¼şĞÅÏ¢
+    //è¾“å‡ºåŠ è½½çš„é…ç½®æ–‡ä»¶ä¿¡æ¯
     void outputConfig();
-    //»ñÈ¡ÅäÖÃÎÄ¼ş¼ÓÔØµÄÊ§°ÜÔ­Òò
+    //è·å–é…ç½®æ–‡ä»¶åŠ è½½çš„å¤±è´¥åŸå› 
     char const* getError() { return m_szError; };
 public:
-    string              m_strWorkDir;///<¹¤×÷Ä¿Â¼
-    CwxHostInfo         m_listen;///<tcpµÄ¼àÌıip/port
-    CWX_UINT32          m_uiConnTimeoutMilliSecond; ///<Á¬½ÓµÄ³¬Ê±Ê±¼ä
-    CWX_UINT32          m_uiCheckMilliSecond; ///<·¢ËÍ³É¹¦¼ì²âµÄÊ±¼ä
-    CWX_UINT32          m_uiPartition; ///<ËùÊôµÄ·ÖÇø
-    string			    m_strMyHost; ///<mysqlµÄserver
-    CWX_UINT16          m_unMyPort; ///<mysqlµÄport
-    string			    m_strMyUser; ///<mysqlµÄÓÃ»§
-    string			    m_strMyPasswd; ///<mysqlµÄÓÃ»§
-    string			    m_strMyDb;  ///<mysqlµÄÊı¾İ¿â
-    char                m_szError[2048];///<´íÎóÏûÏ¢µÄbuf
+    string              m_strWorkDir;///<å·¥ä½œç›®å½•
+    CwxHostInfo         m_listen;///<tcpçš„ç›‘å¬ip/port
+    CWX_UINT32          m_uiConnTimeoutMilliSecond; ///<è¿æ¥çš„è¶…æ—¶æ—¶é—´
+    CWX_UINT32          m_uiCheckMilliSecond; ///<å‘é€æˆåŠŸæ£€æµ‹çš„æ—¶é—´
+    CWX_UINT32          m_uiPartition; ///<æ‰€å±çš„åˆ†åŒº
+    string			    m_strMyHost; ///<mysqlçš„server
+    CWX_UINT16          m_unMyPort; ///<mysqlçš„port
+    string			    m_strMyUser; ///<mysqlçš„ç”¨æˆ·
+    string			    m_strMyPasswd; ///<mysqlçš„ç”¨æˆ·
+    string			    m_strMyDb;  ///<mysqlçš„æ•°æ®åº“
+    char                m_szError[2048];///<é”™è¯¯æ¶ˆæ¯çš„buf
 };
 
 #endif

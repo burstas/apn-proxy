@@ -1,4 +1,4 @@
-﻿#ifndef __APN_DPROXY_APP_H__
+#ifndef __APN_DPROXY_APP_H__
 #define __APN_DPROXY_APP_H__
 /*
 版权声明：

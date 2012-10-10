@@ -1,4 +1,4 @@
-﻿#include "ApnProxySsl.h"
+#include "ApnProxySsl.h"
 #include "CwxSockConnector.h"
 
 

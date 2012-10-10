@@ -1,4 +1,4 @@
-﻿#include "Mysql.h"
+#include "Mysql.h"
 
 
 bool Mysql::init(){

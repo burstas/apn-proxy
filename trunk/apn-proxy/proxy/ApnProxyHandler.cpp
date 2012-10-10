@@ -1,4 +1,4 @@
-﻿#include "ApnProxyHandler.h"
+#include "ApnProxyHandler.h"
 #include "ApnProxyApp.h"
 #include "ApnProxyAppPoco.h"
 

@@ -1,4 +1,4 @@
-﻿#include "ApnProxyAppPoco.h"
+#include "ApnProxyAppPoco.h"
 
 ///发送一个notice。返回值，0：成功；-1：失败。
 int ApnProxyAppPoco::sendNotice(ApnProxySsl *ssl, ///<ssl连接

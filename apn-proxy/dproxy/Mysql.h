@@ -1,4 +1,4 @@
-﻿#ifndef __MYSQL_H__
+#ifndef __MYSQL_H__
 #define __MYSQL_H__
 
 /**

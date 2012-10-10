@@ -1,4 +1,4 @@
-﻿#include "ApnDproxyConfig.h"
+#include "ApnDproxyConfig.h"
 #include "CwxFile.h"
 
 static bool parseHostPort(string const& strHostPort, CwxHostInfo& host)

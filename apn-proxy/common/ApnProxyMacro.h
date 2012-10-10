@@ -1,4 +1,4 @@
-﻿#ifndef __APN_PROXY_MACRO_H__
+#ifndef __APN_PROXY_MACRO_H__
 #define __APN_PROXY_MACRO_H__
 
 /*

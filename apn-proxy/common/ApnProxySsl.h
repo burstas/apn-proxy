@@ -1,4 +1,4 @@
-﻿#ifndef __APN_PROXY_SSL_H__
+#ifndef __APN_PROXY_SSL_H__
 #define __APN_PROXY_SSL_H__
 
 /*

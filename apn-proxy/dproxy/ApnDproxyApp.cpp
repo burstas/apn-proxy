@@ -1,4 +1,4 @@
-﻿#include "ApnProxyApp.h"
+#include "ApnProxyApp.h"
 #include "CwxDate.h"
 
 ///构造函数

@@ -1,4 +1,4 @@
-﻿#ifndef __APN_PROXY_APP_POCO_H__
+#ifndef __APN_PROXY_APP_POCO_H__
 #define __APN_PROXY_APP_POCO_H__
 
 /*

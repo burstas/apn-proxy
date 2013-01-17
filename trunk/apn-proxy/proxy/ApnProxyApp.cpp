@@ -74,13 +74,10 @@ int ApnProxyApp::initRunEnv(){
     }
     ///创建线程池对象，此线程池中线程的group-id为2
     CWX_UINT16 i=0;
-    CWX_UINT16 uiThreadId = 2;
     CwxThreadPool* pThreadPool = NULL;
     map<string, ApnProxyConfigChannel*>::iterator iter = m_config.m_channels.begin();
     while(iter != m_config.m_channels.end()){
-        pThreadPool = new CwxThreadPool(uiThreadId++, 
-            iter->second->m_unThreadNum,
-            getThreadPoolMgr(),
+        pThreadPool = new CwxThreadPool(iter->second->m_unThreadNum,
             &getCommander());
 
         ///启动线程

@@ -60,7 +60,7 @@ private:
     string                  m_strCaPath; ///<认证的目录
     SSL_CTX*                m_ctx; ///<ssl的context
     SSL*                    m_ssl;  ///<ssl的连接
-    SSL_METHOD*             m_method; ///<ssl的method
+    const SSL_METHOD*       m_method; ///<ssl的method
     X509*                   m_cert; ///<ssl的证书
     EVP_PKEY*               m_key; ///<ssl的key
     CwxSockStream           m_stream; ///<socket的连接

@@ -17,7 +17,7 @@ int ApnProxyApp::init(int argc, char** argv){
     if (CwxAppFramework::init(argc, argv) == -1) return -1;
     ///检查是否通过-f指定了配置文件，若没有，则采用默认的配置文件
     if ((NULL == this->getConfFile()) || (strlen(this->getConfFile()) == 0)){
-        this->setConfFile("apn_proxy.cnf");
+        this->setConfFile("apn_proxy.conf");
     }
     ///加载配置文件，若失败则退出
     if (0 != m_config.loadConfig(getConfFile())){
